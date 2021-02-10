@@ -33,9 +33,10 @@ class JLinkBinaryRunner(ZephyrBinaryRunner):
                  flash_addr=0x0, erase=True, reset_after_load=False,
                  iface='swd', speed='auto',
                  gdbserver='JLinkGDBServer', gdb_port=DEFAULT_JLINK_GDB_PORT,
-                 tui=False, tool_opt=[]):
+                 tui=False, use_mot=None, tool_opt=[]):
         super().__init__(cfg)
         self.bin_name = cfg.bin_file
+        self.mot_name = cfg.mot_file
         self.elf_name = cfg.elf_file
         self.gdb_cmd = [cfg.gdb] if cfg.gdb else None
         self.device = device
@@ -48,6 +49,7 @@ class JLinkBinaryRunner(ZephyrBinaryRunner):
         self.speed = speed
         self.gdb_port = gdb_port
         self.tui_arg = ['-tui'] if tui else []
+        self.use_mot = use_mot
 
         self.tool_opt = []
         for opts in [shlex.split(opt) for opt in tool_opt]:
@@ -88,6 +90,8 @@ class JLinkBinaryRunner(ZephyrBinaryRunner):
                             dest='reset_after_load', nargs=0,
                             action=ToggleAction,
                             help='reset after loading? (default: no)')
+        parser.add_argument('--use-mot', default=False, action='store_true',
+                            help='if given, MOT file file will be used for loading instead of BIN file')                            
 
         parser.set_defaults(reset_after_load=False)
 
@@ -102,7 +106,8 @@ class JLinkBinaryRunner(ZephyrBinaryRunner):
                                  iface=args.iface, speed=args.speed,
                                  gdbserver=args.gdbserver,
                                  gdb_port=args.gdb_port,
-                                 tui=args.tui, tool_opt=args.tool_opt)
+                                 tui=args.tui, use_mot=args.use_mot,
+                                 tool_opt=args.tool_opt)
 
     def print_gdbserver_message(self):
         self.logger.info('J-Link GDB server running on port {}'.
@@ -179,15 +184,24 @@ class JLinkBinaryRunner(ZephyrBinaryRunner):
 
     def flash(self, **kwargs):
         self.require(self.commander)
-        self.ensure_output('bin')
+
+        if self.use_mot:
+            self.ensure_output('mot')
+            loadfile = self.mot_name
+        else:
+            self.ensure_output('bin')
+            loadfile = self.bin_name
 
         lines = ['r'] # Reset and halt the target
 
         if self.erase:
             lines.append('erase') # Erase all flash sectors
 
-        lines.append('loadfile {} 0x{:x}'.format(self.bin_name,
-                                                 self.flash_addr))
+        if self.use_mot:
+            lines.append('loadfile {}'.format(loadfile))
+        else:
+            lines.append('loadfile {} 0x{:x}'.format(loadfile, self.flash_addr))
+
         if self.reset_after_load:
             lines.append('r') # Reset and halt the target
 
@@ -226,5 +240,5 @@ class JLinkBinaryRunner(ZephyrBinaryRunner):
                     '-CommanderScript', fname] +
                    self.tool_opt)
 
-            self.logger.info('Flashing file: {}'.format(self.bin_name))
+            self.logger.info('Flashing file: {}'.format(loadfile))
             self.check_call(cmd)
