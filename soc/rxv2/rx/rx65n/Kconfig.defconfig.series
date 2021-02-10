@@ -20,14 +20,14 @@ if SOC_SERIES_RX65N # check if: SOC_FAMILY_RX
 			default y
 	endif #GPIO
 
-	if PINMUX # check if: place of definition is correct here
-		config PINMUX_RX
-			default y
-	endif #PINMUX
+	# if PINMUX # check if: place of definition is correct here
+	# 	config PINMUX_RX
+	# 		default y
+	# endif #PINMUX
 
-	config PINMUX_RX
-		default y
-	 	depends on PINMUX
+	# config PINMUX_RX
+	# 	default y
+	#  	depends on PINMUX
 	
 	# if WATCHDOG # check if: place of definition is correct here	#
 		# config IWDT_RX

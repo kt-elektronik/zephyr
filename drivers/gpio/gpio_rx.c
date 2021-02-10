@@ -243,11 +243,6 @@ static int gpio_rx_init(const struct device *device){
 	struct gpio_rx_data *data = device->data;
 	static bool isr_connected;
 
-	//data->pinmux = DEVICE_DT_GET(DT_NODELABEL(pinmux));
-	if (!data->pinmux) {
-		return -ENOTSUP;
-	}
-
 	if (!isr_connected){
 		irq_disable(CONFIG_GPIO_RX_IRQ);
 
