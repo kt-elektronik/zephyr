@@ -57,6 +57,8 @@ elseif("${ARCH}" STREQUAL "x86")
   include(${CMAKE_CURRENT_LIST_DIR}/target_x86.cmake)
 elseif("${ARCH}" STREQUAL "sparc")
   include(${CMAKE_CURRENT_LIST_DIR}/target_sparc.cmake)
+elseif("${ARCH}" STREQUAL "rxv2")
+  include(${CMAKE_CURRENT_LIST_DIR}/target_rxv2.cmake)
 endif()
 
 if(NOT no_libgcc)

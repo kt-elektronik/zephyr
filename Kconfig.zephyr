@@ -344,6 +344,12 @@ config BUILD_OUTPUT_S19
 	  Build an S19 binary zephyr/zephyr.s19 in the build directory.
 	  The name of this file can be customized with CONFIG_KERNEL_BIN_NAME.
 
+config BUILD_OUTPUT_MOT
+	bool "Build a binary in SREC format with .mot extension"
+	help
+	  Build a binary in SREC format. This will build a zephyr.mot file needed
+	  by some tools.
+
 config BUILD_OUTPUT_STRIPPED
 	bool "Build a stripped binary"
 	help

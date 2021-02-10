@@ -1,5 +1,8 @@
-check_set_linker_property(TARGET linker PROPERTY memusage "${LINKERFLAGPREFIX},--print-memory-usage")
-
+if(CONFIG_RXV2)
+  check_set_linker_property(TARGET linker PROPERTY memusage "${LINKERFLAGPREFIX},--stats")
+else()
+  check_set_linker_property(TARGET linker PROPERTY memusage "${LINKERFLAGPREFIX},--print-memory-usage")
+endif()
 # Some linker flags might not be purely ld specific, but a combination of
 # linker and compiler, such as:
 # --coverage for clang

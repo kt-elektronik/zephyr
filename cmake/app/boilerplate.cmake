@@ -103,6 +103,7 @@ add_custom_target(code_data_relocation_target)
 # Property         Description
 # --------------   --------------------------------------------------
 # bin_file         "zephyr.bin" file for flashing
+# mot_file         "zephyr.mot" file for flashing
 # hex_file         "zephyr.hex" file for flashing
 # elf_file         "zephyr.elf" file for flashing or debugging
 # yaml_contents    generated contents of runners.yaml
@@ -586,6 +587,7 @@ set(KERNEL_HEX_NAME   ${KERNEL_NAME}.hex)
 set(KERNEL_MAP_NAME   ${KERNEL_NAME}.map)
 set(KERNEL_LST_NAME   ${KERNEL_NAME}.lst)
 set(KERNEL_S19_NAME   ${KERNEL_NAME}.s19)
+set(KERNEL_MOT_NAME   ${KERNEL_NAME}.mot)
 set(KERNEL_EXE_NAME   ${KERNEL_NAME}.exe)
 set(KERNEL_STAT_NAME  ${KERNEL_NAME}.stat)
 set(KERNEL_STRIP_NAME ${KERNEL_NAME}.strip)

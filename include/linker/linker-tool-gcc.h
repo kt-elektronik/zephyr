@@ -40,17 +40,21 @@
 	OUTPUT_FORMAT("elf32-littlenios2", "elf32-bignios2", "elf32-littlenios2")
 #elif defined(CONFIG_RISCV)
 	OUTPUT_ARCH("riscv")
-#ifdef CONFIG_64BIT
-	OUTPUT_FORMAT("elf64-littleriscv")
-#else
-	OUTPUT_FORMAT("elf32-littleriscv")
-#endif
+	#ifdef CONFIG_64BIT
+		OUTPUT_FORMAT("elf64-littleriscv")
+	#else
+		OUTPUT_FORMAT("elf32-littleriscv")
+	#endif
 #elif defined(CONFIG_XTENSA)
 	/* Not needed */
 #elif defined(CONFIG_ARCH_POSIX)
 	/* Not needed */
 #elif defined(CONFIG_SPARC)
 	OUTPUT_FORMAT("elf32-sparc")
+#elif defined(CONFIG_RXV2)
+	// Possible vaues: "elf32-rx-le", "elf32-rx-be", "elf32-rx-be-ns", "elf32-little", "elf32-big") 
+	// Maximum allowed: three values
+	OUTPUT_FORMAT("elf32-rx-le")
 #else
 	#error Arch not supported.
 #endif

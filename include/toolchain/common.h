@@ -83,6 +83,8 @@
 
     #define PERFOPT_ALIGN .align  4
 
+  #elif defined(CONFIG_RXV2)
+
   #else
 
     #error Architecture unsupported
