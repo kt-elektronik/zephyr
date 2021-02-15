@@ -28,7 +28,7 @@
 
 //#define RX_PINMUX_0_BASE_ADDR     (DT_REG_ADDR(DT_INST(0, rx_port0)))
 
-#define RX_PINMUX_PINS 8
+#define RX_GPIO_PORT_PINS 8
 
 #endif /* !_ASMLANGUAGE */
 

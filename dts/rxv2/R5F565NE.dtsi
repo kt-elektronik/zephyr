@@ -70,227 +70,7 @@
 			label = "SYSTEM_CLOCK";
 		};
 */		
-/*
-		rxv2_int_ctrl: interrupt-controller@87010 { // R01DS0276EJ0230 Rev.2.30, R01UH0590EJ0230 Rev.2.30
-			compatible = "renesas,rxv2"; // check if: driver name is correct here			
-			#interrupt-cells = <0x3>;
-			#address-cells = <0x0>; // check if: 0x2
-			interrupt-controller; // is a boolean indicating that the current node is an interrupt controller
-			reg =	
-				<0x00087010 0x01>, // check if: more than only one address is required: 0008 7010h to 0008 70FFh ICU Interrupt Request Register 016 to Interrupt Request Register 255 IR016 to IR255 8 8 2 ICLK ICUB
-				<0x0008711A 0x01>, // check if: more than only one address is required: 0008 711Ah to 0008 71FFh ICU DTC Transfer Request Enable Register 026 to DTC Transfer Request Enable Register 255 DTCER026 to DTCER255 8 8 2 ICLK ICUB
-				<0x00087202 0x01>, // check if: more than only one address is required: 0008 7202h to 0008 721Fh ICU Interrupt Request Enable Register 02 to Interrupt Request Enable Register 1F IER02 to IER1F 8 8 2 ICLK ICUB
-				<0x000872E0 0x01>, // 0008 72E0h ICU Software Interrupt Generation Register SWINTR 8 8 2 ICLK ICUB
-				<0x000872E1 0x01>, // 0008 72E1h ICU Software Interrupt 2 Generation Register SWINT2R 8 8 2 ICLK ICUB
-				<0x000872F0 0x02>, // 0008 72F0h ICU 16 2 ICLK ICUB Fast Interrupt Set Register FIR 16 0008 7300h to ICU
-				<0x000873FF 0x01>, // 0008 73FFh Interrupt Source Priority Register 000 to Interrupt Source Priority Register 255 IPR000 to IPR255 8 8 2 ICLK ICUB
-				<0x00087400 0x01>, // 0008 7400h ICU DMAC Trigger Select Register 0 DMRSR0 8 8 2 ICLK ICUB
-				<0x00087404 0x01>, // 0008 7404h ICU DMAC Trigger Select Register 1 DMRSR1 8 8 2 ICLK ICUB
-				<0x00087408 0x01>, // 0008 7408h ICU DMAC Trigger Select Register 2 DMRSR2 8 8 2 ICLK ICUB
-				<0x0008740C 0x01>, // 0008 740Ch ICU DMAC Trigger Select Register 3 DMRSR3 8 8 2 ICLK ICUB
-				<0x00087410 0x01>, // 0008 7410h ICU DMAC Trigger Select Register 4 DMRSR4 8 8 2 ICLK ICUB
-				<0x00087414 0x01>, // 0008 7414h ICU DMAC Trigger Select Register 5 DMRSR5 8 8 2 ICLK ICUB
-				<0x00087418 0x01>, // 0008 7418h ICU DMAC Trigger Select Register 6 DMRSR6 8 8 2 ICLK ICUB
-				<0x0008741C 0x01>, // 0008 741Ch ICU DMAC Trigger Select Register 7 DMRSR7 8 8 2 ICLK ICUB
-				<0x00087500 0x01>, // check if: more than only one address is required: 0008 7500h to 0008 750Fh ICU IRQ Control Register 0 to IRQ Control Register 15 IRQCR0 to IRQCR15 8 8 2 ICLK ICUB
-				<0x00087520 0x01>, // 0008 7520h ICU IRQ Pin Digital Filter Enable Register 0 IRQFLTE0 8 8 2 ICLK ICUB
-				<0x00087521 0x01>, // 0008 7521h ICU IRQ Pin Digital Filter Enable Register 1 IRQFLTE1 8 8 2 ICLK ICUB
-				<0x00087528 0x02>, // 0008 7528h ICU IRQ Pin Digital Filter Setting Register 0 IRQFLTC0 16 16 2 ICLK ICUB
-				<0x0008752A 0x02>, // 0008 752Ah ICU IRQ Pin Digital Filter Setting Register 1 IRQFLTC1 16 16 2 ICLK ICUB
-				<0x00087580 0x01>, // 0008 7580h ICU Non-Maskable Interrupt Status Register NMISR 8 8 2 ICLK ICUB
-				<0x00087581 0x01>, // 0008 7581h ICU Non-Maskable Interrupt Enable Register NMIER 8 8 2 ICLK ICUB
-				<0x00087582 0x01>, // 0008 7582h ICU Non-Maskable Interrupt Status Clear Register NMICLR 8 8 2 ICLK ICUB
-				<0x00087583 0x01>, // 0008 7583h ICU NMI Pin Interrupt Control Register NMICR 8 8 2 ICLK ICUB
-				<0x00087590 0x01>, // 0008 7590h ICU NMI Pin Digital Filter Enable Register NMIFLTE 8 8 2 ICLK ICUB
-				<0x00087594 0x01>, // 0008 7594h ICU NMI Pin Digital Filter Setting Register NMIFLTC 8 8 2 ICLK ICUB
-				<0x00087600 0x04>, // 0008 7600h ICU Group BE0 Interrupt Request Register GRPBE0 32 32 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x00087630 0x04>, // 0008 7630h ICU Group BL0 Interrupt Request Register GRPBL0 32 32 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x00087634 0x04>, // 0008 7634h ICU Group BL1 Interrupt Request Register GRPBL1 32 32 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x00087638 0x04>, // 0008 7638h ICU Group BL2 Interrupt Request Register GRPBL2 32 32 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x00087640 0x04>, // 0008 7640h ICU Group BE0 Interrupt Request Enable Register GENBE0 32 32 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x00087670 0x04>, // 0008 7670h ICU Group BL0 Interrupt Request Enable Register GENBL0 32 32 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x00087674 0x04>, // 0008 7674h ICU Group BL1 Interrupt Request Enable Register GENBL1 32 32 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x00087678 0x04>, // 0008 7678h ICU Group BL2 Interrupt Request Enable Register GENBL2 32 32 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x00087680 0x04>, // 0008 7680h ICU Group BE0 Interrupt Clear Register GCRBE0 32 32 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x00087700 0x01>, // 0008 7700h ICU Software Configurable Interrupt B Request Register 0 PIBR0 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x00087701 0x01>, // 0008 7701h ICU Software Configurable Interrupt B Request Register 1 PIBR1 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x00087702 0x01>, // 0008 7702h ICU Software Configurable Interrupt B Request Register 2 PIBR2 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x00087703 0x01>, // 0008 7703h ICU Software Configurable Interrupt B Request Register 3 PIBR3 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x00087704 0x01>, // 0008 7704h ICU Software Configurable Interrupt B Request Register 4 PIBR4 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x00087705 0x01>, // 0008 7705h ICU Software Configurable Interrupt B Request Register 5 PIBR5 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x00087706 0x01>, // 0008 7706h ICU Software Configurable Interrupt B Request Register 6 PIBR6 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x00087707 0x01>, // 0008 7707h ICU Software Configurable Interrupt B Request Register 7 PIBR7 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x00087708 0x01>, // 0008 7708h ICU Software Configurable Interrupt B Request Register 8 PIBR8 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x00087709 0x01>, // 0008 7709h ICU Software Configurable Interrupt B Request Register 9 PIBR9 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x0008770A 0x01>, // 0008 770Ah ICU Software Configurable Interrupt B Request Register A PIBRA 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x0008770B 0x01>, // 0008 770Bh ICU Software Configurable Interrupt B Request Register B PIBRB 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x00087780 0x01>, // 0008 7780h ICU Software Configurable Interrupt B Source Select Register X128 SLIBXR128 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x00087781 0x01>, // 0008 7781h ICU Software Configurable Interrupt B Source Select Register X129 SLIBXR129 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x00087782 0x01>, // 0008 7782h ICU Software Configurable Interrupt B Source Select Register X130 SLIBXR130 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x00087783 0x01>, // 0008 7783h ICU Software Configurable Interrupt B Source Select Register X131 SLIBXR131 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x00087784 0x01>, // 0008 7784h ICU Software Configurable Interrupt B Source Select Register X132 SLIBXR132 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x00087785 0x01>, // 0008 7785h ICU Software Configurable Interrupt B Source Select Register X133 SLIBXR133 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x00087786 0x01>, // 0008 7786h ICU Software Configurable Interrupt B Source Select Register X134 SLIBXR134 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x00087787 0x01>, // 0008 7787h ICU Software Configurable Interrupt B Source Select Register X135 SLIBXR135 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x00087788 0x01>, // 0008 7788h ICU Software Configurable Interrupt B Source Select Register X136 SLIBXR136 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x00087789 0x01>, // 0008 7789h ICU Software Configurable Interrupt B Source Select Register X137 SLIBXR137 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x0008778A 0x01>, // 0008 778Ah ICU Software Configurable Interrupt B Source Select Register X138 SLIBXR138 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x0008778B 0x01>, // 0008 778Bh ICU Software Configurable Interrupt B Source Select Register X139 SLIBXR139 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x0008778C 0x01>, // 0008 778Ch ICU Software Configurable Interrupt B Source Select Register X140 SLIBXR140 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x0008778D 0x01>, // 0008 778Dh ICU Software Configurable Interrupt B Source Select Register X141 SLIBXR141 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x0008778E 0x01>, // 0008 778Eh ICU Software Configurable Interrupt B Source Select Register X142 SLIBXR142 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x0008778F 0x01>, // 0008 778Fh ICU Software Configurable Interrupt B Source Select Register X143 SLIBXR143 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x00087790 0x01>, // 0008 7790h ICU Software Configurable Interrupt B Source Select Register 144 SLIBR144 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x00087791 0x01>, // 0008 7791h ICU Software Configurable Interrupt B Source Select Register 145 SLIBR145 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x00087792 0x01>, // 0008 7792h ICU Software Configurable Interrupt B Source Select Register 146 SLIBR146 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x00087793 0x01>, // 0008 7793h ICU Software Configurable Interrupt B Source Select Register 147 SLIBR147 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x00087794 0x01>, // 0008 7794h ICU Software Configurable Interrupt B Source Select Register 148 SLIBR148 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x00087795 0x01>, // 0008 7795h ICU Software Configurable Interrupt B Source Select Register 149 SLIBR149 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x00087796 0x01>, // 0008 7796h ICU Software Configurable Interrupt B Source Select Register 150 SLIBR150 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x00087797 0x01>, // 0008 7797h ICU Software Configurable Interrupt B Source Select Register 151 SLIBR151 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x00087798 0x01>, // 0008 7798h ICU Software Configurable Interrupt B Source Select Register 152 SLIBR152 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x00087799 0x01>, // 0008 7799h ICU Software Configurable Interrupt B Source Select Register 153 SLIBR153 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x0008779A 0x01>, // 0008 779Ah ICU Software Configurable Interrupt B Source Select Register 154 SLIBR154 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x0008779B 0x01>, // 0008 779Bh ICU Software Configurable Interrupt B Source Select Register 155 SLIBR155 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x0008779C 0x01>, // 0008 779Ch ICU Software Configurable Interrupt B Source Select Register 156 SLIBR156 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x0008779D 0x01>, // 0008 779Dh ICU Software Configurable Interrupt B Source Select Register 157 SLIBR157 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x0008779E 0x01>, // 0008 779Eh ICU Software Configurable Interrupt B Source Select Register 158 SLIBR158 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x0008779F 0x01>, // 0008 779Fh ICU Software Configurable Interrupt B Source Select Register 159 SLIBR159 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x000877A0 0x01>, // 0008 77A0h ICU Software Configurable Interrupt B Source Select Register 160 SLIBR160 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x000877A1 0x01>, // 0008 77A1h ICU Software Configurable Interrupt B Source Select Register 161 SLIBR161 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x000877A2 0x01>, // 0008 77A2h ICU Software Configurable Interrupt B Source Select Register 162 SLIBR162 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x000877A3 0x01>, // 0008 77A3h ICU Software Configurable Interrupt B Source Select Register 163 SLIBR163 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x000877A4 0x01>, // 0008 77A4h ICU Software Configurable Interrupt B Source Select Register 164 SLIBR164 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x000877A5 0x01>, // 0008 77A5h ICU Software Configurable Interrupt B Source Select Register 165 SLIBR165 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x000877A6 0x01>, // 0008 77A6h ICU Software Configurable Interrupt B Source Select Register 166 SLIBR166 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x000877A7 0x01>, // 0008 77A7h ICU Software Configurable Interrupt B Source Select Register 167 SLIBR167 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x000877A8 0x01>, // 0008 77A8h ICU Software Configurable Interrupt B Source Select Register 168 SLIBR168 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x000877A9 0x01>, // 0008 77A9h ICU Software Configurable Interrupt B Source Select Register 169 SLIBR169 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x000877AA 0x01>, // 0008 77AAh ICU Software Configurable Interrupt B Source Select Register 170 SLIBR170 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x000877AB 0x01>, // 0008 77ABh ICU Software Configurable Interrupt B Source Select Register 171 SLIBR171 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x000877AC 0x01>, // 0008 77ACh ICU Software Configurable Interrupt B Source Select Register 172 SLIBR172 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x000877AD 0x01>, // 0008 77ADh ICU Software Configurable Interrupt B Source Select Register 173 SLIBR173 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x000877AE 0x01>, // 0008 77AEh ICU Software Configurable Interrupt B Source Select Register 174 SLIBR174 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x000877AF 0x01>, // 0008 77AFh ICU Software Configurable Interrupt B Source Select Register 175 SLIBR175 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x000877B0 0x01>, // 0008 77B0h ICU Software Configurable Interrupt B Source Select Register 176 SLIBR176 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x000877B1 0x01>, // 0008 77B1h ICU Software Configurable Interrupt B Source Select Register 177 SLIBR177 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x000877B2 0x01>, // 0008 77B2h ICU Software Configurable Interrupt B Source Select Register 178 SLIBR178 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x000877B3 0x01>, // 0008 77B3h ICU Software Configurable Interrupt B Source Select Register 179 SLIBR179 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x000877B4 0x01>, // 0008 77B4h ICU Software Configurable Interrupt B Source Select Register 180 SLIBR180 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x000877B5 0x01>, // 0008 77B5h ICU Software Configurable Interrupt B Source Select Register 181 SLIBR181 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x000877B6 0x01>, // 0008 77B6h ICU Software Configurable Interrupt B Source Select Register 182 SLIBR182 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x000877B7 0x01>, // 0008 77B7h ICU Software Configurable Interrupt B Source Select Register 183 SLIBR183 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x000877B8 0x01>, // 0008 77B8h ICU Software Configurable Interrupt B Source Select Register 184 SLIBR184 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x000877B9 0x01>, // 0008 77B9h ICU Software Configurable Interrupt B Source Select Register 185 SLIBR185 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x000877BA 0x01>, // 0008 77BAh ICU Software Configurable Interrupt B Source Select Register 186 SLIBR186 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x000877BB 0x01>, // 0008 77BBh ICU Software Configurable Interrupt B Source Select Register 187 SLIBR187 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x000877BC 0x01>, // 0008 77BCh ICU Software Configurable Interrupt B Source Select Register 188 SLIBR188 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x000877BD 0x01>, // 0008 77BDh ICU Software Configurable Interrupt B Source Select Register 189 SLIBR189 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x000877BE 0x01>, // 0008 77BEh ICU Software Configurable Interrupt B Source Select Register 190 SLIBR190 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x000877BF 0x01>, // 0008 77BFh ICU Software Configurable Interrupt B Source Select Register 191 SLIBR191 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x000877C0 0x01>, // 0008 77C0h ICU Software Configurable Interrupt B Source Select Register 192 SLIBR192 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x000877C1 0x01>, // 0008 77C1h ICU Software Configurable Interrupt B Source Select Register 193 SLIBR193 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x000877C2 0x01>, // 0008 77C2h ICU Software Configurable Interrupt B Source Select Register 194 SLIBR194 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x000877C3 0x01>, // 0008 77C3h ICU Software Configurable Interrupt B Source Select Register 195 SLIBR195 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x000877C4 0x01>, // 0008 77C4h ICU Software Configurable Interrupt B Source Select Register 196 SLIBR196 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x000877C5 0x01>, // 0008 77C5h ICU Software Configurable Interrupt B Source Select Register 197 SLIBR197 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x000877C6 0x01>, // 0008 77C6h ICU Software Configurable Interrupt B Source Select Register 198 SLIBR198 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x000877C7 0x01>, // 0008 77C7h ICU Software Configurable Interrupt B Source Select Register 199 SLIBR199 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x000877C8 0x01>, // 0008 77C8h ICU Software Configurable Interrupt B Source Select Register 200 SLIBR200 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x000877C9 0x01>, // 0008 77C9h ICU Software Configurable Interrupt B Source Select Register 201 SLIBR201 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x000877CA 0x01>, // 0008 77CAh ICU Software Configurable Interrupt B Source Select Register 202 SLIBR202 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x000877CB 0x01>, // 0008 77CBh ICU Software Configurable Interrupt B Source Select Register 203 SLIBR203 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x000877CC 0x01>, // 0008 77CCh ICU Software Configurable Interrupt B Source Select Register 204 SLIBR204 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x000877CD 0x01>, // 0008 77CDh ICU Software Configurable Interrupt B Source Select Register 205 SLIBR205 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x000877CE 0x01>, // 0008 77CEh ICU Software Configurable Interrupt B Source Select Register 206 SLIBR206 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x000877CF 0x01>, // 0008 77CFh ICU Software Configurable Interrupt B Source Select Register 207 SLIBR207 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
-				<0x00087830 0x04>, // 0008 7830h ICU Group AL0 Interrupt Request Register GRPAL0 32 32 2 ICLK to 1 PCLKA 2 ICLK ICUB
-				<0x00087834 0x04>, // 0008 7834h ICU Group AL1 Interrupt Request Register GRPAL1 32 32 2 ICLK to 1 PCLKA 2 ICLK ICUB
-				<0x00087870 0x04>, // 0008 7870h ICU Group AL0 Interrupt Request Enable Register GENAL0 32 32 2 ICLK to 1 PCLKA 2 ICLK ICUB
-				<0x00087874 0x04>, // 0008 7874h ICU Group AL1 Interrupt Request Enable Register GENAL1 32 32 2 ICLK to 1 PCLKA 2 ICLK ICUB
-				<0x00087900 0x01>, // 0008 7900h ICU Software Configurable Interrupt A Request Register 0 PIAR0 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
-				<0x00087901 0x01>, // 0008 7901h ICU Software Configurable Interrupt A Request Register 1 PIAR1 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
-				<0x00087902 0x01>, // 0008 7902h ICU Software Configurable Interrupt A Request Register 2 PIAR2 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
-				<0x00087903 0x01>, // 0008 7903h ICU Software Configurable Interrupt A Request Register 3 PIAR3 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
-				<0x00087904 0x01>, // 0008 7904h ICU Software Configurable Interrupt A Request Register 4 PIAR4 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
-				<0x00087905 0x01>, // 0008 7905h ICU Software Configurable Interrupt A Request Register 5 PIAR5 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
-				<0x0008790B 0x01>, // 0008 790Bh ICU Software Configurable Interrupt A Request Register B PIARB 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
-				<0x000879D0 0x01>, // 0008 79D0h ICU Software Configurable Interrupt A Source Select Register 208 SLIAR208 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
-				<0x000879D1 0x01>, // 0008 79D1h ICU Software Configurable Interrupt A Source Select Register 209 SLIAR209 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
-				<0x000879D2 0x01>, // 0008 79D2h ICU Software Configurable Interrupt A Source Select Register 210 SLIAR210 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
-				<0x000879D3 0x01>, // 0008 79D3h ICU Software Configurable Interrupt A Source Select Register 211 SLIAR211 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
-				<0x000879D4 0x01>, // 0008 79D4h ICU Software Configurable Interrupt A Source Select Register 212 SLIAR212 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
-				<0x000879D5 0x01>, // 0008 79D5h ICU Software Configurable Interrupt A Source Select Register 213 SLIAR213 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
-				<0x000879D6 0x01>, // 0008 79D6h ICU Software Configurable Interrupt A Source Select Register 214 SLIAR214 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
-				<0x000879D7 0x01>, // 0008 79D7h ICU Software Configurable Interrupt A Source Select Register 215 SLIAR215 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
-				<0x000879D8 0x01>, // 0008 79D8h ICU Software Configurable Interrupt A Source Select Register 216 SLIAR216 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
-				<0x000879D9 0x01>, // 0008 79D9h ICU Software Configurable Interrupt A Source Select Register 217 SLIAR217 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
-				<0x000879DA 0x01>, // 0008 79DAh ICU Software Configurable Interrupt A Source Select Register 218 SLIAR218 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
-				<0x000879DB 0x01>, // 0008 79DBh ICU Software Configurable Interrupt A Source Select Register 219 SLIAR219 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
-				<0x000879DC 0x01>, // 0008 79DCh ICU Software Configurable Interrupt A Source Select Register 220 SLIAR220 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
-				<0x000879DD 0x01>, // 0008 79DDh ICU Software Configurable Interrupt A Source Select Register 221 SLIAR221 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
-				<0x000879DE 0x01>, // 0008 79DEh ICU Software Configurable Interrupt A Source Select Register 222 SLIAR222 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
-				<0x000879DF 0x01>, // 0008 79DFh ICU Software Configurable Interrupt A Source Select Register 223 SLIAR223 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
-				<0x000879E0 0x01>, // 0008 79E0h ICU Software Configurable Interrupt A Source Select Register 224 SLIAR224 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
-				<0x000879E1 0x01>, // 0008 79E1h ICU Software Configurable Interrupt A Source Select Register 225 SLIAR225 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
-				<0x000879E2 0x01>, // 0008 79E2h ICU Software Configurable Interrupt A Source Select Register 226 SLIAR226 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
-				<0x000879E3 0x01>, // 0008 79E3h ICU Software Configurable Interrupt A Source Select Register 227 SLIAR227 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
-				<0x000879E4 0x01>, // 0008 79E4h ICU Software Configurable Interrupt A Source Select Register 228 SLIAR228 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
-				<0x000879E5 0x01>, // 0008 79E5h ICU Software Configurable Interrupt A Source Select Register 229 SLIAR229 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
-				<0x000879E6 0x01>, // 0008 79E6h ICU Software Configurable Interrupt A Source Select Register 230 SLIAR230 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
-				<0x000879E7 0x01>, // 0008 79E7h ICU Software Configurable Interrupt A Source Select Register 231 SLIAR231 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
-				<0x000879E8 0x01>, // 0008 79E8h ICU Software Configurable Interrupt A Source Select Register 232 SLIAR232 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
-				<0x000879E9 0x01>, // 0008 79E9h ICU Software Configurable Interrupt A Source Select Register 233 SLIAR233 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
-				<0x000879EA 0x01>, // 0008 79EAh ICU Software Configurable Interrupt A Source Select Register 234 SLIAR234 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
-				<0x000879EB 0x01>, // 0008 79EBh ICU Software Configurable Interrupt A Source Select Register 235 SLIAR235 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
-				<0x000879EC 0x01>, // 0008 79ECh ICU Software Configurable Interrupt A Source Select Register 236 SLIAR236 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
-				<0x000879ED 0x01>, // 0008 79EDh ICU Software Configurable Interrupt A Source Select Register 237 SLIAR237 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
-				<0x000879EE 0x01>, // 0008 79EEh ICU Software Configurable Interrupt A Source Select Register 238 SLIAR238 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
-				<0x000879EF 0x01>, // 0008 79EFh ICU Software Configurable Interrupt A Source Select Register 239 SLIAR239 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
-				<0x000879F0 0x01>, // 0008 79F0h ICU Software Configurable Interrupt A Source Select Register 240 SLIAR240 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
-				<0x000879F1 0x01>, // 0008 79F1h ICU Software Configurable Interrupt A Source Select Register 241 SLIAR241 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
-				<0x000879F2 0x01>, // 0008 79F2h ICU Software Configurable Interrupt A Source Select Register 242 SLIAR242 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
-				<0x000879F3 0x01>, // 0008 79F3h ICU Software Configurable Interrupt A Source Select Register 243 SLIAR243 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
-				<0x000879F4 0x01>, // 0008 79F4h ICU Software Configurable Interrupt A Source Select Register 244 SLIAR244 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
-				<0x000879F5 0x01>, // 0008 79F5h ICU Software Configurable Interrupt A Source Select Register 245 SLIAR245 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
-				<0x000879F6 0x01>, // 0008 79F6h ICU Software Configurable Interrupt A Source Select Register 246 SLIAR246 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
-				<0x000879F7 0x01>, // 0008 79F7h ICU Software Configurable Interrupt A Source Select Register 247 SLIAR247 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
-				<0x000879F8 0x01>, // 0008 79F8h ICU Software Configurable Interrupt A Source Select Register 248 SLIAR248 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
-				<0x000879F9 0x01>, // 0008 79F9h ICU Software Configurable Interrupt A Source Select Register 249 SLIAR249 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
-				<0x000879FA 0x01>, // 0008 79FAh ICU Software Configurable Interrupt A Source Select Register 250 SLIAR250 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
-				<0x000879FB 0x01>, // 0008 79FBh ICU Software Configurable Interrupt A Source Select Register 251 SLIAR251 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
-				<0x000879FC 0x01>, // 0008 79FCh ICU Software Configurable Interrupt A Source Select Register 252 SLIAR252 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
-				<0x000879FD 0x01>, // 0008 79FDh ICU Software Configurable Interrupt A Source Select Register 253 SLIAR253 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
-				<0x000879FE 0x01>, // 0008 79FEh ICU Software Configurable Interrupt A Source Select Register 254 SLIAR254 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
-				<0x000879FF 0x01>, // 0008 79FFh ICU Software Configurable Interrupt A Source Select Register 255 SLIAR255 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
-				<0x00087A00 0x01>, // 0008 7A00h ICU Software Configurable Interrupt Source Select Register Write Protect Register SLIPRCR 8 8 2 ICLK to 1 PCLKA/B 2 ICLK ICUB
-				<0x00087A01 0x01>; // 0008 7A01h ICU EXDMAC Trigger Select Register SELEXDR 8 8 2 ICLK to 1 PCLKA/B 2 ICLK ICUB
 
-				interrupt-names = 	"ch000","ch001","ch002","ch003","ch004","ch005","ch006","ch007","ch008","ch009",
-									"ch010","ch011","ch012","ch013","ch014","ch015","ch016","ch017","ch018","ch019",
-									"ch020","ch021","ch022","ch023","ch024","ch025","ch026","ch027","ch028","ch029",
-									"ch030","ch031","ch032","ch033","ch034","ch035","ch036","ch037","ch038","ch039",
-									"ch040","ch041","ch042","ch043","ch044","ch045","ch046","ch047","ch048","ch049",
-									"ch050","ch051","ch052","ch053","ch054","ch055","ch056","ch057","ch058","ch059",
-									"ch060","ch061","ch062","ch063","ch064","ch065","ch066","ch067","ch068","ch069",
-									"ch070","ch071","ch072","ch073","ch074","ch075","ch076","ch077","ch078","ch079",
-									"ch080","ch081","ch082","ch083","ch084","ch085","ch086","ch087","ch088","ch089",
-									"ch090","ch091","ch092","ch093","ch094","ch095","ch096","ch097","ch098","ch099",
-									"ch100","ch101","ch102","ch103","ch104","ch105","ch106","ch107","ch108","ch109",
-									"ch110","ch111","ch112","ch113","ch114","ch115","ch116","ch117","ch118","ch119",
-									"ch120","ch121","ch122","ch123","ch124","ch125","ch126","ch127","ch128","ch129",
-									"ch130","ch131","ch132","ch133","ch134","ch135","ch136","ch137","ch138","ch139",
-									"ch140","ch141","ch142","ch143","ch144","ch145","ch146","ch147","ch148","ch149",
-									"ch150","ch151","ch152","ch153","ch154","ch155","ch156","ch157","ch158","ch159",
-									"ch160","ch161","ch162","ch163","ch164","ch165","ch166","ch167","ch168","ch169",
-									"ch170","ch171","ch172","ch173","ch174","ch175","ch176","ch177","ch178","ch179",
-									"ch180","ch181","ch182","ch183","ch184","ch185","ch186","ch187";
-										
-					interrupts = <4711 0 815>; // check if: correct value
-					label = "rxv2_int_ctrl";	
-		};
-
- */		
 		i2c0: i2c@88300 { // I2C-bus Interface (RIICa), from R01DS0276EJ0230 Rev.2.30, R01UH0590EJ0230 Rev.2.30
 			#address-cells = <0x1>;
 			#size-cells = <0x0>;
@@ -382,6 +162,7 @@
 				<0x0008C0C1 0x01>, // 0008 C0C1h PORT1 Pull-Up Resistor Control Register PCR
 				<0x0008C0E1 0x01>, // 0008 C0E1h PORT1 Drive Capacity Control Register DSCR
 				<0x0008C129 0x01>; // 0008 C129h PORT1 Drive Capacity Control Register 2 DSCR2
+			reg-names = "PDR", "PODR", "PIDR", "PMR", "ODR0", "ODR1", "PCR", "DSCR", "DSCR2";
 			label = "PORT_1";
 		};
 
@@ -398,6 +179,7 @@
 				<0x0008C08F 0x01>, // 0008C08Fh PORT7 Open-Drain Control Register 1 ODR1
 				<0x0008C0C7 0x01>, // 0008C0C7h PORT7 Pull-Up Resistor Control Register PCR
 				<0x0008C0E7 0x01>; // 0008C0E7h PORT7 Drive Capacity Control Register DSCR
+			reg-names = "PDR", "PODR", "PIDR", "PMR", "ODR0", "ODR1", "PCR", "DSCR";
 			label = "PORT_7";
 		};
 
@@ -413,6 +195,7 @@
 				<0x0008C0A0 0x01>, // 0008C0A0h PORTG Open-Drain Control Register 0 ODR0
 				<0x0008C0A1 0x01>, // 0008C0A1h PORTG Open-Drain Control Register 1 ODR1
 				<0x0008C0D0 0x01>; // 0008C0D0h PORTG Pull-Up Resistor Control Register PCR
+			reg-names = "PDR", "PODR", "PIDR", "PMR", "ODR0", "ODR1", "PCR";
 			label = "PORT_G";
 		};
 
@@ -699,5 +482,226 @@
 				}; // ethernetphy0
 			}; // ethernet0
 		}; // pinctrl */
+
+		/*
+		rxv2_int_ctrl: interrupt-controller@87010 { // R01DS0276EJ0230 Rev.2.30, R01UH0590EJ0230 Rev.2.30
+			compatible = "renesas,rxv2"; // check if: driver name is correct here			
+			#interrupt-cells = <0x3>;
+			#address-cells = <0x0>; // check if: 0x2
+			interrupt-controller; // is a boolean indicating that the current node is an interrupt controller
+			reg =	
+				<0x00087010 0x01>, // check if: more than only one address is required: 0008 7010h to 0008 70FFh ICU Interrupt Request Register 016 to Interrupt Request Register 255 IR016 to IR255 8 8 2 ICLK ICUB
+				<0x0008711A 0x01>, // check if: more than only one address is required: 0008 711Ah to 0008 71FFh ICU DTC Transfer Request Enable Register 026 to DTC Transfer Request Enable Register 255 DTCER026 to DTCER255 8 8 2 ICLK ICUB
+				<0x00087202 0x01>, // check if: more than only one address is required: 0008 7202h to 0008 721Fh ICU Interrupt Request Enable Register 02 to Interrupt Request Enable Register 1F IER02 to IER1F 8 8 2 ICLK ICUB
+				<0x000872E0 0x01>, // 0008 72E0h ICU Software Interrupt Generation Register SWINTR 8 8 2 ICLK ICUB
+				<0x000872E1 0x01>, // 0008 72E1h ICU Software Interrupt 2 Generation Register SWINT2R 8 8 2 ICLK ICUB
+				<0x000872F0 0x02>, // 0008 72F0h ICU 16 2 ICLK ICUB Fast Interrupt Set Register FIR 16 0008 7300h to ICU
+				<0x000873FF 0x01>, // 0008 73FFh Interrupt Source Priority Register 000 to Interrupt Source Priority Register 255 IPR000 to IPR255 8 8 2 ICLK ICUB
+				<0x00087400 0x01>, // 0008 7400h ICU DMAC Trigger Select Register 0 DMRSR0 8 8 2 ICLK ICUB
+				<0x00087404 0x01>, // 0008 7404h ICU DMAC Trigger Select Register 1 DMRSR1 8 8 2 ICLK ICUB
+				<0x00087408 0x01>, // 0008 7408h ICU DMAC Trigger Select Register 2 DMRSR2 8 8 2 ICLK ICUB
+				<0x0008740C 0x01>, // 0008 740Ch ICU DMAC Trigger Select Register 3 DMRSR3 8 8 2 ICLK ICUB
+				<0x00087410 0x01>, // 0008 7410h ICU DMAC Trigger Select Register 4 DMRSR4 8 8 2 ICLK ICUB
+				<0x00087414 0x01>, // 0008 7414h ICU DMAC Trigger Select Register 5 DMRSR5 8 8 2 ICLK ICUB
+				<0x00087418 0x01>, // 0008 7418h ICU DMAC Trigger Select Register 6 DMRSR6 8 8 2 ICLK ICUB
+				<0x0008741C 0x01>, // 0008 741Ch ICU DMAC Trigger Select Register 7 DMRSR7 8 8 2 ICLK ICUB
+				<0x00087500 0x01>, // check if: more than only one address is required: 0008 7500h to 0008 750Fh ICU IRQ Control Register 0 to IRQ Control Register 15 IRQCR0 to IRQCR15 8 8 2 ICLK ICUB
+				<0x00087520 0x01>, // 0008 7520h ICU IRQ Pin Digital Filter Enable Register 0 IRQFLTE0 8 8 2 ICLK ICUB
+				<0x00087521 0x01>, // 0008 7521h ICU IRQ Pin Digital Filter Enable Register 1 IRQFLTE1 8 8 2 ICLK ICUB
+				<0x00087528 0x02>, // 0008 7528h ICU IRQ Pin Digital Filter Setting Register 0 IRQFLTC0 16 16 2 ICLK ICUB
+				<0x0008752A 0x02>, // 0008 752Ah ICU IRQ Pin Digital Filter Setting Register 1 IRQFLTC1 16 16 2 ICLK ICUB
+				<0x00087580 0x01>, // 0008 7580h ICU Non-Maskable Interrupt Status Register NMISR 8 8 2 ICLK ICUB
+				<0x00087581 0x01>, // 0008 7581h ICU Non-Maskable Interrupt Enable Register NMIER 8 8 2 ICLK ICUB
+				<0x00087582 0x01>, // 0008 7582h ICU Non-Maskable Interrupt Status Clear Register NMICLR 8 8 2 ICLK ICUB
+				<0x00087583 0x01>, // 0008 7583h ICU NMI Pin Interrupt Control Register NMICR 8 8 2 ICLK ICUB
+				<0x00087590 0x01>, // 0008 7590h ICU NMI Pin Digital Filter Enable Register NMIFLTE 8 8 2 ICLK ICUB
+				<0x00087594 0x01>, // 0008 7594h ICU NMI Pin Digital Filter Setting Register NMIFLTC 8 8 2 ICLK ICUB
+				<0x00087600 0x04>, // 0008 7600h ICU Group BE0 Interrupt Request Register GRPBE0 32 32 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087630 0x04>, // 0008 7630h ICU Group BL0 Interrupt Request Register GRPBL0 32 32 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087634 0x04>, // 0008 7634h ICU Group BL1 Interrupt Request Register GRPBL1 32 32 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087638 0x04>, // 0008 7638h ICU Group BL2 Interrupt Request Register GRPBL2 32 32 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087640 0x04>, // 0008 7640h ICU Group BE0 Interrupt Request Enable Register GENBE0 32 32 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087670 0x04>, // 0008 7670h ICU Group BL0 Interrupt Request Enable Register GENBL0 32 32 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087674 0x04>, // 0008 7674h ICU Group BL1 Interrupt Request Enable Register GENBL1 32 32 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087678 0x04>, // 0008 7678h ICU Group BL2 Interrupt Request Enable Register GENBL2 32 32 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087680 0x04>, // 0008 7680h ICU Group BE0 Interrupt Clear Register GCRBE0 32 32 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087700 0x01>, // 0008 7700h ICU Software Configurable Interrupt B Request Register 0 PIBR0 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087701 0x01>, // 0008 7701h ICU Software Configurable Interrupt B Request Register 1 PIBR1 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087702 0x01>, // 0008 7702h ICU Software Configurable Interrupt B Request Register 2 PIBR2 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087703 0x01>, // 0008 7703h ICU Software Configurable Interrupt B Request Register 3 PIBR3 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087704 0x01>, // 0008 7704h ICU Software Configurable Interrupt B Request Register 4 PIBR4 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087705 0x01>, // 0008 7705h ICU Software Configurable Interrupt B Request Register 5 PIBR5 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087706 0x01>, // 0008 7706h ICU Software Configurable Interrupt B Request Register 6 PIBR6 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087707 0x01>, // 0008 7707h ICU Software Configurable Interrupt B Request Register 7 PIBR7 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087708 0x01>, // 0008 7708h ICU Software Configurable Interrupt B Request Register 8 PIBR8 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087709 0x01>, // 0008 7709h ICU Software Configurable Interrupt B Request Register 9 PIBR9 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x0008770A 0x01>, // 0008 770Ah ICU Software Configurable Interrupt B Request Register A PIBRA 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x0008770B 0x01>, // 0008 770Bh ICU Software Configurable Interrupt B Request Register B PIBRB 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087780 0x01>, // 0008 7780h ICU Software Configurable Interrupt B Source Select Register X128 SLIBXR128 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087781 0x01>, // 0008 7781h ICU Software Configurable Interrupt B Source Select Register X129 SLIBXR129 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087782 0x01>, // 0008 7782h ICU Software Configurable Interrupt B Source Select Register X130 SLIBXR130 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087783 0x01>, // 0008 7783h ICU Software Configurable Interrupt B Source Select Register X131 SLIBXR131 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087784 0x01>, // 0008 7784h ICU Software Configurable Interrupt B Source Select Register X132 SLIBXR132 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087785 0x01>, // 0008 7785h ICU Software Configurable Interrupt B Source Select Register X133 SLIBXR133 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087786 0x01>, // 0008 7786h ICU Software Configurable Interrupt B Source Select Register X134 SLIBXR134 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087787 0x01>, // 0008 7787h ICU Software Configurable Interrupt B Source Select Register X135 SLIBXR135 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087788 0x01>, // 0008 7788h ICU Software Configurable Interrupt B Source Select Register X136 SLIBXR136 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087789 0x01>, // 0008 7789h ICU Software Configurable Interrupt B Source Select Register X137 SLIBXR137 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x0008778A 0x01>, // 0008 778Ah ICU Software Configurable Interrupt B Source Select Register X138 SLIBXR138 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x0008778B 0x01>, // 0008 778Bh ICU Software Configurable Interrupt B Source Select Register X139 SLIBXR139 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x0008778C 0x01>, // 0008 778Ch ICU Software Configurable Interrupt B Source Select Register X140 SLIBXR140 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x0008778D 0x01>, // 0008 778Dh ICU Software Configurable Interrupt B Source Select Register X141 SLIBXR141 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x0008778E 0x01>, // 0008 778Eh ICU Software Configurable Interrupt B Source Select Register X142 SLIBXR142 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x0008778F 0x01>, // 0008 778Fh ICU Software Configurable Interrupt B Source Select Register X143 SLIBXR143 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087790 0x01>, // 0008 7790h ICU Software Configurable Interrupt B Source Select Register 144 SLIBR144 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087791 0x01>, // 0008 7791h ICU Software Configurable Interrupt B Source Select Register 145 SLIBR145 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087792 0x01>, // 0008 7792h ICU Software Configurable Interrupt B Source Select Register 146 SLIBR146 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087793 0x01>, // 0008 7793h ICU Software Configurable Interrupt B Source Select Register 147 SLIBR147 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087794 0x01>, // 0008 7794h ICU Software Configurable Interrupt B Source Select Register 148 SLIBR148 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087795 0x01>, // 0008 7795h ICU Software Configurable Interrupt B Source Select Register 149 SLIBR149 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087796 0x01>, // 0008 7796h ICU Software Configurable Interrupt B Source Select Register 150 SLIBR150 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087797 0x01>, // 0008 7797h ICU Software Configurable Interrupt B Source Select Register 151 SLIBR151 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087798 0x01>, // 0008 7798h ICU Software Configurable Interrupt B Source Select Register 152 SLIBR152 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087799 0x01>, // 0008 7799h ICU Software Configurable Interrupt B Source Select Register 153 SLIBR153 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x0008779A 0x01>, // 0008 779Ah ICU Software Configurable Interrupt B Source Select Register 154 SLIBR154 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x0008779B 0x01>, // 0008 779Bh ICU Software Configurable Interrupt B Source Select Register 155 SLIBR155 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x0008779C 0x01>, // 0008 779Ch ICU Software Configurable Interrupt B Source Select Register 156 SLIBR156 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x0008779D 0x01>, // 0008 779Dh ICU Software Configurable Interrupt B Source Select Register 157 SLIBR157 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x0008779E 0x01>, // 0008 779Eh ICU Software Configurable Interrupt B Source Select Register 158 SLIBR158 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x0008779F 0x01>, // 0008 779Fh ICU Software Configurable Interrupt B Source Select Register 159 SLIBR159 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877A0 0x01>, // 0008 77A0h ICU Software Configurable Interrupt B Source Select Register 160 SLIBR160 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877A1 0x01>, // 0008 77A1h ICU Software Configurable Interrupt B Source Select Register 161 SLIBR161 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877A2 0x01>, // 0008 77A2h ICU Software Configurable Interrupt B Source Select Register 162 SLIBR162 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877A3 0x01>, // 0008 77A3h ICU Software Configurable Interrupt B Source Select Register 163 SLIBR163 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877A4 0x01>, // 0008 77A4h ICU Software Configurable Interrupt B Source Select Register 164 SLIBR164 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877A5 0x01>, // 0008 77A5h ICU Software Configurable Interrupt B Source Select Register 165 SLIBR165 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877A6 0x01>, // 0008 77A6h ICU Software Configurable Interrupt B Source Select Register 166 SLIBR166 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877A7 0x01>, // 0008 77A7h ICU Software Configurable Interrupt B Source Select Register 167 SLIBR167 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877A8 0x01>, // 0008 77A8h ICU Software Configurable Interrupt B Source Select Register 168 SLIBR168 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877A9 0x01>, // 0008 77A9h ICU Software Configurable Interrupt B Source Select Register 169 SLIBR169 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877AA 0x01>, // 0008 77AAh ICU Software Configurable Interrupt B Source Select Register 170 SLIBR170 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877AB 0x01>, // 0008 77ABh ICU Software Configurable Interrupt B Source Select Register 171 SLIBR171 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877AC 0x01>, // 0008 77ACh ICU Software Configurable Interrupt B Source Select Register 172 SLIBR172 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877AD 0x01>, // 0008 77ADh ICU Software Configurable Interrupt B Source Select Register 173 SLIBR173 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877AE 0x01>, // 0008 77AEh ICU Software Configurable Interrupt B Source Select Register 174 SLIBR174 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877AF 0x01>, // 0008 77AFh ICU Software Configurable Interrupt B Source Select Register 175 SLIBR175 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877B0 0x01>, // 0008 77B0h ICU Software Configurable Interrupt B Source Select Register 176 SLIBR176 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877B1 0x01>, // 0008 77B1h ICU Software Configurable Interrupt B Source Select Register 177 SLIBR177 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877B2 0x01>, // 0008 77B2h ICU Software Configurable Interrupt B Source Select Register 178 SLIBR178 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877B3 0x01>, // 0008 77B3h ICU Software Configurable Interrupt B Source Select Register 179 SLIBR179 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877B4 0x01>, // 0008 77B4h ICU Software Configurable Interrupt B Source Select Register 180 SLIBR180 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877B5 0x01>, // 0008 77B5h ICU Software Configurable Interrupt B Source Select Register 181 SLIBR181 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877B6 0x01>, // 0008 77B6h ICU Software Configurable Interrupt B Source Select Register 182 SLIBR182 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877B7 0x01>, // 0008 77B7h ICU Software Configurable Interrupt B Source Select Register 183 SLIBR183 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877B8 0x01>, // 0008 77B8h ICU Software Configurable Interrupt B Source Select Register 184 SLIBR184 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877B9 0x01>, // 0008 77B9h ICU Software Configurable Interrupt B Source Select Register 185 SLIBR185 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877BA 0x01>, // 0008 77BAh ICU Software Configurable Interrupt B Source Select Register 186 SLIBR186 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877BB 0x01>, // 0008 77BBh ICU Software Configurable Interrupt B Source Select Register 187 SLIBR187 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877BC 0x01>, // 0008 77BCh ICU Software Configurable Interrupt B Source Select Register 188 SLIBR188 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877BD 0x01>, // 0008 77BDh ICU Software Configurable Interrupt B Source Select Register 189 SLIBR189 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877BE 0x01>, // 0008 77BEh ICU Software Configurable Interrupt B Source Select Register 190 SLIBR190 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877BF 0x01>, // 0008 77BFh ICU Software Configurable Interrupt B Source Select Register 191 SLIBR191 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877C0 0x01>, // 0008 77C0h ICU Software Configurable Interrupt B Source Select Register 192 SLIBR192 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877C1 0x01>, // 0008 77C1h ICU Software Configurable Interrupt B Source Select Register 193 SLIBR193 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877C2 0x01>, // 0008 77C2h ICU Software Configurable Interrupt B Source Select Register 194 SLIBR194 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877C3 0x01>, // 0008 77C3h ICU Software Configurable Interrupt B Source Select Register 195 SLIBR195 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877C4 0x01>, // 0008 77C4h ICU Software Configurable Interrupt B Source Select Register 196 SLIBR196 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877C5 0x01>, // 0008 77C5h ICU Software Configurable Interrupt B Source Select Register 197 SLIBR197 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877C6 0x01>, // 0008 77C6h ICU Software Configurable Interrupt B Source Select Register 198 SLIBR198 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877C7 0x01>, // 0008 77C7h ICU Software Configurable Interrupt B Source Select Register 199 SLIBR199 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877C8 0x01>, // 0008 77C8h ICU Software Configurable Interrupt B Source Select Register 200 SLIBR200 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877C9 0x01>, // 0008 77C9h ICU Software Configurable Interrupt B Source Select Register 201 SLIBR201 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877CA 0x01>, // 0008 77CAh ICU Software Configurable Interrupt B Source Select Register 202 SLIBR202 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877CB 0x01>, // 0008 77CBh ICU Software Configurable Interrupt B Source Select Register 203 SLIBR203 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877CC 0x01>, // 0008 77CCh ICU Software Configurable Interrupt B Source Select Register 204 SLIBR204 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877CD 0x01>, // 0008 77CDh ICU Software Configurable Interrupt B Source Select Register 205 SLIBR205 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877CE 0x01>, // 0008 77CEh ICU Software Configurable Interrupt B Source Select Register 206 SLIBR206 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877CF 0x01>, // 0008 77CFh ICU Software Configurable Interrupt B Source Select Register 207 SLIBR207 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087830 0x04>, // 0008 7830h ICU Group AL0 Interrupt Request Register GRPAL0 32 32 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x00087834 0x04>, // 0008 7834h ICU Group AL1 Interrupt Request Register GRPAL1 32 32 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x00087870 0x04>, // 0008 7870h ICU Group AL0 Interrupt Request Enable Register GENAL0 32 32 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x00087874 0x04>, // 0008 7874h ICU Group AL1 Interrupt Request Enable Register GENAL1 32 32 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x00087900 0x01>, // 0008 7900h ICU Software Configurable Interrupt A Request Register 0 PIAR0 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x00087901 0x01>, // 0008 7901h ICU Software Configurable Interrupt A Request Register 1 PIAR1 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x00087902 0x01>, // 0008 7902h ICU Software Configurable Interrupt A Request Register 2 PIAR2 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x00087903 0x01>, // 0008 7903h ICU Software Configurable Interrupt A Request Register 3 PIAR3 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x00087904 0x01>, // 0008 7904h ICU Software Configurable Interrupt A Request Register 4 PIAR4 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x00087905 0x01>, // 0008 7905h ICU Software Configurable Interrupt A Request Register 5 PIAR5 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x0008790B 0x01>, // 0008 790Bh ICU Software Configurable Interrupt A Request Register B PIARB 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879D0 0x01>, // 0008 79D0h ICU Software Configurable Interrupt A Source Select Register 208 SLIAR208 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879D1 0x01>, // 0008 79D1h ICU Software Configurable Interrupt A Source Select Register 209 SLIAR209 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879D2 0x01>, // 0008 79D2h ICU Software Configurable Interrupt A Source Select Register 210 SLIAR210 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879D3 0x01>, // 0008 79D3h ICU Software Configurable Interrupt A Source Select Register 211 SLIAR211 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879D4 0x01>, // 0008 79D4h ICU Software Configurable Interrupt A Source Select Register 212 SLIAR212 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879D5 0x01>, // 0008 79D5h ICU Software Configurable Interrupt A Source Select Register 213 SLIAR213 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879D6 0x01>, // 0008 79D6h ICU Software Configurable Interrupt A Source Select Register 214 SLIAR214 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879D7 0x01>, // 0008 79D7h ICU Software Configurable Interrupt A Source Select Register 215 SLIAR215 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879D8 0x01>, // 0008 79D8h ICU Software Configurable Interrupt A Source Select Register 216 SLIAR216 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879D9 0x01>, // 0008 79D9h ICU Software Configurable Interrupt A Source Select Register 217 SLIAR217 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879DA 0x01>, // 0008 79DAh ICU Software Configurable Interrupt A Source Select Register 218 SLIAR218 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879DB 0x01>, // 0008 79DBh ICU Software Configurable Interrupt A Source Select Register 219 SLIAR219 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879DC 0x01>, // 0008 79DCh ICU Software Configurable Interrupt A Source Select Register 220 SLIAR220 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879DD 0x01>, // 0008 79DDh ICU Software Configurable Interrupt A Source Select Register 221 SLIAR221 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879DE 0x01>, // 0008 79DEh ICU Software Configurable Interrupt A Source Select Register 222 SLIAR222 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879DF 0x01>, // 0008 79DFh ICU Software Configurable Interrupt A Source Select Register 223 SLIAR223 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879E0 0x01>, // 0008 79E0h ICU Software Configurable Interrupt A Source Select Register 224 SLIAR224 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879E1 0x01>, // 0008 79E1h ICU Software Configurable Interrupt A Source Select Register 225 SLIAR225 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879E2 0x01>, // 0008 79E2h ICU Software Configurable Interrupt A Source Select Register 226 SLIAR226 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879E3 0x01>, // 0008 79E3h ICU Software Configurable Interrupt A Source Select Register 227 SLIAR227 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879E4 0x01>, // 0008 79E4h ICU Software Configurable Interrupt A Source Select Register 228 SLIAR228 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879E5 0x01>, // 0008 79E5h ICU Software Configurable Interrupt A Source Select Register 229 SLIAR229 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879E6 0x01>, // 0008 79E6h ICU Software Configurable Interrupt A Source Select Register 230 SLIAR230 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879E7 0x01>, // 0008 79E7h ICU Software Configurable Interrupt A Source Select Register 231 SLIAR231 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879E8 0x01>, // 0008 79E8h ICU Software Configurable Interrupt A Source Select Register 232 SLIAR232 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879E9 0x01>, // 0008 79E9h ICU Software Configurable Interrupt A Source Select Register 233 SLIAR233 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879EA 0x01>, // 0008 79EAh ICU Software Configurable Interrupt A Source Select Register 234 SLIAR234 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879EB 0x01>, // 0008 79EBh ICU Software Configurable Interrupt A Source Select Register 235 SLIAR235 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879EC 0x01>, // 0008 79ECh ICU Software Configurable Interrupt A Source Select Register 236 SLIAR236 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879ED 0x01>, // 0008 79EDh ICU Software Configurable Interrupt A Source Select Register 237 SLIAR237 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879EE 0x01>, // 0008 79EEh ICU Software Configurable Interrupt A Source Select Register 238 SLIAR238 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879EF 0x01>, // 0008 79EFh ICU Software Configurable Interrupt A Source Select Register 239 SLIAR239 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879F0 0x01>, // 0008 79F0h ICU Software Configurable Interrupt A Source Select Register 240 SLIAR240 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879F1 0x01>, // 0008 79F1h ICU Software Configurable Interrupt A Source Select Register 241 SLIAR241 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879F2 0x01>, // 0008 79F2h ICU Software Configurable Interrupt A Source Select Register 242 SLIAR242 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879F3 0x01>, // 0008 79F3h ICU Software Configurable Interrupt A Source Select Register 243 SLIAR243 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879F4 0x01>, // 0008 79F4h ICU Software Configurable Interrupt A Source Select Register 244 SLIAR244 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879F5 0x01>, // 0008 79F5h ICU Software Configurable Interrupt A Source Select Register 245 SLIAR245 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879F6 0x01>, // 0008 79F6h ICU Software Configurable Interrupt A Source Select Register 246 SLIAR246 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879F7 0x01>, // 0008 79F7h ICU Software Configurable Interrupt A Source Select Register 247 SLIAR247 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879F8 0x01>, // 0008 79F8h ICU Software Configurable Interrupt A Source Select Register 248 SLIAR248 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879F9 0x01>, // 0008 79F9h ICU Software Configurable Interrupt A Source Select Register 249 SLIAR249 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879FA 0x01>, // 0008 79FAh ICU Software Configurable Interrupt A Source Select Register 250 SLIAR250 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879FB 0x01>, // 0008 79FBh ICU Software Configurable Interrupt A Source Select Register 251 SLIAR251 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879FC 0x01>, // 0008 79FCh ICU Software Configurable Interrupt A Source Select Register 252 SLIAR252 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879FD 0x01>, // 0008 79FDh ICU Software Configurable Interrupt A Source Select Register 253 SLIAR253 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879FE 0x01>, // 0008 79FEh ICU Software Configurable Interrupt A Source Select Register 254 SLIAR254 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879FF 0x01>, // 0008 79FFh ICU Software Configurable Interrupt A Source Select Register 255 SLIAR255 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x00087A00 0x01>, // 0008 7A00h ICU Software Configurable Interrupt Source Select Register Write Protect Register SLIPRCR 8 8 2 ICLK to 1 PCLKA/B 2 ICLK ICUB
+				<0x00087A01 0x01>; // 0008 7A01h ICU EXDMAC Trigger Select Register SELEXDR 8 8 2 ICLK to 1 PCLKA/B 2 ICLK ICUB
+
+				interrupt-names = 	"ch000","ch001","ch002","ch003","ch004","ch005","ch006","ch007","ch008","ch009",
+									"ch010","ch011","ch012","ch013","ch014","ch015","ch016","ch017","ch018","ch019",
+									"ch020","ch021","ch022","ch023","ch024","ch025","ch026","ch027","ch028","ch029",
+									"ch030","ch031","ch032","ch033","ch034","ch035","ch036","ch037","ch038","ch039",
+									"ch040","ch041","ch042","ch043","ch044","ch045","ch046","ch047","ch048","ch049",
+									"ch050","ch051","ch052","ch053","ch054","ch055","ch056","ch057","ch058","ch059",
+									"ch060","ch061","ch062","ch063","ch064","ch065","ch066","ch067","ch068","ch069",
+									"ch070","ch071","ch072","ch073","ch074","ch075","ch076","ch077","ch078","ch079",
+									"ch080","ch081","ch082","ch083","ch084","ch085","ch086","ch087","ch088","ch089",
+									"ch090","ch091","ch092","ch093","ch094","ch095","ch096","ch097","ch098","ch099",
+									"ch100","ch101","ch102","ch103","ch104","ch105","ch106","ch107","ch108","ch109",
+									"ch110","ch111","ch112","ch113","ch114","ch115","ch116","ch117","ch118","ch119",
+									"ch120","ch121","ch122","ch123","ch124","ch125","ch126","ch127","ch128","ch129",
+									"ch130","ch131","ch132","ch133","ch134","ch135","ch136","ch137","ch138","ch139",
+									"ch140","ch141","ch142","ch143","ch144","ch145","ch146","ch147","ch148","ch149",
+									"ch150","ch151","ch152","ch153","ch154","ch155","ch156","ch157","ch158","ch159",
+									"ch160","ch161","ch162","ch163","ch164","ch165","ch166","ch167","ch168","ch169",
+									"ch170","ch171","ch172","ch173","ch174","ch175","ch176","ch177","ch178","ch179",
+									"ch180","ch181","ch182","ch183","ch184","ch185","ch186","ch187";
+										
+					interrupts = <4711 0 815>; // check if: correct value
+					label = "rxv2_int_ctrl";	
+		};
+ 		*/		
 	};
 };
