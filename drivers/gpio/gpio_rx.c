@@ -66,15 +66,15 @@ static int gpio_rx_config(const struct device *port, gpio_pin_t pin,
 	/* Open drain */
 	if ((flags & GPIO_OPEN_DRAIN) != 0) {
 		if (pin < 4) {
-			(*data->reg.odr0) |= (pin << 1);
+			(*data->reg.odr0) |= BIT(pin << 1);
 		} else {
-			(*data->reg.odr0) |= ((pin - 4) << 1);
+			(*data->reg.odr0) |= BIT((pin - 4) << 1);
 		}
 	} else {
 		if (pin < 4) {
-			(*data->reg.odr0) &= ~(pin << 1);
+			(*data->reg.odr0) &= ~BIT(pin << 1);
 		} else {
-			(*data->reg.odr0) &= ~((pin - 4) << 1);
+			(*data->reg.odr0) &= ~BIT((pin - 4) << 1);
 		}
 	}
 

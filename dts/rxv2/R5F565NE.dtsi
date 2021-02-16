@@ -127,6 +127,8 @@
 			status = "disabled"; // check if: all the other elements also need a status
 		};
 
+		// @todo: Add remaining ports. The 144 pin soc has port0..port9, porta..portf, portj. 
+
 		port0: gpio@8c000 { // R01DS0276EJ0230 Rev.2.30, R01UH0590EJ0230 Rev.2.30
 			compatible = "renesas,rx-gpio";
 			gpio-controller;
