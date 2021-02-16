@@ -217,5 +217,19 @@ static const struct gpio_driver_api gpio_rx_driver_api ={
 
 GPIO_DEVICE_INIT(port0);
 GPIO_DEVICE_INIT(port1);
+GPIO_DEVICE_INIT(port2);
+GPIO_DEVICE_INIT(port3);
+GPIO_DEVICE_INIT(port4);
+GPIO_DEVICE_INIT(port5);
+GPIO_DEVICE_INIT(port6);
 GPIO_DEVICE_INIT(port7);
+GPIO_DEVICE_INIT(port8);
+GPIO_DEVICE_INIT(port9);
+GPIO_DEVICE_INIT(porta);
+GPIO_DEVICE_INIT(portb);
+GPIO_DEVICE_INIT(portc);
+GPIO_DEVICE_INIT(portd);
+GPIO_DEVICE_INIT(porte);
+GPIO_DEVICE_INIT(portf);
 GPIO_DEVICE_INIT(portg);
+GPIO_DEVICE_INIT(portj);

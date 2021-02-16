@@ -2,8 +2,8 @@
 /* SPDX-License-Identifier: Apache-2.0 */
 
 #include <mem.h>
-#include <dt-bindings/gpio/gpio.h>
 #include "skeleton.dtsi" 
+#include "rx65n_gpio.dtsi" 
 
 / {
 
@@ -126,86 +126,6 @@
 			label = "TIMER_0";
 			status = "disabled"; // check if: all the other elements also need a status
 		};
-
-		// @todo: Add remaining ports. The 144 pin soc has port0..port9, porta..portf, portj. 
-
-		port0: gpio@8c000 { // R01DS0276EJ0230 Rev.2.30, R01UH0590EJ0230 Rev.2.30
-			compatible = "renesas,rx-gpio";
-			gpio-controller;
-			#gpio-cells = <0x2>;
-			ngpios = <8>;
-			// gpio-ranges = <&pfc 0 0 22>;
-			reg =
-				<0x0008C000 0x01>, // 0008 C000h PORT0 Port Direction Register PDR
-				<0x0008C020 0x01>, // 0008 C020h PORT0 Port Output Data Register PODR
-				<0x0008C040 0x01>, // 0008 C040h PORT0 Port Input Register PIDR
-				<0x0008C060 0x01>, // 0008 C060h PORT0 Port Mode Register PMR
-				<0x0008C080 0x01>, // 0008 C080h PORT0 Open-Drain Control Register 0 ODR0
-				<0x0008C081 0x01>, // 0008 C081h PORT0 Open-Drain Control Register 1 ODR1
-				<0x0008C0C0 0x01>, // 0008 C0C0h PORT0 Pull-Up Resistor Control Register PCR
-				<0x0008C0E0 0x01>, // 0008 C0E0h PORT0 Drive Capacity Control Register DSCR DSCR
-				<0x0008C128 0x01>; // 0008 C128h PORT0 Drive Capacity Control Register DSCR 2 DSCR2
-			reg-names = "PDR", "PODR", "PIDR", "PMR", "ODR0", "ODR1", "PCR", "DSCR", "DSCR2";
-			label = "PORT_0";
-//				interrupts = <4711 0 815>; // check if: interrupt value must be adapted
-		};
-		
-		port1: gpio@8c001 { // R01DS0276EJ0230 Rev.2.30, R01UH0590EJ0230 Rev.2.30
-			compatible = "renesas,rx-gpio";
-			gpio-controller;
-			#gpio-cells = <0x2>;
-			reg =
-				<0x0008C001 0x01>, // 0008 C001h PORT1 Port Direction Register PDR
-				<0x0008C021 0x01>, // 0008 C021h PORT1 Port Output Data Register PODR
-				<0x0008C041 0x01>, // 0008 C041h PORT1 Port Input Register PIDR
-				<0x0008C061 0x01>, // 0008 C061h PORT1 Port Mode Register PMR
-				<0x0008C082 0x01>, // 0008 C082h PORT1 Open-Drain Control Register 0 ODR0
-				<0x0008C083 0x01>, // 0008 C083h PORT1 Open-Drain Control Register 1 ODR1
-				<0x0008C0C1 0x01>, // 0008 C0C1h PORT1 Pull-Up Resistor Control Register PCR
-				<0x0008C0E1 0x01>, // 0008 C0E1h PORT1 Drive Capacity Control Register DSCR
-				<0x0008C129 0x01>; // 0008 C129h PORT1 Drive Capacity Control Register 2 DSCR2
-			reg-names = "PDR", "PODR", "PIDR", "PMR", "ODR0", "ODR1", "PCR", "DSCR", "DSCR2";
-			label = "PORT_1";
-		};
-
-		port7: gpio@8c007 { // R01DS0276EJ0230 Rev.2.30, R01UH0590EJ0230 Rev.2.30
-			compatible = "renesas,rx-gpio";
-			gpio-controller;
-			#gpio-cells = <2>;
-			reg = 
-				<0x0008C007 0x01>, // 0008C007h PORT7 Port Direction Register PDR
-				<0x0008C027 0x01>, // 0008C027h PORT7 Port Output Data Register PODR
-				<0x0008C047 0x01>, // 0008C047h PORT7 Port Input Register PIDR
-				<0x0008C067 0x01>, // 0008C067h PORT7 Port Mode Register PMR
-				<0x0008C08E 0x01>, // 0008C08Eh PORT7 Open-Drain Control Register 0 ODR0
-				<0x0008C08F 0x01>, // 0008C08Fh PORT7 Open-Drain Control Register 1 ODR1
-				<0x0008C0C7 0x01>, // 0008C0C7h PORT7 Pull-Up Resistor Control Register PCR
-				<0x0008C0E7 0x01>; // 0008C0E7h PORT7 Drive Capacity Control Register DSCR
-			reg-names = "PDR", "PODR", "PIDR", "PMR", "ODR0", "ODR1", "PCR", "DSCR";
-			label = "PORT_7";
-		};
-
-		portg: gpio@8c010 { // R01DS0276EJ0230 Rev.2.30, R01UH0590EJ0230 Rev.2.30
-			compatible = "renesas,rx-gpio";
-			gpio-controller;
-			#gpio-cells = <2>;
-			reg = 
-				<0x0008C010 0x01>, // 0008C010h PORTG Port Direction Register PDR
-				<0x0008C030 0x01>, // 0008C030h PORTG Port Output Data Register PODR
-				<0x0008C050 0x01>, // 0008C050h PORTG Port Input Register PIDR
-				<0x0008C070 0x01>, // 0008C070h PORTG Port Mode Register PMR
-				<0x0008C0A0 0x01>, // 0008C0A0h PORTG Open-Drain Control Register 0 ODR0
-				<0x0008C0A1 0x01>, // 0008C0A1h PORTG Open-Drain Control Register 1 ODR1
-				<0x0008C0D0 0x01>; // 0008C0D0h PORTG Pull-Up Resistor Control Register PCR
-			reg-names = "PDR", "PODR", "PIDR", "PMR", "ODR0", "ODR1", "PCR";
-			label = "PORT_G";
-		};
-
-		// // Address?? Function?
-		// pinmux: pinmux@abcd {
-		// 	compatible = "renesas,rx-pinmux";
-		// 	reg = <0xabcd 0x11>;
-		// };
 
 		uart0: serial@8a000 { // R01DS0276EJ0230 Rev.2.30, R01UH0590EJ0230 Rev.2.30
 			compatible = "renesas,rx-uart";

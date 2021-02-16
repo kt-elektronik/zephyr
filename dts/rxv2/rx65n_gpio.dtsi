@@ -1,0 +1,320 @@
+/* Copyright (c) 2020 KT-Elektronik, Klaucke und Partner GmbH */
+/* SPDX-License-Identifier: Apache-2.0 */
+
+#include <mem.h>
+#include <dt-bindings/gpio/gpio.h>
+#include "skeleton.dtsi" 
+
+/ {
+	soc {
+		/* The 144 pin soc has port0..port9, porta..portf, portj. */
+
+		port0: gpio@8c000 {
+			compatible = "renesas,rx-gpio";
+			gpio-controller;
+			#gpio-cells = <0x2>;
+			ngpios = <8>;
+			// gpio-ranges = <&pfc 0 0 22>;
+			reg =
+				<0x0008C000 0x01>, /* 0008 C000h PORT0 Port Direction Register PDR */
+				<0x0008C020 0x01>, /* 0008 C020h PORT0 Port Output Data Register PODR */
+				<0x0008C040 0x01>, /* 0008 C040h PORT0 Port Input Register PIDR */
+				<0x0008C060 0x01>, /* 0008 C060h PORT0 Port Mode Register PMR */
+				<0x0008C080 0x01>, /* 0008 C080h PORT0 Open-Drain Control Register 0 ODR0 */
+				<0x0008C081 0x01>, /* 0008 C081h PORT0 Open-Drain Control Register 1 ODR1 */
+				<0x0008C0C0 0x01>, /* 0008 C0C0h PORT0 Pull-Up Resistor Control Register PCR */
+				<0x0008C0E0 0x01>, /* 0008 C0E0h PORT0 Drive Capacity Control Register DSCR DSCR */
+				<0x0008C128 0x01>; /* 0008 C128h PORT0 Drive Capacity Control Register DSCR 2 DSCR2 */
+			reg-names = "PDR", "PODR", "PIDR", "PMR", "ODR0", "ODR1", "PCR", "DSCR", "DSCR2";
+			label = "PORT_0";
+			// interrupts = <4711 0 815>; // check if: interrupt value must be adapted
+		};
+		
+		port1: gpio@8c001 {
+			compatible = "renesas,rx-gpio";
+			gpio-controller;
+			#gpio-cells = <0x2>;
+			reg =
+				<0x0008C001 0x01>, /* 0008 C001h PORT1 Port Direction Register PDR */
+				<0x0008C021 0x01>, /* 0008 C021h PORT1 Port Output Data Register PODR */
+				<0x0008C041 0x01>, /* 0008 C041h PORT1 Port Input Register PIDR */
+				<0x0008C061 0x01>, /* 0008 C061h PORT1 Port Mode Register PMR */
+				<0x0008C082 0x01>, /* 0008 C082h PORT1 Open-Drain Control Register 0 ODR0 */
+				<0x0008C083 0x01>, /* 0008 C083h PORT1 Open-Drain Control Register 1 ODR1 */
+				<0x0008C0C1 0x01>, /* 0008 C0C1h PORT1 Pull-Up Resistor Control Register PCR */
+				<0x0008C0E1 0x01>, /* 0008 C0E1h PORT1 Drive Capacity Control Register DSCR */
+				<0x0008C129 0x01>; /* 0008 C129h PORT1 Drive Capacity Control Register 2 DSCR2 */
+			reg-names = "PDR", "PODR", "PIDR", "PMR", "ODR0", "ODR1", "PCR", "DSCR", "DSCR2";
+			label = "PORT_1";
+		};
+
+		port2: gpio@8c002 {
+			compatible = "renesas,rx-gpio";
+			gpio-controller;
+			#gpio-cells = <0x2>;
+				reg =
+				<0x0008C002 0x01>, /* 0008C002h PORT2 Port Direction Register PDR */
+				<0x0008C022 0x01>, /* 0008C022h PORT2 Port Output Data Register PODR */
+				<0x0008C042 0x01>, /* 0008C042h PORT2 Port Input Register PIDR */
+				<0x0008C062 0x01>, /* 0008C062h PORT2 Port Mode Register PMR */
+				<0x0008C084 0x01>, /* 0008C084h PORT2 Open-Drain Control Register 0 ODR0 */
+				<0x0008C085 0x01>, /* 0008C085h PORT2 Open-Drain Control Register 1 ODR1 */
+				<0x0008C0C2 0x01>, /* 0008C0C2h PORT2 Pull-Up Resistor Control Register PCR */
+				<0x0008C0E2 0x01>; /* 0008C0E2h PORT2 Drive Capacity Control Register DSCR */
+
+			reg-names = "PDR", "PODR", "PIDR", "PMR", "ODR0", "ODR1", "PCR", "DSCR";
+			label = "PORT_2";
+		};
+
+		port3: gpio@8c003 {
+			compatible = "renesas,rx-gpio";
+			gpio-controller;
+			#gpio-cells = <0x2>;
+			reg =
+				<0x0008C003 0x01>, /* 0008C003h PORT3 Port Direction Register PDR */
+				<0x0008C023 0x01>, /* 0008C023h PORT3 Port Output Data Register PODR */
+				<0x0008C043 0x01>, /* 0008C043h PORT3 Port Input Register PIDR */
+				<0x0008C063 0x01>, /* 0008C063h PORT3 Port Mode Register PMR */
+				<0x0008C086 0x01>, /* 0008C086h PORT3 Open-Drain Control Register 0 ODR0 */
+				<0x0008C087 0x01>, /* 0008C087h PORT3 Open-Drain Control Register 1 ODR1 */
+				<0x0008C0C3 0x01>; /* 0008C0C3h PORT3 Pull-Up Resistor Control Register PCR */
+			reg-names = "PDR", "PODR", "PIDR", "PMR", "ODR0", "ODR1", "PCR";
+			label = "PORT_3";
+		};
+
+		port4: gpio@8c004 {
+			compatible = "renesas,rx-gpio";
+			gpio-controller;
+			#gpio-cells = <0x2>;
+			reg =
+				<0x0008C004 0x01>, /* 0008C004h PORT4 Port Direction Register PDR */
+				<0x0008C024 0x01>, /* 0008C024h PORT4 Port Output Data Register PODR */
+				<0x0008C044 0x01>, /* 0008C044h PORT4 Port Input Register PIDR */
+				<0x0008C064 0x01>, /* 0008C064h PORT4 Port Mode Register PMR */
+				<0x0008C088 0x01>, /* 0008C088h PORT4 Open-Drain Control Register 0 ODR0 */
+				<0x0008C089 0x01>, /* 0008C089h PORT4 Open-Drain Control Register 1 ODR1 */
+				<0x0008C0C4 0x01>; /* 0008C0C4h PORT4 Pull-Up Resistor Control Register PCR */
+			reg-names = "PDR", "PODR", "PIDR", "PMR", "ODR0", "ODR1", "PCR";
+			label = "PORT_4";
+		};
+
+		port5: gpio@8c005 {
+			compatible = "renesas,rx-gpio";
+			gpio-controller;
+			#gpio-cells = <0x2>;
+			reg =
+				<0x0008C005 0x01>, /* 0008C005h PORT5 Port Direction Register PDR */
+				<0x0008C025 0x01>, /* 0008C025h PORT5 Port Output Data Register PODR */
+				<0x0008C045 0x01>, /* 0008C045h PORT5 Port Input Register PIDR */
+				<0x0008C065 0x01>, /* 0008C065h PORT5 Port Mode Register PMR */
+				<0x0008C08A 0x01>, /* 0008C08Ah PORT5 Open-Drain Control Register 0 ODR0 */
+				<0x0008C08B 0x01>, /* 0008C08Bh PORT5 Open-Drain Control Register 1 ODR1 */
+				<0x0008C0C5 0x01>, /* 0008C0C5h PORT5 Pull-Up Resistor Control Register PCR */
+				<0x0008C0E5 0x01>; /* 0008C0E5h PORT5 Drive Capacity Control Register DSCR */
+			reg-names = "PDR", "PODR", "PIDR", "PMR", "ODR0", "ODR1", "PCR", "DSCR";
+			label = "PORT_5";
+		};
+
+		port6: gpio@8c006 {
+			compatible = "renesas,rx-gpio";
+			gpio-controller;
+			#gpio-cells = <0x2>;
+			reg =
+				<0x0008C006 0x01>, /* 0008C006h PORT6 Port Direction Register PDR */
+				<0x0008C026 0x01>, /* 0008C026h PORT6 Port Output Data Register PODR */
+				<0x0008C046 0x01>, /* 0008C046h PORT6 Port Input Register PIDR */
+				<0x0008C066 0x01>, /* 0008C066h PORT6 Port Mode Register PMR */
+				<0x0008C08C 0x01>, /* 0008C08Ch PORT6 Open-Drain Control Register 0 ODR0 */
+				<0x0008C08D 0x01>, /* 0008C08Dh PORT6 Open-Drain Control Register 1 ODR1 */
+				<0x0008C0C6 0x01>; /* 0008C0C6h PORT6 Pull-Up Resistor Control Register PCR */
+			reg-names = "PDR", "PODR", "PIDR", "PMR", "ODR0", "ODR1", "PCR";
+			label = "PORT_6";
+		};
+
+		port7: gpio@8c007 {
+			compatible = "renesas,rx-gpio";
+			gpio-controller;
+			#gpio-cells = <2>;
+			reg = 
+				<0x0008C007 0x01>, /* 0008C007h PORT7 Port Direction Register PDR */
+				<0x0008C027 0x01>, /* 0008C027h PORT7 Port Output Data Register PODR */
+				<0x0008C047 0x01>, /* 0008C047h PORT7 Port Input Register PIDR */
+				<0x0008C067 0x01>, /* 0008C067h PORT7 Port Mode Register PMR */
+				<0x0008C08E 0x01>, /* 0008C08Eh PORT7 Open-Drain Control Register 0 ODR0 */
+				<0x0008C08F 0x01>, /* 0008C08Fh PORT7 Open-Drain Control Register 1 ODR1 */
+				<0x0008C0C7 0x01>, /* 0008C0C7h PORT7 Pull-Up Resistor Control Register PCR */
+				<0x0008C0E7 0x01>; /* 0008C0E7h PORT7 Drive Capacity Control Register DSCR */
+			reg-names = "PDR", "PODR", "PIDR", "PMR", "ODR0", "ODR1", "PCR", "DSCR";
+			label = "PORT_7";
+		};
+
+		port8: gpio@8c008 {
+			compatible = "renesas,rx-gpio";
+			gpio-controller;
+			#gpio-cells = <0x2>;
+			reg =
+				<0x0008C008 0x01>, /* 0008C008h PORT8 Port Direction Register PDR */
+				<0x0008C028 0x01>, /* 0008C028h PORT8 Port Output Data Register PODR */
+				<0x0008C048 0x01>, /* 0008C048h PORT8 Port Input Register PIDR */
+				<0x0008C068 0x01>, /* 0008C068h PORT8 Port Mode Register PMR */
+				<0x0008C090 0x01>, /* 0008C090h PORT8 Open-Drain Control Register 0 ODR0 */
+				<0x0008C091 0x01>, /* 0008C091h PORT8 Open-Drain Control Register 1 ODR1 */
+				<0x0008C0C8 0x01>, /* 0008C0C8h PORT8 Pull-Up Resistor Control Register PCR */
+				<0x0008C0E8 0x01>; /* 0008C0E8h PORT8 Drive Capacity Control Register DSCR */
+			reg-names = "PDR", "PODR", "PIDR", "PMR", "ODR0", "ODR1", "PCR", "DSCR";
+			label = "PORT_8";
+		};
+
+		port9: gpio@8c009 {
+			compatible = "renesas,rx-gpio";
+			gpio-controller;
+			#gpio-cells = <0x2>;
+			reg =
+				<0x0008C009 0x01>, /* 0008C009h PORT9 Port Direction Register PDR */
+				<0x0008C029 0x01>, /* 0008C029h PORT9 Port Output Data Register PODR */
+				<0x0008C049 0x01>, /* 0008C049h PORT9 Port Input Register PIDR */
+				<0x0008C069 0x01>, /* 0008C069h PORT9 Port Mode Register PMR */
+				<0x0008C092 0x01>, /* 0008C092h PORT9 Open-Drain Control Register 0 ODR0 */
+				<0x0008C093 0x01>, /* 0008C093h PORT9 Open-Drain Control Register 1 ODR1 */
+				<0x0008C0C9 0x01>, /* 0008C0C9h PORT9 Pull-Up Resistor Control Register PCR */
+				<0x0008C0E9 0x01>; /* 0008C0E9h PORT9 Drive Capacity Control Register DSCR */
+			reg-names = "PDR", "PODR", "PIDR", "PMR", "ODR0", "ODR1", "PCR", "DSCR";
+			label = "PORT_9";
+		};
+
+		porta: gpio@8c00a {
+			compatible = "renesas,rx-gpio";
+			gpio-controller;
+			#gpio-cells = <0x2>;
+			reg =
+				<0x0008C00A 0x01>, /* 0008C00Ah PORTA Port Direction Register PDR */
+				<0x0008C02A 0x01>, /* 0008C02Ah PORTA Port Output Data Register PODR */
+				<0x0008C04A 0x01>, /* 0008C04Ah PORTA Port Input Register PIDR */
+				<0x0008C06A 0x01>, /* 0008C06Ah PORTA Port Mode Register PMR */
+				<0x0008C094 0x01>, /* 0008C094h PORTA Open-Drain Control Register 0 ODR0 */
+				<0x0008C095 0x01>, /* 0008C095h PORTA Open-Drain Control Register 1 ODR1 */
+				<0x0008C0CA 0x01>, /* 0008C0CAh PORTA Pull-Up Resistor Control Register PCR */
+				<0x0008C0EA 0x01>; /* 0008C0EAh PORTA Drive Capacity Control Register DSCR */
+			reg-names = "PDR", "PODR", "PIDR", "PMR", "ODR0", "ODR1", "PCR", "DSCR";
+			label = "PORT_A";
+		};
+
+		portb: gpio@8c00b {
+			compatible = "renesas,rx-gpio";
+			gpio-controller;
+			#gpio-cells = <0x2>;
+			reg =
+				<0x0008C00B 0x01>, /* 0008C00Bh PORTB Port Direction Register PDR */
+				<0x0008C02B 0x01>, /* 0008C02Bh PORTB Port Output Data Register PODR */
+				<0x0008C04B 0x01>, /* 0008C04Bh PORTB Port Input Register PIDR */
+				<0x0008C06B 0x01>, /* 0008C06Bh PORTB Port Mode Register PMR */
+				<0x0008C096 0x01>, /* 0008C096h PORTB Open-Drain Control Register 0 ODR0 */
+				<0x0008C097 0x01>, /* 0008C097h PORTB Open-Drain Control Register 1 ODR1 */
+				<0x0008C0CB 0x01>, /* 0008C0CBh PORTB Pull-Up Resistor Control Register PCR */
+				<0x0008C0EB 0x01>; /* 0008C0EBh PORTB Drive Capacity Control Register DSCR */
+			reg-names = "PDR", "PODR", "PIDR", "PMR", "ODR0", "ODR1", "PCR", "DSCR";
+			label = "PORT_B";
+		};
+
+		portc: gpio@8c00c {
+			compatible = "renesas,rx-gpio";
+			gpio-controller;
+			#gpio-cells = <0x2>;
+			reg =
+				<0x0008C00C 0x01>, /* 0008C00Ch PORTC Port Direction Register PDR */
+				<0x0008C02C 0x01>, /* 0008C02Ch PORTC Port Output Data Register PODR */
+				<0x0008C04C 0x01>, /* 0008C04Ch PORTC Port Input Register PIDR */
+				<0x0008C06C 0x01>, /* 0008C06Ch PORTC Port Mode Register PMR */
+				<0x0008C098 0x01>, /* 0008C098h PORTC Open-Drain Control Register 0 ODR0 */
+				<0x0008C099 0x01>, /* 0008C099h PORTC Open-Drain Control Register 1 ODR1 */
+				<0x0008C0CC 0x01>, /* 0008C0CCh PORTC Pull-Up Resistor Control Register PCR */
+				<0x0008C0EC 0x01>; /* 0008C0ECh PORTC Drive Capacity Control Register DSCR */
+			reg-names = "PDR", "PODR", "PIDR", "PMR", "ODR0", "ODR1", "PCR", "DSCR";
+			label = "PORT_C";
+		};
+
+		portd: gpio@8c00d {
+			compatible = "renesas,rx-gpio";
+			gpio-controller;
+			#gpio-cells = <0x2>;
+			reg =
+				<0x0008C00D 0x01>, /* 0008C00Dh PORTD Port Direction Register PDR */
+				<0x0008C02D 0x01>, /* 0008C02Dh PORTD Port Output Data Register PODR */
+				<0x0008C04D 0x01>, /* 0008C04Dh PORTD Port Input Register PIDR */
+				<0x0008C06D 0x01>, /* 0008C06Dh PORTD Port Mode Register PMR */
+				<0x0008C09A 0x01>, /* 0008C09Ah PORTD Open-Drain Control Register 0 ODR0 */
+				<0x0008C09B 0x01>, /* 0008C09Bh PORTD Open-Drain Control Register 1 ODR1 */
+				<0x0008C0CD 0x01>, /* 0008C0CDh PORTD Pull-Up Resistor Control Register PCR */
+				<0x0008C0ED 0x01>; /* 0008C0EDh PORTD Drive Capacity Control Register DSCR */
+			reg-names = "PDR", "PODR", "PIDR", "PMR", "ODR0", "ODR1", "PCR", "DSCR";
+			label = "PORT_D";
+		};
+
+		porte: gpio@8c00e {
+			compatible = "renesas,rx-gpio";
+			gpio-controller;
+			#gpio-cells = <0x2>;
+			reg =
+				<0x0008C00E 0x01>, /* 0008C00Eh PORTE Port Direction Register PDR */
+				<0x0008C02E 0x01>, /* 0008C02Eh PORTE Port Output Data Register PODR */
+				<0x0008C04E 0x01>, /* 0008C04Eh PORTE Port Input Register PIDR */
+				<0x0008C06E 0x01>, /* 0008C06Eh PORTE Port Mode Register PMR */
+				<0x0008C09C 0x01>, /* 0008C09Ch PORTE Open-Drain Control Register 0 ODR0 */
+				<0x0008C09D 0x01>, /* 0008C09Dh PORTE Open-Drain Control Register 1 ODR1 */
+				<0x0008C0CE 0x01>, /* 0008C0CEh PORTE Pull-Up Resistor Control Register PCR */
+				<0x0008C0EE 0x01>; /* 0008C0EEh PORTE Drive Capacity Control Register DSCR */
+			reg-names = "PDR", "PODR", "PIDR", "PMR", "ODR0", "ODR1", "PCR", "DSCR";
+			label = "PORT_E";
+		};
+
+		portf: gpio@8c00f {
+			compatible = "renesas,rx-gpio";
+			gpio-controller;
+			#gpio-cells = <0x2>;
+			reg =
+				<0x0008C00F 0x01>, /* 0008C00Fh PORTF Port Direction Register PDR */
+				<0x0008C02F 0x01>, /* 0008C02Fh PORTF Port Output Data Register PODR */
+				<0x0008C04F 0x01>, /* 0008C04Fh PORTF Port Input Register PIDR */
+				<0x0008C06F 0x01>, /* 0008C06Fh PORTF Port Mode Register PMR */
+				<0x0008C09E 0x01>, /* 0008C09Eh PORTF Open-Drain Control Register 0 ODR0 */
+				<0x0008C09F 0x01>, /* 0008C09Fh PORTF Open-Drain Control Register 1 ODR1 */
+				<0x0008C0CF 0x01>; /* 0008C0CFh PORTF Pull-Up Resistor Control Register PCR */
+			reg-names = "PDR", "PODR", "PIDR", "PMR", "ODR0", "ODR1", "PCR";
+			label = "PORT_F";
+		};
+
+
+		portg: gpio@8c010 {
+			compatible = "renesas,rx-gpio";
+			gpio-controller;
+			#gpio-cells = <2>;
+			reg = 
+				<0x0008C010 0x01>, /* 0008C010h PORTG Port Direction Register PDR */
+				<0x0008C030 0x01>, /* 0008C030h PORTG Port Output Data Register PODR */
+				<0x0008C050 0x01>, /* 0008C050h PORTG Port Input Register PIDR */
+				<0x0008C070 0x01>, /* 0008C070h PORTG Port Mode Register PMR */
+				<0x0008C0A0 0x01>, /* 0008C0A0h PORTG Open-Drain Control Register 0 ODR0 */
+				<0x0008C0A1 0x01>, /* 0008C0A1h PORTG Open-Drain Control Register 1 ODR1 */
+				<0x0008C0D0 0x01>; /* 0008C0D0h PORTG Pull-Up Resistor Control Register PCR */
+			reg-names = "PDR", "PODR", "PIDR", "PMR", "ODR0", "ODR1", "PCR";
+			label = "PORT_G";
+		};
+
+		portj: gpio@8c012 {
+			compatible = "renesas,rx-gpio";
+			gpio-controller;
+			#gpio-cells = <0x2>;
+			reg =
+				<0x0008C012 0x01>, /* 0008C012h PORTJ Port Direction Register PDR */
+				<0x0008C032 0x01>, /* 0008C032h PORTJ Port Output Data Register PODR */
+				<0x0008C052 0x01>, /* 0008C052h PORTJ Port Input Register PIDR */
+				<0x0008C072 0x01>, /* 0008C072h PORTJ Port Mode Register PMR */
+				<0x0008C0A4 0x01>, /* 0008C0A4h PORTJ Open-Drain Control Register 0 ODR0 */
+				<0x0008C0A5 0x01>, /* 0008C0A5h PORTJ Open-Drain Control Register 1 ODR1 */
+				<0x0008C0D2 0x01>, /* 0008C0D2h PORTJ Pull-Up Resistor Control Register PCR */
+				<0x0008C0F2 0x01>; /* 0008C0F2h PORTJ Drive Capacity Control Register DSCR */
+			reg-names = "PDR", "PODR", "PIDR", "PMR", "ODR0", "ODR1", "PCR", "DSCR";
+			label = "PORT_J";
+		};
+	};
+};
