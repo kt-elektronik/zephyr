@@ -16,7 +16,6 @@ config GPIO_RX_IRQ
 
 config GPIO_RX
 	bool "GPIO pins"
-	default y
 	help
 	  Include support for GPIO pins on the RX65N.
 

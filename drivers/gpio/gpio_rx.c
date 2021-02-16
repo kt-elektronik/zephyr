@@ -215,21 +215,58 @@ static const struct gpio_driver_api gpio_rx_driver_api ={
 			    &gpio_rx_driver_api)
 
 
+#if DT_NODE_EXISTS(DT_NODELABEL(port0))
 GPIO_DEVICE_INIT(port0);
+#endif
+#if DT_NODE_EXISTS(DT_NODELABEL(port1))
 GPIO_DEVICE_INIT(port1);
+#endif
+#if DT_NODE_EXISTS(DT_NODELABEL(port2))
 GPIO_DEVICE_INIT(port2);
+#endif
+#if DT_NODE_EXISTS(DT_NODELABEL(port3))
 GPIO_DEVICE_INIT(port3);
+#endif
+#if DT_NODE_EXISTS(DT_NODELABEL(port4))
 GPIO_DEVICE_INIT(port4);
+#endif
+#if DT_NODE_EXISTS(DT_NODELABEL(port5))
 GPIO_DEVICE_INIT(port5);
+#endif
+#if DT_NODE_EXISTS(DT_NODELABEL(port6))
 GPIO_DEVICE_INIT(port6);
+#endif
+#if DT_NODE_EXISTS(DT_NODELABEL(port7))
 GPIO_DEVICE_INIT(port7);
+#endif
+#if DT_NODE_EXISTS(DT_NODELABEL(port8))
 GPIO_DEVICE_INIT(port8);
+#endif
+#if DT_NODE_EXISTS(DT_NODELABEL(port9))
 GPIO_DEVICE_INIT(port9);
+#endif
+#if DT_NODE_EXISTS(DT_NODELABEL(porta))
 GPIO_DEVICE_INIT(porta);
+#endif
+#if DT_NODE_EXISTS(DT_NODELABEL(portb))
 GPIO_DEVICE_INIT(portb);
+#endif
+#if DT_NODE_EXISTS(DT_NODELABEL(portc))
 GPIO_DEVICE_INIT(portc);
+#endif
+#if DT_NODE_EXISTS(DT_NODELABEL(portd))
 GPIO_DEVICE_INIT(portd);
+#endif
+#if DT_NODE_EXISTS(DT_NODELABEL(porte))
 GPIO_DEVICE_INIT(porte);
+#endif
+#if DT_NODE_EXISTS(DT_NODELABEL(portf))
 GPIO_DEVICE_INIT(portf);
+#endif
+#if DT_NODE_EXISTS(DT_NODELABEL(portg))
 GPIO_DEVICE_INIT(portg);
+#endif
+#if DT_NODE_EXISTS(DT_NODELABEL(portj))
 GPIO_DEVICE_INIT(portj);
+#endif
+
