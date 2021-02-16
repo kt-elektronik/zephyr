@@ -36,7 +36,9 @@ struct gpio_rx_data {
 	sys_slist_t cb;
 };
 
-struct gpio_rx_cfg {
+struct gpio_rx_driver_cfg {
+
+	volatile uint8_t *gpio_base_addr;
 };
 
 static int gpio_rx_init(const struct device *port)
@@ -189,87 +191,31 @@ static const struct gpio_driver_api gpio_rx_driver_api ={
 };
 
 
-// @todo: Use a macro for the following
-
-static struct gpio_rx_data gpio_rx_0_data = {
-	.reg = {
-		.pdr  = (uint8_t*)DT_REG_ADDR_BY_NAME(DT_NODELABEL(port0), PDR),
-		.podr =	(uint8_t*)DT_REG_ADDR_BY_NAME(DT_NODELABEL(port0), PODR),
-		.pidr =	(uint8_t*)DT_REG_ADDR_BY_NAME(DT_NODELABEL(port0), PIDR),
-		.pmr  =	(uint8_t*)DT_REG_ADDR_BY_NAME(DT_NODELABEL(port0), PMR),
-		.odr0 =	(uint8_t*)DT_REG_ADDR_BY_NAME(DT_NODELABEL(port0), ODR0),
-		.odr1 =	(uint8_t*)DT_REG_ADDR_BY_NAME(DT_NODELABEL(port0), ODR1),
-		.pcr  =	(uint8_t*)DT_REG_ADDR_BY_NAME(DT_NODELABEL(port0), PCR) 
-	}
-};
-static const struct gpio_rx_cfg gpio_rx_0_config;
-DEVICE_DT_DEFINE(DT_NODELABEL(port0),
-			gpio_rx_init,
-			device_pm_control_nop,
-			&gpio_rx_0_data, &gpio_rx_0_config,
-			POST_KERNEL,
-			CONFIG_KERNEL_INIT_PRIORITY_DEVICE,
-			&gpio_rx_driver_api);
-
-
-static struct gpio_rx_data gpio_rx_1_data = {
-	.reg = {
-		.pdr  = (uint8_t*)DT_REG_ADDR_BY_NAME(DT_NODELABEL(port1), PDR),
-		.podr =	(uint8_t*)DT_REG_ADDR_BY_NAME(DT_NODELABEL(port1), PODR),
-		.pidr =	(uint8_t*)DT_REG_ADDR_BY_NAME(DT_NODELABEL(port1), PIDR),
-		.pmr  =	(uint8_t*)DT_REG_ADDR_BY_NAME(DT_NODELABEL(port1), PMR),
-		.odr0 =	(uint8_t*)DT_REG_ADDR_BY_NAME(DT_NODELABEL(port1), ODR0),
-		.odr1 =	(uint8_t*)DT_REG_ADDR_BY_NAME(DT_NODELABEL(port1), ODR1),
-		.pcr  =	(uint8_t*)DT_REG_ADDR_BY_NAME(DT_NODELABEL(port1), PCR) 
-	}
-};
-static const struct gpio_rx_cfg gpio_rx_1_config;
-DEVICE_DT_DEFINE(DT_NODELABEL(port1),
-			gpio_rx_init,
-			device_pm_control_nop,
-			&gpio_rx_1_data, &gpio_rx_1_config,
-			POST_KERNEL,
-			CONFIG_KERNEL_INIT_PRIORITY_DEVICE,
-			&gpio_rx_driver_api);
+#define GPIO_DEVICE_INIT(_port) \
+	static struct gpio_rx_data _port##_data = { \
+		.reg = { \
+			.pdr  = (uint8_t*)DT_REG_ADDR_BY_NAME(DT_NODELABEL(_port), PDR),  \
+			.podr =	(uint8_t*)DT_REG_ADDR_BY_NAME(DT_NODELABEL(_port), PODR), \
+			.pidr =	(uint8_t*)DT_REG_ADDR_BY_NAME(DT_NODELABEL(_port), PIDR), \
+			.pmr  =	(uint8_t*)DT_REG_ADDR_BY_NAME(DT_NODELABEL(_port), PMR),  \
+			.odr0 =	(uint8_t*)DT_REG_ADDR_BY_NAME(DT_NODELABEL(_port), ODR0), \
+			.odr1 =	(uint8_t*)DT_REG_ADDR_BY_NAME(DT_NODELABEL(_port), ODR1), \
+			.pcr  =	(uint8_t*)DT_REG_ADDR_BY_NAME(DT_NODELABEL(_port), PCR)   \
+	} \
+	}; \
+	static struct gpio_rx_driver_cfg _port##_cfg = { \
+		.gpio_base_addr = (uint8_t*)DT_REG_ADDR(DT_NODELABEL(_port)) \
+	}; \
+	DEVICE_DT_DEFINE(DT_NODELABEL(_port),			\
+			    gpio_rx_init,						\
+			    device_pm_control_nop,				\
+			    &_port##_data, &_port##_cfg,		\
+			    POST_KERNEL,			 			\
+			    CONFIG_KERNEL_INIT_PRIORITY_DEVICE,	\
+			    &gpio_rx_driver_api)
 
 
-static struct gpio_rx_data gpio_rx_7_data = {
-	.reg = {
-		.pdr  = (uint8_t*)DT_REG_ADDR_BY_NAME(DT_NODELABEL(port7), PDR),
-		.podr =	(uint8_t*)DT_REG_ADDR_BY_NAME(DT_NODELABEL(port7), PODR),
-		.pidr =	(uint8_t*)DT_REG_ADDR_BY_NAME(DT_NODELABEL(port7), PIDR),
-		.pmr  =	(uint8_t*)DT_REG_ADDR_BY_NAME(DT_NODELABEL(port7), PMR),
-		.odr0 =	(uint8_t*)DT_REG_ADDR_BY_NAME(DT_NODELABEL(port7), ODR0),
-		.odr1 =	(uint8_t*)DT_REG_ADDR_BY_NAME(DT_NODELABEL(port7), ODR1),
-		.pcr  =	(uint8_t*)DT_REG_ADDR_BY_NAME(DT_NODELABEL(port7), PCR) 
-	}
-};
-static const struct gpio_rx_cfg gpio_rx_7_config;
-DEVICE_DT_DEFINE(DT_NODELABEL(port7),
-			gpio_rx_init,
-			device_pm_control_nop,
-			&gpio_rx_7_data, &gpio_rx_7_config,
-			POST_KERNEL,
-			CONFIG_KERNEL_INIT_PRIORITY_DEVICE,
-			&gpio_rx_driver_api);
-
-
-static struct gpio_rx_data gpio_rx_g_data = {
-	.reg = {
-		.pdr  = (uint8_t*)DT_REG_ADDR_BY_NAME(DT_NODELABEL(portg), PDR),
-		.podr =	(uint8_t*)DT_REG_ADDR_BY_NAME(DT_NODELABEL(portg), PODR),
-		.pidr =	(uint8_t*)DT_REG_ADDR_BY_NAME(DT_NODELABEL(portg), PIDR),
-		.pmr  =	(uint8_t*)DT_REG_ADDR_BY_NAME(DT_NODELABEL(portg), PMR),
-		.odr0 =	(uint8_t*)DT_REG_ADDR_BY_NAME(DT_NODELABEL(portg), ODR0),
-		.odr1 =	(uint8_t*)DT_REG_ADDR_BY_NAME(DT_NODELABEL(portg), ODR1),
-		.pcr  =	(uint8_t*)DT_REG_ADDR_BY_NAME(DT_NODELABEL(portg), PCR) 
-	}
-};
-static const struct gpio_rx_cfg gpio_rx_g_config;
-DEVICE_DT_DEFINE(DT_NODELABEL(portg),
-			gpio_rx_init,
-			device_pm_control_nop,
-			&gpio_rx_g_data, &gpio_rx_g_config,
-			POST_KERNEL,
-			CONFIG_KERNEL_INIT_PRIORITY_DEVICE,
-			&gpio_rx_driver_api);
+GPIO_DEVICE_INIT(port0);
+GPIO_DEVICE_INIT(port1);
+GPIO_DEVICE_INIT(port7);
+GPIO_DEVICE_INIT(portg);
