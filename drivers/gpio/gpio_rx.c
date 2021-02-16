@@ -16,8 +16,7 @@
 
 #include "gpio_utils.h"
 
-
-struct gpio_rx_data{
+struct gpio_rx_data {
 	/* gpio_driver_data needs to be first */
 	struct gpio_driver_data common;
 
@@ -37,29 +36,16 @@ struct gpio_rx_data{
 	sys_slist_t cb;
 };
 
-
-struct gpio_rx_cfg{
-
+struct gpio_rx_cfg {
 };
 
-
-static int gpio_rx_init(const struct device *port){
-
-	// struct gpio_rx_data *data = port->data;
-
-	// data->reg.pdr  = (uint8_t*)DT_INST_REG_ADDR_BY_NAME(0, PDR);
-	// data->reg.podr = (uint8_t*)DT_INST_REG_ADDR_BY_NAME(0, PODR);
-	// data->reg.pidr = (uint8_t*)DT_INST_REG_ADDR_BY_NAME(0, PIDR);
-	// data->reg.pmr  = (uint8_t*)DT_INST_REG_ADDR_BY_NAME(0, PMR);
-	// data->reg.odr0 = (uint8_t*)DT_INST_REG_ADDR_BY_NAME(0, ODR0);
-	// data->reg.odr1 = (uint8_t*)DT_INST_REG_ADDR_BY_NAME(0, ODR1);
-	// data->reg.pcr  = (uint8_t*)DT_INST_REG_ADDR_BY_NAME(0, PCR);
-
+static int gpio_rx_init(const struct device *port)
+{
 	return 0;
 }
 
-static int gpio_rx_config(const struct device *port, 
-				gpio_pin_t pin, gpio_flags_t flags)
+static int gpio_rx_config(const struct device *port, gpio_pin_t pin,
+			  gpio_flags_t flags)
 {
 	struct gpio_rx_data *data = port->data;
 
@@ -74,6 +60,21 @@ static int gpio_rx_config(const struct device *port,
 
 	/* Set pull-up if requested */
 	WRITE_BIT(*(data->reg.pcr), pin, flags & GPIO_PULL_UP);
+
+	/* Open drain */
+	if ((flags & GPIO_OPEN_DRAIN) != 0) {
+		if (pin < 4) {
+			(*data->reg.odr0) |= (pin << 1);
+		} else {
+			(*data->reg.odr0) |= ((pin - 4) << 1);
+		}
+	} else {
+		if (pin < 4) {
+			(*data->reg.odr0) &= ~(pin << 1);
+		} else {
+			(*data->reg.odr0) &= ~((pin - 4) << 1);
+		}
+	}
 
 	/* Set the initial output value before enabling output to avoid glitches
 	 */
@@ -90,16 +91,17 @@ static int gpio_rx_config(const struct device *port,
 	return 0;
 }
 
-static int gpio_rx_port_get_raw(const struct device *port, uint32_t *value){
-
+static int gpio_rx_port_get_raw(const struct device *port, uint32_t *value)
+{
 	struct gpio_rx_data *data = port->data;
 
 	*value = *(data->reg.pidr);
 	return 0;
 }
 
-static int gpio_rx_port_set_masked_raw(const struct device *port, uint32_t mask, uint32_t value){
-
+static int gpio_rx_port_set_masked_raw(const struct device *port, uint32_t mask,
+				       uint32_t value)
+{
 	struct gpio_rx_data *data = port->data;
 	uint32_t key;
 
@@ -109,24 +111,24 @@ static int gpio_rx_port_set_masked_raw(const struct device *port, uint32_t mask,
 	return 0;
 }
 
-static int gpio_rx_port_set_bits_raw(const struct device *port, uint32_t pins){
-
+static int gpio_rx_port_set_bits_raw(const struct device *port, uint32_t pins)
+{
 	struct gpio_rx_data *data = port->data;
 
 	*(data->reg.podr) |= pins;
 	return 0;
 }
 
-static int gpio_rx_port_clear_bits_raw(const struct device *port, uint32_t pins){
-	
+static int gpio_rx_port_clear_bits_raw(const struct device *port, uint32_t pins)
+{
 	struct gpio_rx_data *data = port->data;
 
 	*(data->reg.podr) &= ~pins;
 	return 0;
 }
 
-static int gpio_rx_port_toggle_bits(const struct device *port, uint32_t pins){
-
+static int gpio_rx_port_toggle_bits(const struct device *port, uint32_t pins)
+{
 	struct gpio_rx_data *data = port->data;
 	uint32_t key;
 
@@ -136,9 +138,11 @@ static int gpio_rx_port_toggle_bits(const struct device *port, uint32_t pins){
 	return 0;
 }
 
-
-static int gpio_rx_pin_interrupt_configure(const struct device *port, gpio_pin_t pin, enum gpio_int_mode mode, enum gpio_int_trig trig){
-	
+static int gpio_rx_pin_interrupt_configure(const struct device *port,
+					   gpio_pin_t pin,
+					   enum gpio_int_mode mode,
+					   enum gpio_int_trig trig)
+{
 	// struct gpio_rx_data *data = port->data;
 	// uint32_t io_pin = pin + data->port.pin_offset; /* Range from 0 - 39 */
 	// uint32_t *reg = GET_GPIO_PIN_REG(io_pin);
@@ -165,8 +169,9 @@ static int gpio_rx_pin_interrupt_configure(const struct device *port, gpio_pin_t
 	return 0;
 }
 
-static int gpio_rx_manage_callback(const struct device *port, struct gpio_callback *callback, bool set){
-
+static int gpio_rx_manage_callback(const struct device *port,
+				   struct gpio_callback *callback, bool set)
+{
 	struct gpio_rx_data *data = port->data;
 
 	return gpio_manage_callback(&data->cb, callback, set);
