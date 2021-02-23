@@ -124,6 +124,8 @@ source "drivers/serial/Kconfig.litex"
 
 source "drivers/serial/Kconfig.rtt"
 
+source "drivers/serial/Kconfig.rx"
+
 source "drivers/serial/Kconfig.xlnx"
 
 source "drivers/serial/Kconfig.xmc4xxx"

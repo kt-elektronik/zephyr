@@ -127,33 +127,27 @@
 			status = "disabled"; // check if: all the other elements also need a status
 		};
 
-		uart0: serial@8a000 { // R01DS0276EJ0230 Rev.2.30, R01UH0590EJ0230 Rev.2.30
-			compatible = "renesas,rx-uart";
-			uart-controller;
+		sci0: serial@8a000 {
+			compatible = "renesas,rx-sci";
+			//uart-controller;
 			//device_type = "serial"; // check if: correct (could be uart)
-			reg = <0x0008A000 0x01>,  // 0008 A000h SCI0 Serial Mode Register SMR
-				<0x0008A001 0x01>,  // 0008 A001h SCI0 Bit Rate Register BRR
-				<0x0008A002 0x01>,  // 0008 A002h SCI0 Serial Control Register SCR
-				<0x0008A003 0x01>,  // 0008 A003h SCI0 Transmit Data Register TDR
-				<0x0008A004 0x01>,  // 0008 A004h SCI0 Serial Status Register SSR
-				<0x0008A005 0x01>,  // 0008 A005h SCI0 Receive Data Register RDR
-				<0x0008A006 0x01>,  // 0008 A006h SCI0 Smart Card Mode Register SCMR
-				<0x0008A007 0x01>,  // 0008 A007h SCI0 Serial Extended Mode Register SEMR
-				<0x0008A008 0x01>,  // 0008 A008h SCI0 Noise Filter Setting Register SNFR
-				<0x0008A009 0x01>,  // 0008 A009h SCI0 I2C Mode Register 1 SIMR1
-				<0x0008A00A 0x01>,  // 0008 A00Ah SCI0 I2C Mode Register 2 SIMR2
-				<0x0008A00B 0x01>,  // 0008 A00Bh SCI0 I2C Mode Register 3 SIMR3
-				<0x0008A00C 0x01>,  // 0008 A00Ch SCI0 I2C Status Register SISR
-				<0x0008A00D 0x01>,  // 0008 A00Dh SCI0 SPI Mode Register SPMR
-			//	<0x0008A00E 0x02>,  // either use TDRHL or TDRH and TDRL: 0008 A00Eh SCI0 Transmit Data Register HL TDRHL
-				<0x0008A00E 0x01>,  // 0008 A00Eh SCI0 Transmit Data Register H
-				<0x0008A00F 0x01>,  // 0008 A00Fh SCI0 Transmit Data Register L TDRL
-  			//	<0x0008A010 0x02>,  // either use RDRHL or RDRH and RDRL: 0008 A010h SCI0 Receive Data Register HL RDRHL
-				<0x0008A010 0x01>,  // 0008 A010h SCI0 Receive Data Register H RDRH
-				<0x0008A011 0x01>,  // 0008 A011h SCI0 Receive Data Register L RDRL
-				<0x0008A012 0x01>;  // 0008 A012h SCI0 Modulation Duty Register MDDR
+			reg = <0x0008A000 0x20>;  // SCI0 Serial Mode Register SMR
 			status = "disabled";
 			label = "SCI_0";
+		};
+
+		sci10: serial@d0040 {
+			compatible = "renesas,rx-sci";
+			reg = <0x000D0040 0x1D>;  // SCI10 Serial Mode Register SMR
+			status = "disabled";
+			label = "SCI_10";
+		};
+
+		sci12: serial@8b300 {
+			compatible = "renesas,rx-sci";
+			reg = <0x0008B300 0x34>;  // SCI12 Serial Mode Register SMR
+			status = "disabled";
+			label = "SCI_12";
 		};
 			
 

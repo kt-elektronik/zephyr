@@ -33,6 +33,8 @@ void main(void)
 	bool led_is_on = true;
 	int ret;
 
+	printk("Hello World");
+
 	dev = device_get_binding(LED0);
 	if (dev == NULL) {
 		return;
@@ -46,6 +48,10 @@ void main(void)
 	while (1) {
 		gpio_pin_set(dev, PIN, (int)led_is_on);
 		led_is_on = !led_is_on;
-		k_msleep(SLEEP_TIME_MS);
+		///k_msleep(SLEEP_TIME_MS);
+		uint32_t v = 1;
+    for (uint32_t i=0; i<10000; i++) {
+      v = v*i;
+    }
 	}
 }

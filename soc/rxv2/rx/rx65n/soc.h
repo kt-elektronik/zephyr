@@ -30,6 +30,17 @@
 
 #define RX_GPIO_PORT_PINS 8
 
+
+#define SYSTEM_PRCR (*(uint16_t*)0x000803FE)
+#define MPC_PWPR    (*(uint8_t*)0x0008C11F)
+
+#define ENABLE_WRITING_SYSTEM  ((SYSTEM_PRCR)=0xA50Bu)
+#define DISABLE_WRITING_SYSTEM  ((SYSTEM_PRCR)=0xA500u)
+
+#define ENABLE_WRITING_MPC MPC_PWPR &= ~BIT(7); MPC_PWPR |= BIT(6);
+#define DISABLE_WRITING_MPC MPC_PWPR &= ~BIT(6); MPC_PWPR |= BIT(7);
+ 
+
 #endif /* !_ASMLANGUAGE */
 
 #endif /* _SOC_H_ */

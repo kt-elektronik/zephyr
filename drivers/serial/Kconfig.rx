@@ -1,0 +1,10 @@
+# SPDX-License-Identifier: Apache-2.0
+
+config UART_RX
+	bool "RX65N UART driver"
+	default y
+	select SERIAL_HAS_DRIVER
+	# select SERIAL_SUPPORT_INTERRUPT
+	select GPIO_RX
+	depends on SOC_FAMILY_RX
+	
