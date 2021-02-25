@@ -16,7 +16,7 @@
 
 
 
-#define DEV_CFG(dev)	((const struct uart_rx_device_config *const)(dev)->config)
+#define DEV_CFG(dev) ((const struct uart_rx_device_config *const)(dev)->config)
 #define DEV_DATA(dev) ((struct uart_rx_data *)(dev)->data)
 #define DEV_BASE(dev) \
 	((volatile struct st_sci12  *)(DEV_CFG(dev))->base)
@@ -29,6 +29,7 @@ struct uart_rx_device_config {
 	uintptr_t base;
 	uint32_t sys_clk_freq;
 	uint32_t baud_rate;
+	uint8_t type;
 #ifdef CONFIG_UART_INTERRUPT_DRIVEN
 	irq_cfg_func_t cfg_func;
 #endif
@@ -53,10 +54,10 @@ struct uart_rx_data {
 static void uart_rx_poll_out(const struct device *dev,
 					 unsigned char c)
 {
-	volatile struct st_sci12 *sci = DEV_BASE(dev);
+	volatile struct st_sci_com *sci = (struct st_sci_com *) DEV_BASE(dev);
 
 	while ((sci->SSR & BIT(2)) == 0);
-  sci->TDR = c;
+	sci->TDR = c;
 }
 
 /**
@@ -69,25 +70,11 @@ static void uart_rx_poll_out(const struct device *dev,
  */
 static int uart_rx_poll_in(const struct device *dev, unsigned char *c)
 {
-	// volatile struct uart_rx_regs_t *uart = DEV_UART(dev);
-	// uint32_t val = uart->rx;
-
-	// if (val & RXDATA_EMPTY) {
-	// 	return -1;
-	// }
-
-	// *c = (unsigned char)(val & RXDATA_MASK);
-
 	return 0;
 }
 
 static int uart_rx_err_check(const struct device *dev)
 {
-	// uint32_t err = UART_GET_PARITY_ERR(DEV_BASE(dev)->int_st)
-	// 	    | UART_GET_FRAME_ERR(DEV_BASE(dev)->int_st);
-
-	// return err;
-
 	return 0;
 }
 
@@ -103,61 +90,45 @@ static int uart_rx_configure(const struct device *dev,
 	return 0;
 }
 
-static int uart_rx_init(const struct device *dev)
+static int uart_rx_sci0_init(const struct device *dev)
 {
-	// const struct uart_rx_device_config * const cfg = DEV_CFG(dev);
-	// cfg->baud_rate;
+	/* do sci0 specific init */
+	ARG_UNUSED(dev);
+	return 0;
+}
+
+static int uart_rx_sci12_init(const struct device *dev)
+{
 	volatile struct st_sci12 *sci = DEV_BASE(dev);
 
-	ENABLE_WRITING_SYSTEM;
+	REGISTER_WRITE_ENABLE(1);
 	ENABLE_WRITING_MPC;
 
 	/* Cancel SCI stop state */
-  //SYSTEM.MSTPCRB.BIT.MSTPB4 = 0U;
 	*(uint16_t*)0x00080014 &= ~BIT(4);
 
- /* Clear the control register */
-  sci->SCR = 0x00U;
-  /* Set clock enable */
-  sci->SCR = _00_SCI_INTERNAL_SCK_UNUSED;
-  // /* Clear the SIMR1.IICM, SPMR.CKPH, and CKPOL bit */
+	/* Clear the control register */
+	sci->SCR = 0x00U;
+	/* Set clock enable */
+	sci->SCR = _00_SCI_INTERNAL_SCK_UNUSED;
+	/* Clear the SIMR1.IICM, SPMR.CKPH, and CKPOL bit */
 	sci->SIMR1 &= ~BIT(0);
 	sci->SPMR &= ~(BIT(6) | BIT(7));
-  // sci->SIMR1.BIT.IICM = 0U;
-  // sci->SPMR.BIT.CKPH = 0U;
-  // sci->SPMR.BIT.CKPOL = 0U;
 
-  /* Set control registers */
-  // 115200 Baud
-  sci->SPMR = _00_SCI_RTS | _00_SCI_CLOCK_NOT_INVERTED | _00_SCI_CLOCK_NOT_DELAYED;
-  sci->SMR = _00_SCI_CLOCK_PCLK | _00_SCI_MULTI_PROCESSOR_DISABLE | _00_SCI_STOP_1 | 
+	/* Set registers for first test*/
+	// 115200 Baud
+	sci->SPMR = _00_SCI_RTS | _00_SCI_CLOCK_NOT_INVERTED | _00_SCI_CLOCK_NOT_DELAYED;
+	sci->SMR = _00_SCI_CLOCK_PCLK | _00_SCI_MULTI_PROCESSOR_DISABLE | _00_SCI_STOP_1 | 
 			_00_SCI_PARITY_DISABLE | _00_SCI_DATA_LENGTH_8  | _00_SCI_ASYNCHRONOUS_OR_I2C_MODE;
-  sci->SCMR = _00_SCI_SERIAL_MODE | _00_SCI_DATA_INVERT_NONE | _00_SCI_DATA_LSB_FIRST |
+	sci->SCMR = _00_SCI_SERIAL_MODE | _00_SCI_DATA_INVERT_NONE | _00_SCI_DATA_LSB_FIRST |
 			_10_SCI_DATA_LENGTH_8_OR_7 | _62_SCI_SCMR_DEFAULT;
-  sci->SEMR = _00_SCI_BIT_MODULATION_DISABLE | _10_SCI_8_BASE_CLOCK | 
+	sci->SEMR = _00_SCI_BIT_MODULATION_DISABLE | _10_SCI_8_BASE_CLOCK | 
 			_00_SCI_NOISE_FILTER_DISABLE | _40_SCI_BAUDRATE_DOUBLE | _00_SCI_LOW_LEVEL_START_BIT;
 
-  /* Set bit rate */
-  sci->BRR = 0x40U;
+	/* Set bit rate */
+	sci->BRR = 0x40U;
 
-  // /* Set RXD12 pin */
-  // MPC.PE2PFS.BYTE = 0x0CU;
-  // PORTE.PMR.BYTE |= 0x04U;
-
-  // /* Set TXD12 pin */
-  // PORTE.PODR.BYTE |= 0x02U;
-  // MPC.PE1PFS.BYTE = 0x0CU;
-  // PORTE.PMR.BYTE |= 0x02U;
-  // PORTE.PDR.BYTE |= 0x02U;
-
-// 	/* Enable TX and RX channels */
-// 	uart->txctrl = TXCTRL_TXEN | CTRL_CNT(cfg->txcnt_irq);
-// 	uart->rxctrl = RXCTRL_RXEN | CTRL_CNT(cfg->rxcnt_irq);
-
-// 	/* Set baud rate */
-// 	uart->div = cfg->sys_clk_freq / cfg->baud_rate - 1;
-
-	return 0;
+ 	return 0;
 }
 
 static const struct uart_driver_api uart_rx_driver_api = {
@@ -184,30 +155,47 @@ static const struct uart_driver_api uart_rx_driver_api = {
 #endif
 };
 
-//#ifdef CONFIG_RX_UART_SCI0
-
-//static struct uart_rx_data uart_rx_data_0;
-static struct st_sci12 uart_rx_data_0;
+static struct st_sci0 uart_rx_data_0;
+static struct st_sci12 uart_rx_data_12;
 
 #ifdef CONFIG_UART_INTERRUPT_DRIVEN
 static void uart_rx_irq_cfg_func_0(void);
 #endif
 
 static const struct uart_rx_device_config uart_rx_dev_cfg_0 = {
-	.base         = DT_INST_REG_ADDR(0),
-	//.sys_clk_freq = DT_INST_PROP(0, clock_frequency),
-	.baud_rate    = DT_INST_PROP(0, current_speed)
+	.base         = DT_REG_ADDR(DT_NODELABEL(sci0)),
+	.baud_rate    = DT_PROP(DT_NODELABEL(sci0), current_speed),
+	//.type         = DT_PROP(DT_NODELABEL(sci0), type),
 #ifdef CONFIG_UART_INTERRUPT_DRIVEN
 	.cfg_func     = uart_rx_irq_cfg_func_0,
 #endif
 };
 
-DEVICE_DT_INST_DEFINE(0,
-			uart_rx_init,
+static const struct uart_rx_device_config uart_rx_dev_cfg_12 = {
+	.base         = DT_REG_ADDR(DT_NODELABEL(sci12)),
+	.baud_rate    = DT_PROP(DT_NODELABEL(sci12), current_speed),
+	//.type         = DT_PROP(DT_NODELABEL(sci12), type),
+#ifdef CONFIG_UART_INTERRUPT_DRIVEN
+	.cfg_func     = uart_rx_irq_cfg_func_0,
+#endif
+};
+
+
+DEVICE_DT_DEFINE(DT_NODELABEL(sci0),
+			uart_rx_sci0_init,
 			device_pm_control_nop,
 			&uart_rx_data_0, 
 			&uart_rx_dev_cfg_0,
-			POST_KERNEL, 
+			PRE_KERNEL_2, 
 			CONFIG_KERNEL_INIT_PRIORITY_DEVICE,
 			(void *)&uart_rx_driver_api);
+
+DEVICE_DT_DEFINE(DT_NODELABEL(sci12),
+			uart_rx_sci12_init,
+			device_pm_control_nop,
+			&uart_rx_data_12, 
+			&uart_rx_dev_cfg_12,
+			PRE_KERNEL_2, 
+			CONFIG_KERNEL_INIT_PRIORITY_DEVICE,
+			(void *)&uart_rx_driver_api);			
 

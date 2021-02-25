@@ -11,6 +11,10 @@ properties:
     interrupts:
       required: false
 
+    type:
+      type: int
+      required: false
+
     # tx-pin:
     #   type: int
     #   description: TX pin

@@ -4,6 +4,11 @@
 #include <mem.h>
 #include "skeleton.dtsi" 
 #include "rx65n_gpio.dtsi" 
+// #include <../soc/rxv2/rx/rx65n/include/rx_sci.h>
+
+#define RX_SCI_TYPE_G 0  /* SCI0 - SCI9 */
+#define RX_SCI_TYPE_I 10 /* SCI10, SCI11 */
+#define RX_SCI_TYPE_H 12 /* SCI12 */
 
 / {
 

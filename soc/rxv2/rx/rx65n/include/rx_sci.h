@@ -9,6 +9,19 @@
 
 #include <stdint.h>
 
+#define RX_SCI_TYPE_G 0  /* SCI0 - SCI9 */
+#define RX_SCI_TYPE_I 10 /* SCI10, SCI11 */
+#define RX_SCI_TYPE_H 12 /* SCI12 */
+
+
+struct st_sci_com {
+	uint8_t SMR;
+	uint8_t BRR;
+	uint8_t SCR;
+	uint8_t TDR;
+	uint8_t SSR;
+};
+
 struct st_sci0 {
 	uint8_t SMR;
 	uint8_t BRR;
@@ -16,13 +29,13 @@ struct st_sci0 {
 	uint8_t TDR;
 	uint8_t SSR;
 	uint8_t RDR;
-  uint8_t SCMR;
-  uint8_t SEMR;
-  uint8_t SIMR1;
-  uint8_t SIMR2;
-  uint8_t SIMR3;
-  uint8_t SISR;	
-  uint8_t SPMR;
+	uint8_t SCMR;
+	uint8_t SEMR;
+	uint8_t SIMR1;
+	uint8_t SIMR2;
+	uint8_t SIMR3;
+	uint8_t SISR;	
+	uint8_t SPMR;
 	union {
 		uint16_t TDRHL;
 		struct {
@@ -124,10 +137,7 @@ struct st_sci10 {
 };
 
 struct st_sci12 {
-	union {
-		uint8_t BASE;
-		uint8_t SMR;
-	};
+	uint8_t SMR;
 	uint8_t BRR;
 	uint8_t SCR;
 	uint8_t TDR;
