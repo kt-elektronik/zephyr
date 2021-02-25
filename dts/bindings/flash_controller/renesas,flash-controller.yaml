@@ -1,0 +1,6 @@
+description: Renesas flash controller
+
+compatible: "renesas,flash-controller"
+
+include: flash-controller.yaml
+

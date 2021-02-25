@@ -1,0 +1,703 @@
+/* Copyright (c) 2020 KT-Elektronik, Klaucke und Partner GmbH */
+/* SPDX-License-Identifier: Apache-2.0 */
+
+#include <mem.h>
+#include <dt-bindings/gpio/gpio.h>
+#include "skeleton.dtsi" 
+
+/ {
+
+	chosen {
+		//zephyr,flash-controller = &flashctrl;
+	};	
+
+	cpus {
+		#address-cells = <1>;
+		#size-cells = <0>;
+		//compatible = "renesas,rxv2"; // check if: driver name is correct here
+
+		cpu0: cpu@0 {
+			device_type = "cpu";
+			compatible = "renesas,rxv2","renesas,rx"; // check if: driver name is correct here
+			reg = <0x0>;
+			timebase-frequency = <120000000>; // in Hz
+			clock-frequency = <120000000>; // in Hz
+			status = "okay";
+			// clocks = <&cluster1_clk>; // check if: required
+			//label = "CPU0";
+		};
+	};
+
+	sram0: memory@0 {
+		device_type = "memory";
+		compatible = "mmio-sram";
+		reg = <0x00000000 DT_SIZE_K(640)>;
+		label = "SRAM0";
+	};
+
+	soc {
+		#address-cells = <1>;
+		#size-cells = <1>;
+		device_type = "soc";
+		compatible = "simple-bus";
+		//interrupt-parent = <&rxv2_int_ctrl>;
+		ranges;	
+
+        // flashctrl: flash-controller@800000000000400 { // FFE00000
+		// 	compatible = "renesas,flash-controller", "renesas,rxv2";
+		// 	label = "FLASH_CTRL";			
+		// 	reg = <0x8000000 0x400 0x8000000 0x400>;  // check if: correct (reg = <0x10000000 0x0 >; // also: 0xFFE00000 0x1FFFFF)
+		// 	//interrupts = <4 0>;
+		// 	//interrupt-names = "command-complete", "read-collision";
+
+		// 	#address-cells = <0x1>;
+		// 	#size-cells = <0x1>;
+		//	}; // flashctrl: flash-controller	
+
+		flash0: flash@ffe00000 {
+			compatible = "soc-nv-flash";				
+			//label = "FLASH_RX";
+			reg = <0xFFE00000 DT_SIZE_M(2)>;
+			//erase-block-size = <4096>; // check if: correct
+			//write-block-size = <8>; // check if: correct
+		}; 
+	
+/*
+		sysclk: clock { // check if: address @??????? is missing
+		    compatible = "fixed-clock";
+		    clock-frequency = <120000000>; // in Hz
+		    #clock-cells = <0x0>; // check if: correct
+			label = "SYSTEM_CLOCK";
+		};
+*/		
+/*
+		rxv2_int_ctrl: interrupt-controller@87010 { // R01DS0276EJ0230 Rev.2.30, R01UH0590EJ0230 Rev.2.30
+			compatible = "renesas,rxv2"; // check if: driver name is correct here			
+			#interrupt-cells = <0x3>;
+			#address-cells = <0x0>; // check if: 0x2
+			interrupt-controller; // is a boolean indicating that the current node is an interrupt controller
+			reg =	
+				<0x00087010 0x01>, // check if: more than only one address is required: 0008 7010h to 0008 70FFh ICU Interrupt Request Register 016 to Interrupt Request Register 255 IR016 to IR255 8 8 2 ICLK ICUB
+				<0x0008711A 0x01>, // check if: more than only one address is required: 0008 711Ah to 0008 71FFh ICU DTC Transfer Request Enable Register 026 to DTC Transfer Request Enable Register 255 DTCER026 to DTCER255 8 8 2 ICLK ICUB
+				<0x00087202 0x01>, // check if: more than only one address is required: 0008 7202h to 0008 721Fh ICU Interrupt Request Enable Register 02 to Interrupt Request Enable Register 1F IER02 to IER1F 8 8 2 ICLK ICUB
+				<0x000872E0 0x01>, // 0008 72E0h ICU Software Interrupt Generation Register SWINTR 8 8 2 ICLK ICUB
+				<0x000872E1 0x01>, // 0008 72E1h ICU Software Interrupt 2 Generation Register SWINT2R 8 8 2 ICLK ICUB
+				<0x000872F0 0x02>, // 0008 72F0h ICU 16 2 ICLK ICUB Fast Interrupt Set Register FIR 16 0008 7300h to ICU
+				<0x000873FF 0x01>, // 0008 73FFh Interrupt Source Priority Register 000 to Interrupt Source Priority Register 255 IPR000 to IPR255 8 8 2 ICLK ICUB
+				<0x00087400 0x01>, // 0008 7400h ICU DMAC Trigger Select Register 0 DMRSR0 8 8 2 ICLK ICUB
+				<0x00087404 0x01>, // 0008 7404h ICU DMAC Trigger Select Register 1 DMRSR1 8 8 2 ICLK ICUB
+				<0x00087408 0x01>, // 0008 7408h ICU DMAC Trigger Select Register 2 DMRSR2 8 8 2 ICLK ICUB
+				<0x0008740C 0x01>, // 0008 740Ch ICU DMAC Trigger Select Register 3 DMRSR3 8 8 2 ICLK ICUB
+				<0x00087410 0x01>, // 0008 7410h ICU DMAC Trigger Select Register 4 DMRSR4 8 8 2 ICLK ICUB
+				<0x00087414 0x01>, // 0008 7414h ICU DMAC Trigger Select Register 5 DMRSR5 8 8 2 ICLK ICUB
+				<0x00087418 0x01>, // 0008 7418h ICU DMAC Trigger Select Register 6 DMRSR6 8 8 2 ICLK ICUB
+				<0x0008741C 0x01>, // 0008 741Ch ICU DMAC Trigger Select Register 7 DMRSR7 8 8 2 ICLK ICUB
+				<0x00087500 0x01>, // check if: more than only one address is required: 0008 7500h to 0008 750Fh ICU IRQ Control Register 0 to IRQ Control Register 15 IRQCR0 to IRQCR15 8 8 2 ICLK ICUB
+				<0x00087520 0x01>, // 0008 7520h ICU IRQ Pin Digital Filter Enable Register 0 IRQFLTE0 8 8 2 ICLK ICUB
+				<0x00087521 0x01>, // 0008 7521h ICU IRQ Pin Digital Filter Enable Register 1 IRQFLTE1 8 8 2 ICLK ICUB
+				<0x00087528 0x02>, // 0008 7528h ICU IRQ Pin Digital Filter Setting Register 0 IRQFLTC0 16 16 2 ICLK ICUB
+				<0x0008752A 0x02>, // 0008 752Ah ICU IRQ Pin Digital Filter Setting Register 1 IRQFLTC1 16 16 2 ICLK ICUB
+				<0x00087580 0x01>, // 0008 7580h ICU Non-Maskable Interrupt Status Register NMISR 8 8 2 ICLK ICUB
+				<0x00087581 0x01>, // 0008 7581h ICU Non-Maskable Interrupt Enable Register NMIER 8 8 2 ICLK ICUB
+				<0x00087582 0x01>, // 0008 7582h ICU Non-Maskable Interrupt Status Clear Register NMICLR 8 8 2 ICLK ICUB
+				<0x00087583 0x01>, // 0008 7583h ICU NMI Pin Interrupt Control Register NMICR 8 8 2 ICLK ICUB
+				<0x00087590 0x01>, // 0008 7590h ICU NMI Pin Digital Filter Enable Register NMIFLTE 8 8 2 ICLK ICUB
+				<0x00087594 0x01>, // 0008 7594h ICU NMI Pin Digital Filter Setting Register NMIFLTC 8 8 2 ICLK ICUB
+				<0x00087600 0x04>, // 0008 7600h ICU Group BE0 Interrupt Request Register GRPBE0 32 32 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087630 0x04>, // 0008 7630h ICU Group BL0 Interrupt Request Register GRPBL0 32 32 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087634 0x04>, // 0008 7634h ICU Group BL1 Interrupt Request Register GRPBL1 32 32 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087638 0x04>, // 0008 7638h ICU Group BL2 Interrupt Request Register GRPBL2 32 32 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087640 0x04>, // 0008 7640h ICU Group BE0 Interrupt Request Enable Register GENBE0 32 32 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087670 0x04>, // 0008 7670h ICU Group BL0 Interrupt Request Enable Register GENBL0 32 32 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087674 0x04>, // 0008 7674h ICU Group BL1 Interrupt Request Enable Register GENBL1 32 32 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087678 0x04>, // 0008 7678h ICU Group BL2 Interrupt Request Enable Register GENBL2 32 32 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087680 0x04>, // 0008 7680h ICU Group BE0 Interrupt Clear Register GCRBE0 32 32 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087700 0x01>, // 0008 7700h ICU Software Configurable Interrupt B Request Register 0 PIBR0 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087701 0x01>, // 0008 7701h ICU Software Configurable Interrupt B Request Register 1 PIBR1 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087702 0x01>, // 0008 7702h ICU Software Configurable Interrupt B Request Register 2 PIBR2 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087703 0x01>, // 0008 7703h ICU Software Configurable Interrupt B Request Register 3 PIBR3 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087704 0x01>, // 0008 7704h ICU Software Configurable Interrupt B Request Register 4 PIBR4 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087705 0x01>, // 0008 7705h ICU Software Configurable Interrupt B Request Register 5 PIBR5 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087706 0x01>, // 0008 7706h ICU Software Configurable Interrupt B Request Register 6 PIBR6 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087707 0x01>, // 0008 7707h ICU Software Configurable Interrupt B Request Register 7 PIBR7 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087708 0x01>, // 0008 7708h ICU Software Configurable Interrupt B Request Register 8 PIBR8 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087709 0x01>, // 0008 7709h ICU Software Configurable Interrupt B Request Register 9 PIBR9 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x0008770A 0x01>, // 0008 770Ah ICU Software Configurable Interrupt B Request Register A PIBRA 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x0008770B 0x01>, // 0008 770Bh ICU Software Configurable Interrupt B Request Register B PIBRB 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087780 0x01>, // 0008 7780h ICU Software Configurable Interrupt B Source Select Register X128 SLIBXR128 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087781 0x01>, // 0008 7781h ICU Software Configurable Interrupt B Source Select Register X129 SLIBXR129 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087782 0x01>, // 0008 7782h ICU Software Configurable Interrupt B Source Select Register X130 SLIBXR130 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087783 0x01>, // 0008 7783h ICU Software Configurable Interrupt B Source Select Register X131 SLIBXR131 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087784 0x01>, // 0008 7784h ICU Software Configurable Interrupt B Source Select Register X132 SLIBXR132 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087785 0x01>, // 0008 7785h ICU Software Configurable Interrupt B Source Select Register X133 SLIBXR133 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087786 0x01>, // 0008 7786h ICU Software Configurable Interrupt B Source Select Register X134 SLIBXR134 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087787 0x01>, // 0008 7787h ICU Software Configurable Interrupt B Source Select Register X135 SLIBXR135 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087788 0x01>, // 0008 7788h ICU Software Configurable Interrupt B Source Select Register X136 SLIBXR136 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087789 0x01>, // 0008 7789h ICU Software Configurable Interrupt B Source Select Register X137 SLIBXR137 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x0008778A 0x01>, // 0008 778Ah ICU Software Configurable Interrupt B Source Select Register X138 SLIBXR138 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x0008778B 0x01>, // 0008 778Bh ICU Software Configurable Interrupt B Source Select Register X139 SLIBXR139 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x0008778C 0x01>, // 0008 778Ch ICU Software Configurable Interrupt B Source Select Register X140 SLIBXR140 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x0008778D 0x01>, // 0008 778Dh ICU Software Configurable Interrupt B Source Select Register X141 SLIBXR141 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x0008778E 0x01>, // 0008 778Eh ICU Software Configurable Interrupt B Source Select Register X142 SLIBXR142 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x0008778F 0x01>, // 0008 778Fh ICU Software Configurable Interrupt B Source Select Register X143 SLIBXR143 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087790 0x01>, // 0008 7790h ICU Software Configurable Interrupt B Source Select Register 144 SLIBR144 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087791 0x01>, // 0008 7791h ICU Software Configurable Interrupt B Source Select Register 145 SLIBR145 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087792 0x01>, // 0008 7792h ICU Software Configurable Interrupt B Source Select Register 146 SLIBR146 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087793 0x01>, // 0008 7793h ICU Software Configurable Interrupt B Source Select Register 147 SLIBR147 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087794 0x01>, // 0008 7794h ICU Software Configurable Interrupt B Source Select Register 148 SLIBR148 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087795 0x01>, // 0008 7795h ICU Software Configurable Interrupt B Source Select Register 149 SLIBR149 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087796 0x01>, // 0008 7796h ICU Software Configurable Interrupt B Source Select Register 150 SLIBR150 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087797 0x01>, // 0008 7797h ICU Software Configurable Interrupt B Source Select Register 151 SLIBR151 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087798 0x01>, // 0008 7798h ICU Software Configurable Interrupt B Source Select Register 152 SLIBR152 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087799 0x01>, // 0008 7799h ICU Software Configurable Interrupt B Source Select Register 153 SLIBR153 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x0008779A 0x01>, // 0008 779Ah ICU Software Configurable Interrupt B Source Select Register 154 SLIBR154 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x0008779B 0x01>, // 0008 779Bh ICU Software Configurable Interrupt B Source Select Register 155 SLIBR155 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x0008779C 0x01>, // 0008 779Ch ICU Software Configurable Interrupt B Source Select Register 156 SLIBR156 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x0008779D 0x01>, // 0008 779Dh ICU Software Configurable Interrupt B Source Select Register 157 SLIBR157 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x0008779E 0x01>, // 0008 779Eh ICU Software Configurable Interrupt B Source Select Register 158 SLIBR158 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x0008779F 0x01>, // 0008 779Fh ICU Software Configurable Interrupt B Source Select Register 159 SLIBR159 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877A0 0x01>, // 0008 77A0h ICU Software Configurable Interrupt B Source Select Register 160 SLIBR160 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877A1 0x01>, // 0008 77A1h ICU Software Configurable Interrupt B Source Select Register 161 SLIBR161 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877A2 0x01>, // 0008 77A2h ICU Software Configurable Interrupt B Source Select Register 162 SLIBR162 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877A3 0x01>, // 0008 77A3h ICU Software Configurable Interrupt B Source Select Register 163 SLIBR163 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877A4 0x01>, // 0008 77A4h ICU Software Configurable Interrupt B Source Select Register 164 SLIBR164 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877A5 0x01>, // 0008 77A5h ICU Software Configurable Interrupt B Source Select Register 165 SLIBR165 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877A6 0x01>, // 0008 77A6h ICU Software Configurable Interrupt B Source Select Register 166 SLIBR166 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877A7 0x01>, // 0008 77A7h ICU Software Configurable Interrupt B Source Select Register 167 SLIBR167 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877A8 0x01>, // 0008 77A8h ICU Software Configurable Interrupt B Source Select Register 168 SLIBR168 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877A9 0x01>, // 0008 77A9h ICU Software Configurable Interrupt B Source Select Register 169 SLIBR169 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877AA 0x01>, // 0008 77AAh ICU Software Configurable Interrupt B Source Select Register 170 SLIBR170 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877AB 0x01>, // 0008 77ABh ICU Software Configurable Interrupt B Source Select Register 171 SLIBR171 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877AC 0x01>, // 0008 77ACh ICU Software Configurable Interrupt B Source Select Register 172 SLIBR172 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877AD 0x01>, // 0008 77ADh ICU Software Configurable Interrupt B Source Select Register 173 SLIBR173 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877AE 0x01>, // 0008 77AEh ICU Software Configurable Interrupt B Source Select Register 174 SLIBR174 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877AF 0x01>, // 0008 77AFh ICU Software Configurable Interrupt B Source Select Register 175 SLIBR175 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877B0 0x01>, // 0008 77B0h ICU Software Configurable Interrupt B Source Select Register 176 SLIBR176 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877B1 0x01>, // 0008 77B1h ICU Software Configurable Interrupt B Source Select Register 177 SLIBR177 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877B2 0x01>, // 0008 77B2h ICU Software Configurable Interrupt B Source Select Register 178 SLIBR178 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877B3 0x01>, // 0008 77B3h ICU Software Configurable Interrupt B Source Select Register 179 SLIBR179 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877B4 0x01>, // 0008 77B4h ICU Software Configurable Interrupt B Source Select Register 180 SLIBR180 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877B5 0x01>, // 0008 77B5h ICU Software Configurable Interrupt B Source Select Register 181 SLIBR181 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877B6 0x01>, // 0008 77B6h ICU Software Configurable Interrupt B Source Select Register 182 SLIBR182 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877B7 0x01>, // 0008 77B7h ICU Software Configurable Interrupt B Source Select Register 183 SLIBR183 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877B8 0x01>, // 0008 77B8h ICU Software Configurable Interrupt B Source Select Register 184 SLIBR184 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877B9 0x01>, // 0008 77B9h ICU Software Configurable Interrupt B Source Select Register 185 SLIBR185 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877BA 0x01>, // 0008 77BAh ICU Software Configurable Interrupt B Source Select Register 186 SLIBR186 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877BB 0x01>, // 0008 77BBh ICU Software Configurable Interrupt B Source Select Register 187 SLIBR187 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877BC 0x01>, // 0008 77BCh ICU Software Configurable Interrupt B Source Select Register 188 SLIBR188 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877BD 0x01>, // 0008 77BDh ICU Software Configurable Interrupt B Source Select Register 189 SLIBR189 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877BE 0x01>, // 0008 77BEh ICU Software Configurable Interrupt B Source Select Register 190 SLIBR190 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877BF 0x01>, // 0008 77BFh ICU Software Configurable Interrupt B Source Select Register 191 SLIBR191 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877C0 0x01>, // 0008 77C0h ICU Software Configurable Interrupt B Source Select Register 192 SLIBR192 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877C1 0x01>, // 0008 77C1h ICU Software Configurable Interrupt B Source Select Register 193 SLIBR193 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877C2 0x01>, // 0008 77C2h ICU Software Configurable Interrupt B Source Select Register 194 SLIBR194 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877C3 0x01>, // 0008 77C3h ICU Software Configurable Interrupt B Source Select Register 195 SLIBR195 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877C4 0x01>, // 0008 77C4h ICU Software Configurable Interrupt B Source Select Register 196 SLIBR196 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877C5 0x01>, // 0008 77C5h ICU Software Configurable Interrupt B Source Select Register 197 SLIBR197 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877C6 0x01>, // 0008 77C6h ICU Software Configurable Interrupt B Source Select Register 198 SLIBR198 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877C7 0x01>, // 0008 77C7h ICU Software Configurable Interrupt B Source Select Register 199 SLIBR199 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877C8 0x01>, // 0008 77C8h ICU Software Configurable Interrupt B Source Select Register 200 SLIBR200 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877C9 0x01>, // 0008 77C9h ICU Software Configurable Interrupt B Source Select Register 201 SLIBR201 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877CA 0x01>, // 0008 77CAh ICU Software Configurable Interrupt B Source Select Register 202 SLIBR202 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877CB 0x01>, // 0008 77CBh ICU Software Configurable Interrupt B Source Select Register 203 SLIBR203 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877CC 0x01>, // 0008 77CCh ICU Software Configurable Interrupt B Source Select Register 204 SLIBR204 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877CD 0x01>, // 0008 77CDh ICU Software Configurable Interrupt B Source Select Register 205 SLIBR205 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877CE 0x01>, // 0008 77CEh ICU Software Configurable Interrupt B Source Select Register 206 SLIBR206 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x000877CF 0x01>, // 0008 77CFh ICU Software Configurable Interrupt B Source Select Register 207 SLIBR207 8 8 2 ICLK to 1 PCLKB 2 ICLK ICUB
+				<0x00087830 0x04>, // 0008 7830h ICU Group AL0 Interrupt Request Register GRPAL0 32 32 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x00087834 0x04>, // 0008 7834h ICU Group AL1 Interrupt Request Register GRPAL1 32 32 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x00087870 0x04>, // 0008 7870h ICU Group AL0 Interrupt Request Enable Register GENAL0 32 32 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x00087874 0x04>, // 0008 7874h ICU Group AL1 Interrupt Request Enable Register GENAL1 32 32 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x00087900 0x01>, // 0008 7900h ICU Software Configurable Interrupt A Request Register 0 PIAR0 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x00087901 0x01>, // 0008 7901h ICU Software Configurable Interrupt A Request Register 1 PIAR1 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x00087902 0x01>, // 0008 7902h ICU Software Configurable Interrupt A Request Register 2 PIAR2 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x00087903 0x01>, // 0008 7903h ICU Software Configurable Interrupt A Request Register 3 PIAR3 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x00087904 0x01>, // 0008 7904h ICU Software Configurable Interrupt A Request Register 4 PIAR4 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x00087905 0x01>, // 0008 7905h ICU Software Configurable Interrupt A Request Register 5 PIAR5 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x0008790B 0x01>, // 0008 790Bh ICU Software Configurable Interrupt A Request Register B PIARB 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879D0 0x01>, // 0008 79D0h ICU Software Configurable Interrupt A Source Select Register 208 SLIAR208 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879D1 0x01>, // 0008 79D1h ICU Software Configurable Interrupt A Source Select Register 209 SLIAR209 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879D2 0x01>, // 0008 79D2h ICU Software Configurable Interrupt A Source Select Register 210 SLIAR210 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879D3 0x01>, // 0008 79D3h ICU Software Configurable Interrupt A Source Select Register 211 SLIAR211 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879D4 0x01>, // 0008 79D4h ICU Software Configurable Interrupt A Source Select Register 212 SLIAR212 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879D5 0x01>, // 0008 79D5h ICU Software Configurable Interrupt A Source Select Register 213 SLIAR213 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879D6 0x01>, // 0008 79D6h ICU Software Configurable Interrupt A Source Select Register 214 SLIAR214 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879D7 0x01>, // 0008 79D7h ICU Software Configurable Interrupt A Source Select Register 215 SLIAR215 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879D8 0x01>, // 0008 79D8h ICU Software Configurable Interrupt A Source Select Register 216 SLIAR216 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879D9 0x01>, // 0008 79D9h ICU Software Configurable Interrupt A Source Select Register 217 SLIAR217 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879DA 0x01>, // 0008 79DAh ICU Software Configurable Interrupt A Source Select Register 218 SLIAR218 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879DB 0x01>, // 0008 79DBh ICU Software Configurable Interrupt A Source Select Register 219 SLIAR219 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879DC 0x01>, // 0008 79DCh ICU Software Configurable Interrupt A Source Select Register 220 SLIAR220 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879DD 0x01>, // 0008 79DDh ICU Software Configurable Interrupt A Source Select Register 221 SLIAR221 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879DE 0x01>, // 0008 79DEh ICU Software Configurable Interrupt A Source Select Register 222 SLIAR222 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879DF 0x01>, // 0008 79DFh ICU Software Configurable Interrupt A Source Select Register 223 SLIAR223 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879E0 0x01>, // 0008 79E0h ICU Software Configurable Interrupt A Source Select Register 224 SLIAR224 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879E1 0x01>, // 0008 79E1h ICU Software Configurable Interrupt A Source Select Register 225 SLIAR225 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879E2 0x01>, // 0008 79E2h ICU Software Configurable Interrupt A Source Select Register 226 SLIAR226 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879E3 0x01>, // 0008 79E3h ICU Software Configurable Interrupt A Source Select Register 227 SLIAR227 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879E4 0x01>, // 0008 79E4h ICU Software Configurable Interrupt A Source Select Register 228 SLIAR228 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879E5 0x01>, // 0008 79E5h ICU Software Configurable Interrupt A Source Select Register 229 SLIAR229 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879E6 0x01>, // 0008 79E6h ICU Software Configurable Interrupt A Source Select Register 230 SLIAR230 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879E7 0x01>, // 0008 79E7h ICU Software Configurable Interrupt A Source Select Register 231 SLIAR231 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879E8 0x01>, // 0008 79E8h ICU Software Configurable Interrupt A Source Select Register 232 SLIAR232 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879E9 0x01>, // 0008 79E9h ICU Software Configurable Interrupt A Source Select Register 233 SLIAR233 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879EA 0x01>, // 0008 79EAh ICU Software Configurable Interrupt A Source Select Register 234 SLIAR234 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879EB 0x01>, // 0008 79EBh ICU Software Configurable Interrupt A Source Select Register 235 SLIAR235 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879EC 0x01>, // 0008 79ECh ICU Software Configurable Interrupt A Source Select Register 236 SLIAR236 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879ED 0x01>, // 0008 79EDh ICU Software Configurable Interrupt A Source Select Register 237 SLIAR237 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879EE 0x01>, // 0008 79EEh ICU Software Configurable Interrupt A Source Select Register 238 SLIAR238 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879EF 0x01>, // 0008 79EFh ICU Software Configurable Interrupt A Source Select Register 239 SLIAR239 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879F0 0x01>, // 0008 79F0h ICU Software Configurable Interrupt A Source Select Register 240 SLIAR240 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879F1 0x01>, // 0008 79F1h ICU Software Configurable Interrupt A Source Select Register 241 SLIAR241 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879F2 0x01>, // 0008 79F2h ICU Software Configurable Interrupt A Source Select Register 242 SLIAR242 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879F3 0x01>, // 0008 79F3h ICU Software Configurable Interrupt A Source Select Register 243 SLIAR243 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879F4 0x01>, // 0008 79F4h ICU Software Configurable Interrupt A Source Select Register 244 SLIAR244 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879F5 0x01>, // 0008 79F5h ICU Software Configurable Interrupt A Source Select Register 245 SLIAR245 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879F6 0x01>, // 0008 79F6h ICU Software Configurable Interrupt A Source Select Register 246 SLIAR246 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879F7 0x01>, // 0008 79F7h ICU Software Configurable Interrupt A Source Select Register 247 SLIAR247 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879F8 0x01>, // 0008 79F8h ICU Software Configurable Interrupt A Source Select Register 248 SLIAR248 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879F9 0x01>, // 0008 79F9h ICU Software Configurable Interrupt A Source Select Register 249 SLIAR249 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879FA 0x01>, // 0008 79FAh ICU Software Configurable Interrupt A Source Select Register 250 SLIAR250 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879FB 0x01>, // 0008 79FBh ICU Software Configurable Interrupt A Source Select Register 251 SLIAR251 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879FC 0x01>, // 0008 79FCh ICU Software Configurable Interrupt A Source Select Register 252 SLIAR252 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879FD 0x01>, // 0008 79FDh ICU Software Configurable Interrupt A Source Select Register 253 SLIAR253 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879FE 0x01>, // 0008 79FEh ICU Software Configurable Interrupt A Source Select Register 254 SLIAR254 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x000879FF 0x01>, // 0008 79FFh ICU Software Configurable Interrupt A Source Select Register 255 SLIAR255 8 8 2 ICLK to 1 PCLKA 2 ICLK ICUB
+				<0x00087A00 0x01>, // 0008 7A00h ICU Software Configurable Interrupt Source Select Register Write Protect Register SLIPRCR 8 8 2 ICLK to 1 PCLKA/B 2 ICLK ICUB
+				<0x00087A01 0x01>; // 0008 7A01h ICU EXDMAC Trigger Select Register SELEXDR 8 8 2 ICLK to 1 PCLKA/B 2 ICLK ICUB
+
+				interrupt-names = 	"ch000","ch001","ch002","ch003","ch004","ch005","ch006","ch007","ch008","ch009",
+									"ch010","ch011","ch012","ch013","ch014","ch015","ch016","ch017","ch018","ch019",
+									"ch020","ch021","ch022","ch023","ch024","ch025","ch026","ch027","ch028","ch029",
+									"ch030","ch031","ch032","ch033","ch034","ch035","ch036","ch037","ch038","ch039",
+									"ch040","ch041","ch042","ch043","ch044","ch045","ch046","ch047","ch048","ch049",
+									"ch050","ch051","ch052","ch053","ch054","ch055","ch056","ch057","ch058","ch059",
+									"ch060","ch061","ch062","ch063","ch064","ch065","ch066","ch067","ch068","ch069",
+									"ch070","ch071","ch072","ch073","ch074","ch075","ch076","ch077","ch078","ch079",
+									"ch080","ch081","ch082","ch083","ch084","ch085","ch086","ch087","ch088","ch089",
+									"ch090","ch091","ch092","ch093","ch094","ch095","ch096","ch097","ch098","ch099",
+									"ch100","ch101","ch102","ch103","ch104","ch105","ch106","ch107","ch108","ch109",
+									"ch110","ch111","ch112","ch113","ch114","ch115","ch116","ch117","ch118","ch119",
+									"ch120","ch121","ch122","ch123","ch124","ch125","ch126","ch127","ch128","ch129",
+									"ch130","ch131","ch132","ch133","ch134","ch135","ch136","ch137","ch138","ch139",
+									"ch140","ch141","ch142","ch143","ch144","ch145","ch146","ch147","ch148","ch149",
+									"ch150","ch151","ch152","ch153","ch154","ch155","ch156","ch157","ch158","ch159",
+									"ch160","ch161","ch162","ch163","ch164","ch165","ch166","ch167","ch168","ch169",
+									"ch170","ch171","ch172","ch173","ch174","ch175","ch176","ch177","ch178","ch179",
+									"ch180","ch181","ch182","ch183","ch184","ch185","ch186","ch187";
+										
+					interrupts = <4711 0 815>; // check if: correct value
+					label = "rxv2_int_ctrl";	
+		};
+
+ */		
+		i2c0: i2c@88300 { // I2C-bus Interface (RIICa), from R01DS0276EJ0230 Rev.2.30, R01UH0590EJ0230 Rev.2.30
+			#address-cells = <0x1>;
+			#size-cells = <0x0>;
+            //cell-index = <0x1>;
+			compatible = "renesas,rx-i2c"; // check if: driver name is correct here
+			// interrupt-parent = <&int_ctrl>;
+			// interrupts = <4711 0 815>; // check if: correct
+			reg = 
+				<0x00088300 0x01>, // 0008 8300h RIIC0 I 2 C-bus Control Register 1 ICCR1 8 8 2, 3 PCLKB 2 ICLK RIICa
+				<0x00088301 0x01>, // 0008 8301h RIIC0 I 2 C-bus Control Register 2 ICCR2 8 8 2, 3 PCLKB 2 ICLK RIICa
+				<0x00088302 0x01>, // 0008 8302h RIIC0 I 2 C-bus Mode Register 1 ICMR1 8 8 2, 3 PCLKB 2 ICLK RIICa
+				<0x00088303 0x01>, // 0008 8303h RIIC0 I 2 C-bus Mode Register 2 ICMR2 8 8 2, 3 PCLKB 2 ICLK RIICa
+				<0x00088304 0x01>, // 0008 8304h RIIC0 I 2 C-bus Mode Register 3 ICMR3 8 8 2, 3 PCLKB 2 ICLK RIICa
+				<0x00088305 0x01>, // 0008 8305h RIIC0 I 2 C-bus Function Enable Register ICFER 8 8 2, 3 PCLKB 2 ICLK RIICa
+				<0x00088306 0x01>, // 0008 8306h RIIC0 I 2 C-bus Status Enable Register ICSER 8 8 2, 3 PCLKB 2 ICLK RIICa
+				<0x00088307 0x01>, // 0008 8307h RIIC0 I 2 C-bus Interrupt Enable Register ICIER 8 8 2, 3 PCLKB 2 ICLK RIICa
+				<0x00088308 0x01>, // 0008 8308h RIIC0 I 2 C-bus Status Register 1 ICSR1 8 8 2, 3 PCLKB 2 ICLK RIICa
+				<0x00088309 0x01>, // 0008 8309h RIIC0 I 2 C-bus Status Register 2 ICSR2 8 8 2, 3 PCLKB 2 ICLK RIICa
+				<0x0008830A 0x01>, // 0008 830Ah RIIC0 Slave Address Register L0 SARL0 8 8 2, 3 PCLKB 2 ICLK RIICa
+				<0x0008830B 0x01>, // 0008 830Bh RIIC0 Slave Address Register U0 SARU0 8 8 2, 3 PCLKB 2 ICLK RIICa
+				<0x0008830C 0x01>, // 0008 830Ch RIIC0 Slave Address Register L1 SARL1 8 8 2, 3 PCLKB 2 ICLK RIICa
+				<0x0008830D 0x01>, // 0008 830Dh RIIC0 Slave Address Register U1 SARU1 8 8 2, 3 PCLKB 2 ICLK RIICa
+				<0x0008830E 0x01>, // 0008 830Eh RIIC0 Slave Address Register L2 SARL2 8 8 2, 3 PCLKB 2 ICLK RIICa
+				<0x0008830F 0x01>, // 0008 830Fh RIIC0 Slave Address Register U2 SARU2 8 8 2, 3 PCLKB 2 ICLK RIICa
+				<0x00088310 0x01>, // 0008 8310h RIIC0 I 2 C-bus Bit Rate Low-Level Register ICBRL 8 8 2, 3 PCLKB 2 ICLK RIICa
+				<0x00088311 0x01>, // 0008 8311h RIIC0 I 2 C-bus Bit Rate High-Level Register ICBRH 8 8 2, 3 PCLKB 2 ICLK RIICa
+				<0x00088312 0x01>, // 0008 8312h RIIC0 I 2 C-bus Transmit Data Register ICDRT 8 8 2, 3 PCLKB 2 ICLK RIICa
+				<0x00088313 0x01>; // 0008 8313h RIIC0 I 2 C-bus Receive Data Register ICDRR 8 8 2, 3 PCLKB 2 ICLK RIICa
+			//dmas = <&dmac1 0x91>, <&dmac1 0x90>;
+			//dma-names = "tx", "rx";	
+			//reg-names = "control"; // check if: correct
+			label = "I2C_0";
+			//clock-frequency = <400000>; // Hz // check if: value must be corrected
+			status = "disabled";
+		};	
+	
+        timer0: timer@88108 {  // 16-Bit Timer Pulse Unit (TPUa), from R01DS0276EJ0230 Rev.2.30, R01UH0590EJ0230 Rev.2.30
+	        compatible = "renesas,rx-timer";
+				reg =
+                    <0x00088108 0x01>, // 0008 8108h TPU0 Noise Filter Control Register NFCR 8
+                    <0x00088110 0x01>, // 0008 8110h TPU0 Timer Control Register TCR 8 8 2, 3 PCLKB 2 ICLK TPUa
+                    <0x00088111 0x01>, // 0008 8111h TPU0 Timer Mode Register TMDR 8 8 2, 3 PCLKB 2 ICLK TPUa
+                    <0x00088112 0x01>, // 0008 8112h TPU0 Timer I/O Control Register H TIORH 8 8 2, 3 PCLKB 2 ICLK TPUa
+                    <0x00088113 0x01>, // 0008 8113h TPU0 Timer I/O Control Register L TIORL 8 8 2, 3 PCLKB 2 ICLK TPUa
+                    <0x00088114 0x01>, // 0008 8114h TPU0 Timer Interrupt Enable Register TIER 8 8 2, 3 PCLKB 2 ICLK TPUa
+                    <0x00088115 0x01>, // 0008 8115h TPU0 Timer Status Register TSR 8 8 2, 3 PCLKB 2 ICLK TPUa
+                    <0x00088116 0x02>, // 0008 8116h TPU0 Timer Counter TCNT 16 16 2, 3 PCLKB 2 ICLK TPUa
+                    <0x00088118 0x02>, // 0008 8118h TPU0 Timer General Register A TGRA 16 16 2, 3 PCLKB 2 ICLK TPUa
+                    <0x0008811A 0x02>, // 0008 811Ah TPU0 Timer General Register B TGRB 16 16 2, 3 PCLKB 2 ICLK TPUa
+                    <0x0008811C 0x02>, // 0008 811Ch TPU0 Timer General Register C TGRC 16 16 2, 3 PCLKB 2 ICLK TPUa
+                    <0x0008811E 0x02>; // 0008 811Eh TPU0 Timer General Register D TGRD 16 16 2, 3 PCLKB 2 ICLK TPUa
+			// interrupts = <4711 0 815>; // check if: correct
+			label = "TIMER_0";
+			status = "disabled"; // check if: all the other elements also need a status
+		};
+
+		port0: gpio@8c000 { // R01DS0276EJ0230 Rev.2.30, R01UH0590EJ0230 Rev.2.30
+			compatible = "renesas,rx-gpio";
+			gpio-controller;
+			#gpio-cells = <0x2>;
+			ngpios = <8>;
+			// gpio-ranges = <&pfc 0 0 22>;
+			reg =
+				<0x0008C000 0x01>, // 0008 C000h PORT0 Port Direction Register PDR
+				<0x0008C020 0x01>, // 0008 C020h PORT0 Port Output Data Register PODR
+				<0x0008C040 0x01>, // 0008 C040h PORT0 Port Input Register PIDR
+				<0x0008C060 0x01>, // 0008 C060h PORT0 Port Mode Register PMR
+				<0x0008C080 0x01>, // 0008 C080h PORT0 Open-Drain Control Register 0 ODR0
+				<0x0008C081 0x01>, // 0008 C081h PORT0 Open-Drain Control Register 1 ODR1
+				<0x0008C0C0 0x01>, // 0008 C0C0h PORT0 Pull-Up Resistor Control Register PCR
+				<0x0008C0E0 0x01>, // 0008 C0E0h PORT0 Drive Capacity Control Register DSCR DSCR
+				<0x0008C128 0x01>; // 0008 C128h PORT0 Drive Capacity Control Register DSCR 2 DSCR2
+			reg-names = "PDR", "PODR", "PIDR", "PMR", "ODR0", "ODR1", "PCR", "DSCR", "DSCR2";
+			label = "PORT_0";
+//				interrupts = <4711 0 815>; // check if: interrupt value must be adapted
+		};
+		
+		port1: gpio@8c001 { // R01DS0276EJ0230 Rev.2.30, R01UH0590EJ0230 Rev.2.30
+			compatible = "renesas,rx-gpio";
+			gpio-controller;
+			#gpio-cells = <0x2>;
+			reg =
+				<0x0008C001 0x01>, // 0008 C001h PORT1 Port Direction Register PDR
+				<0x0008C021 0x01>, // 0008 C021h PORT1 Port Output Data Register PODR
+				<0x0008C041 0x01>, // 0008 C041h PORT1 Port Input Register PIDR
+				<0x0008C061 0x01>, // 0008 C061h PORT1 Port Mode Register PMR
+				<0x0008C082 0x01>, // 0008 C082h PORT1 Open-Drain Control Register 0 ODR0
+				<0x0008C083 0x01>, // 0008 C083h PORT1 Open-Drain Control Register 1 ODR1
+				<0x0008C0C1 0x01>, // 0008 C0C1h PORT1 Pull-Up Resistor Control Register PCR
+				<0x0008C0E1 0x01>, // 0008 C0E1h PORT1 Drive Capacity Control Register DSCR
+				<0x0008C129 0x01>; // 0008 C129h PORT1 Drive Capacity Control Register 2 DSCR2
+			label = "PORT_1";
+		};
+
+		port7: gpio@8c007 { // R01DS0276EJ0230 Rev.2.30, R01UH0590EJ0230 Rev.2.30
+			compatible = "renesas,rx-gpio";
+			gpio-controller;
+			#gpio-cells = <2>;
+			reg = 
+				<0x0008C007 0x01>, // 0008C007h PORT7 Port Direction Register PDR
+				<0x0008C027 0x01>, // 0008C027h PORT7 Port Output Data Register PODR
+				<0x0008C047 0x01>, // 0008C047h PORT7 Port Input Register PIDR
+				<0x0008C067 0x01>, // 0008C067h PORT7 Port Mode Register PMR
+				<0x0008C08E 0x01>, // 0008C08Eh PORT7 Open-Drain Control Register 0 ODR0
+				<0x0008C08F 0x01>, // 0008C08Fh PORT7 Open-Drain Control Register 1 ODR1
+				<0x0008C0C7 0x01>, // 0008C0C7h PORT7 Pull-Up Resistor Control Register PCR
+				<0x0008C0E7 0x01>; // 0008C0E7h PORT7 Drive Capacity Control Register DSCR
+			label = "PORT_7";
+		};
+
+		portg: gpio@8c010 { // R01DS0276EJ0230 Rev.2.30, R01UH0590EJ0230 Rev.2.30
+			compatible = "renesas,rx-gpio";
+			gpio-controller;
+			#gpio-cells = <2>;
+			reg = 
+				<0x0008C010 0x01>, // 0008C010h PORTG Port Direction Register PDR
+				<0x0008C030 0x01>, // 0008C030h PORTG Port Output Data Register PODR
+				<0x0008C050 0x01>, // 0008C050h PORTG Port Input Register PIDR
+				<0x0008C070 0x01>, // 0008C070h PORTG Port Mode Register PMR
+				<0x0008C0A0 0x01>, // 0008C0A0h PORTG Open-Drain Control Register 0 ODR0
+				<0x0008C0A1 0x01>, // 0008C0A1h PORTG Open-Drain Control Register 1 ODR1
+				<0x0008C0D0 0x01>; // 0008C0D0h PORTG Pull-Up Resistor Control Register PCR
+			label = "PORT_G";
+		};
+
+		// // Address?? Function?
+		// pinmux: pinmux@abcd {
+		// 	compatible = "renesas,rx-pinmux";
+		// 	reg = <0xabcd 0x11>;
+		// };
+
+		uart0: serial@8a000 { // R01DS0276EJ0230 Rev.2.30, R01UH0590EJ0230 Rev.2.30
+			compatible = "renesas,rx-uart";
+			uart-controller;
+			//device_type = "serial"; // check if: correct (could be uart)
+			reg = <0x0008A000 0x01>,  // 0008 A000h SCI0 Serial Mode Register SMR
+				<0x0008A001 0x01>,  // 0008 A001h SCI0 Bit Rate Register BRR
+				<0x0008A002 0x01>,  // 0008 A002h SCI0 Serial Control Register SCR
+				<0x0008A003 0x01>,  // 0008 A003h SCI0 Transmit Data Register TDR
+				<0x0008A004 0x01>,  // 0008 A004h SCI0 Serial Status Register SSR
+				<0x0008A005 0x01>,  // 0008 A005h SCI0 Receive Data Register RDR
+				<0x0008A006 0x01>,  // 0008 A006h SCI0 Smart Card Mode Register SCMR
+				<0x0008A007 0x01>,  // 0008 A007h SCI0 Serial Extended Mode Register SEMR
+				<0x0008A008 0x01>,  // 0008 A008h SCI0 Noise Filter Setting Register SNFR
+				<0x0008A009 0x01>,  // 0008 A009h SCI0 I2C Mode Register 1 SIMR1
+				<0x0008A00A 0x01>,  // 0008 A00Ah SCI0 I2C Mode Register 2 SIMR2
+				<0x0008A00B 0x01>,  // 0008 A00Bh SCI0 I2C Mode Register 3 SIMR3
+				<0x0008A00C 0x01>,  // 0008 A00Ch SCI0 I2C Status Register SISR
+				<0x0008A00D 0x01>,  // 0008 A00Dh SCI0 SPI Mode Register SPMR
+			//	<0x0008A00E 0x02>,  // either use TDRHL or TDRH and TDRL: 0008 A00Eh SCI0 Transmit Data Register HL TDRHL
+				<0x0008A00E 0x01>,  // 0008 A00Eh SCI0 Transmit Data Register H
+				<0x0008A00F 0x01>,  // 0008 A00Fh SCI0 Transmit Data Register L TDRL
+  			//	<0x0008A010 0x02>,  // either use RDRHL or RDRH and RDRL: 0008 A010h SCI0 Receive Data Register HL RDRHL
+				<0x0008A010 0x01>,  // 0008 A010h SCI0 Receive Data Register H RDRH
+				<0x0008A011 0x01>,  // 0008 A011h SCI0 Receive Data Register L RDRL
+				<0x0008A012 0x01>;  // 0008 A012h SCI0 Modulation Duty Register MDDR
+			status = "disabled";
+			label = "SCI_0";
+		};
+			
+
+        /* pinctrl: pin_controller@8C000 { // check if: not stand-alone
+    	    #address-cells = <0x1>;
+			#size-cells = <0x1>;
+//			ranges = <0 0x0008C000 0x01>; // check if: correct (0x01)
+//			compatible = "renesas,pinmux"; // check if: correct (pinmux)
+			reg = <0x0008C000 0x2000>;  // check if: correct (reg = <0x0008C000 0x01>;)
+
+			// led: led_0 { // inspired by devicetree.h
+			// 	gpios = <&port0 17 0x1>, <&port1 5 0x3>;
+			// }; // led_0
+
+			uart1: serial@8A020 { // R01DS0276EJ0230 Rev.2.30, R01UH0590EJ0230 Rev.2.30
+				device_type = "serial"; // check if: correct (could be uart)
+				compatible = "renesas,rxv2"; // be aware: SCI = Serial Communication Interface, whereas SMCI = Smart Card Interface
+				uart-controller;
+				reg =
+					<0x0008A020 0x01>, // 0008 A020h SCI1 Serial Mode Register SMR 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+//					<0x0008A020 0x01>, // must be a mistake in the manual: 0008 A020h SMCI1 Serial Mode Register SMR 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A021 0x01>, // 0008 A021h SCI1 Bit Rate Register BRR 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A022 0x01>, // 0008 A022h SCI1 Serial Control Register SCR 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+//					<0x0008A022 0x01>, // must be a mistake in the manual: 0008 A022h SMCI1 Serial Control Register SCR 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A023 0x01>, // 0008 A023h SCI1 Transmit Data Register TDR 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A024 0x01>, // 0008 A024h SCI1 Serial Status Register SSR 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A025 0x01>, // 0008 A025h SCI1 Receive Data Register RDR 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A026 0x01>, // 0008 A026h SCI1 Smart Card Mode Register SCMR 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+//					<0x0008A026 0x01>, // must be a mistake in the manual: 0008 A026h SMCI1 Smart Card Mode Register SCMR 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A027 0x01>, // 0008 A027h SCI1 Serial Extended Mode Register SEMR 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A028 0x01>, // 0008 A028h SCI1 Noise Filter Setting Register SNFR 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A029 0x01>, // 0008 A029h SCI1 I 2 C Mode Register 1 SIMR1 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A02A 0x01>, // 0008 A02Ah SCI1 I 2 C Mode Register 2 SIMR2 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A02B 0x01>, // 0008 A02Bh SCI1 I 2 C Mode Register 3 SIMR3 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A02C 0x01>, // 0008 A02Ch SCI1 I 2 C Status Register SISR 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A02D 0x01>, // 0008 A02Dh SCI1 SPI Mode Register SPMR 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A02E 0x01>, // 0008 A02Eh SCI1 Transmit Data Register H TDRH 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A02F 0x01>, // 0008 A02Fh SCI1 Transmit Data Register L TDRL 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					//<0x0008A02E 0x02>, // either use TDRHL or TDRH and TDRL: 0008 A02Eh SCI1 Transmit Data Register HL TDRHL 16 16 4, 5 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A030 0x01>, // 0008 A030h SCI1 Receive Data Register H RDRH 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A031 0x01>, // 0008 A031h SCI1 Receive Data Register L RDRL 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					//<0x0008A030 0x02>, // either use RDRHL or RDRH and RDRL: 0008 A030h SCI1 Receive Data Register HL RDRHL 16 16 4, 5 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A032 0x01>; // 0008 A032h SCI1 Modulation Duty Register MDDR 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					  
+//				interrupts = <4711 0 815>; // check if: interrupt value must be adapted
+				status = "disabled";
+				label = "SCI1";
+			}; // uart1
+
+			uart2: serial@8A040 { // R01DS0276EJ0230 Rev.2.30, R01UH0590EJ0230 Rev.2.30
+				device_type = "serial"; // check if: correct (could be uart)
+				compatible = "renesas,rxv2"; // be aware: SCI = Serial Communication Interface, whereas SMCI = Smart Card Interface
+				uart-controller;
+				reg =
+				<0x0008A040 0x01>, // 0008 A040h SCI2 Serial Mode Register SMR 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+//				<0x0008A040 0x01>, // must be a mistake in the manual: 0008 A040h SMCI2 Serial Mode Register SMR 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+				<0x0008A041 0x01>, // 0008 A041h SCI2 Bit Rate Register BRR 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+				<0x0008A042 0x01>, // 0008 A042h SCI2 Serial Control Register SCR 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+//				<0x0008A042 0x01>, // must be a mistake in the manual: 0008 A042h SMCI2 Serial Control Register SCR 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+				<0x0008A043 0x01>, // 0008 A043h SCI2 Transmit Data Register TDR 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+				<0x0008A044 0x01>, // 0008 A044h SCI2 Serial Status Register SSR 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+				<0x0008A044 0x01>, // 0008 A044h SMCI2 Serial Status Register SSR 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+				<0x0008A045 0x01>, // 0008 A045h SCI2 Receive Data Register RDR 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+				<0x0008A046 0x01>, // 0008 A046h SCI2 Smart Card Mode Register SCMR 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+//				<0x0008A046 0x01>, // must be a mistake in the manual: 0008 A046h SMCI2 Smart Card Mode Register SCMR 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+				<0x0008A047 0x01>, // 0008 A047h SCI2 Serial Extended Mode Register SEMR 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+				<0x0008A048 0x01>, // 0008 A048h SCI2 Noise Filter Setting Register SNFR 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+				<0x0008A049 0x01>, // 0008 A049h SCI2 I 2 C Mode Register 1 SIMR1 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+				<0x0008A04A 0x01>, // 0008 A04Ah SCI2 I 2 C Mode Register 2 SIMR2 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+				<0x0008A04B 0x01>, // 0008 A04Bh SCI2 I 2 C Mode Register 3 SIMR3 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+				<0x0008A04C 0x01>, // 0008 A04Ch SCI2 I 2 C Status Register SISR 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+				<0x0008A04D 0x01>, // 0008 A04Dh SCI2 SPI Mode Register SPMR 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+				<0x0008A04E 0x01>, // 0008 A04Eh SCI2 Transmit Data Register H TDRH 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+				<0x0008A04F 0x01>, // 0008 A04Fh SCI2 Transmit Data Register L TDRL 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+				// <0x0008A04E 0x02>, // either use TDRHL or TDRH and TDRL: 0008 A04Eh SCI2 Transmit Data Register HL TDRHL 16 16 4, 5 PCLKB 2 ICLK SCIg, SCIh, SCIi
+				<0x0008A050 0x01>, // 0008 A050h SCI2 Receive Data Register H RDRH 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+				<0x0008A051 0x01>, // 0008 A051h SCI2 Receive Data Register L RDRL 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+				// <0x0008A050 0x02>, // either use RDRHL or RDRH and RDRL: 0008 A050h SCI2 Receive Data Register HL RDRHL 16 16 4, 5 PCLKB 2 ICLK SCIg, SCIh, SCIi
+				<0x0008A052 0x01>; // 0008 A052h SCI2 Modulation Duty Register MDDR 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					  
+//				interrupts = <4711 0 815>; // check if: interrupt value must be adapted
+				status = "disabled";
+				label = "SCI2";
+			}; // uart2			
+
+			spi0: spi@8A060 {
+			    #address-cells = <0x1>;
+			    #size-cells = <0x0>;				
+			    compatible = "renesas,spi0";
+				spi-controller;
+				reg = 		
+					<0x0008A060 0x01>, // 0008 A060h SCI3 Serial Mode Register SMR 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A061 0x01>, // 0008 A061h SCI3 Bit Rate Register BRR 8 8 2, 3 PCLKB 2 ICLK SCIg,SCIh, SCIi
+					<0x0008A062 0x01>, // 0008 A062h SCI3 Serial Control Register SCR 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A063 0x01>, // 0008 A063h SCI3 Transmit Data Register TDR 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A064 0x01>, // 0008 A064h SCI3 Serial Status Register SSR 8 8 2, 3 PCLKB 2 ICLK SCIg,SCIh, SCIi
+					<0x0008A065 0x01>, // 0008 A065h SCI3 Receive Data Register RDR 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A066 0x01>, // 0008 A066h SMCI3 Smart Card Mode Register SCMR 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A067 0x01>, // 0008 A067h SCI3 Serial Extended Mode Register SEMR 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A068 0x01>, // 0008 A068h SCI3 Noise Filter Setting Register SNFR 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A069 0x01>, // 0008 A069h SCI3 I 2 C Mode Register 1 SIMR1 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A06A 0x01>, // 0008 A06Ah SCI3 I 2 C Mode Register 2 SIMR2 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A06B 0x01>, // 0008 A06Bh SCI3 I 2 C Mode Register 3 SIMR3 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A06C 0x01>, // 0008 A06Ch SCI3 I 2 C Status Register SISR 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A06D 0x01>, // 0008 A06Dh SCI3 SPI Mode Register SPMR 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A06E 0x01>, // 0008 A06Eh SCI3 Transmit Data Register H TDRH 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A06F 0x01>, // 0008 A06Fh SCI3 Transmit Data Register L TDRL 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					//<0x0008A06E 0x02>, // either use TDRHL or TDRH and TDRL: 0008 A06Eh SCI3 Transmit Data Register HL TDRHL 16 16 4, 5 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A070 0x01>, // 0008 A070h SCI3 Receive Data Register H RDRH 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A071 0x01>, // 0008 A071h SCI3 Receive Data Register L RDRL 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					//<0x0008A070 0x02>, // either use RDRHL or RDRH and RDRL: 0008 A070h SCI3 Receive Data Register HL RDRHL 16 16 4, 5 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A072 0x01>; // 0008 A072h SCI3 Modulation Duty Register MDDR 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+				reg-names = "control", "mem"; // check if: correct
+//				interrupts = <4711 0 815>; // check if: correct value				
+    			clocks = <&sysclk>;
+//				resets = <&cpg 210>;
+//				dmas = <&dmac1 0x43>, <&dmac1 0x42>,
+//			    	   <&dmac2 0x43>, <&dmac2 0x42>;
+//				dma-names = "tx", "rx", "tx", "rx";
+			    label = "SPI0";
+				status = "disabled";
+			}; // spi0
+
+			spi1: spi@8A080 {
+			    #address-cells = <0x1>;
+			    #size-cells = <0x0>;				
+			    compatible = "renesas,spi0";
+				spi-controller;
+				reg = 		
+					<0x0008A080 0x01>, // 0008 A080h SCI4 Serial Mode Register SMR 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A081 0x01>, // 0008 A081h SCI4 Bit Rate Register BRR 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A082 0x01>, // 0008 A082h SCI4 Serial Control Register SCR 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A083 0x01>, // 0008 A083h SCI4 Transmit Data Register TDR 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A084 0x01>, // 0008 A084h SCI4 Serial Status Register SSR 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A085 0x01>, // 0008 A085h SCI4 Receive Data Register RDR 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A086 0x01>, // 0008 A086h SMCI4 Smart Card Mode Register SCMR 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A087 0x01>, // 0008 A087h SCI4 Serial Extended Mode Register SEMR 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A088 0x01>, // 0008 A088h SCI4 Noise Filter Setting Register SNFR 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A089 0x01>, // 0008 A089h SCI4 I 2 C Mode Register 1 SIMR1 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A08A 0x01>, // 0008 A08Ah SCI4 I 2 C Mode Register 2 SIMR2 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A08B 0x01>, // 0008 A08Bh SCI4 I 2 C Mode Register 3 SIMR3 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A08C 0x01>, // 0008 A08Ch SCI4 I 2 C Status Register SISR 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A08D 0x01>, // 0008 A08Dh SCI4 SPI Mode Register SPMR 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A08E 0x01>, // 0008 A08Eh SCI4 Transmit Data Register H TDRH 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A08F 0x01>, // 0008 A08Fh SCI4 Transmit Data Register L TDRL 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A08E 0x02>, // either use TDRHL or TDRH and TDRL: 0008 A08Eh SCI4 Transmit Data Register HL TDRHL 16 16 4, 5 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A090 0x01>, // 0008 A090h SCI4 Receive Data Register H RDRH 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A091 0x01>, // 0008 A091h SCI4 Receive Data Register L RDRL 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A090 0x02>, // either use RDRHL or RDRH and RDRL: 0008 A090h SCI4 Receive Data Register HL RDRHL 16 16 4, 5 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A092 0x01>; // 0008 A092h SCI4 Modulation Duty Register MDDR 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+				reg-names = "control", "mem"; // ???
+//				interrupts = <4711 0 815>; // check if: correct value				
+    			clocks = <&sysclk>;
+//				resets = <&cpg 210>;
+//				dmas = <&dmac1 0x43>, <&dmac1 0x42>,
+//			    	   <&dmac2 0x43>, <&dmac2 0x42>;
+//				dma-names = "tx", "rx", "tx", "rx";
+			    label = "SPI1";
+				status = "disabled";
+			}; // spi1
+
+			spi2: spi@8A0A0 {
+			    #address-cells = <0x1>;
+			    #size-cells = <0x0>;				
+			    compatible = "renesas,spi0";
+				spi-controller;
+				reg = 		
+					<0x0008A0A0 0x01>, // 0008 A0A0h SCI5 Serial Mode Register SMR 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A0A1 0x01>, // 0008 A0A1h SCI5 Bit Rate Register BRR 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A0A2 0x01>, // 0008 A0A2h SCI5 Serial Control Register SCR 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A0A3 0x01>, // 0008 A0A3h SCI5 Transmit Data Register TDR 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A0A4 0x01>, // 0008 A0A4h SCI5 Serial Status Register SSR 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A0A5 0x01>, // 0008 A0A5h SCI5 Receive Data Register RDR 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A0A6 0x01>, // 0008 A0A6h SMCI5 Smart Card Mode Register SCMR 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A0A7 0x01>, // 0008 A0A7h SCI5 Serial Extended Mode Register SEMR 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A0A8 0x01>, // 0008 A0A8h SCI5 Noise Filter Setting Register SNFR 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A0A9 0x01>, // 0008 A0A9h SCI5 I 2 C Mode Register 1 SIMR1 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A0AA 0x01>, // 0008 A0AAh SCI5 I 2 C Mode Register 2 SIMR2 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A0AB 0x01>, // 0008 A0ABh SCI5 I 2 C Mode Register 3 SIMR3 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A0AC 0x01>, // 0008 A0ACh SCI5 I 2 C Status Register SISR 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A0AD 0x01>, // 0008 A0ADh SCI5 SPI Mode Register SPMR 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A0AE 0x01>, // 0008 A0AEh SCI5 Transmit Data Register H TDRH 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A0AF 0x01>, // 0008 A0AFh SCI5 Transmit Data Register L TDRL 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A0AE 0x02>, // either use TDRHL or TDRH and TDRL: 0008 A0AEh SCI5 Transmit Data Register HL TDRHL 16 16 4, 5 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A0B0 0x01>, // 0008 A0B0h SCI5 Receive Data Register H RDRH 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A0B1 0x01>, // 0008 A0B1h SCI5 Receive Data Register L RDRL 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A0B0 0x02>, // either use RDRHL or RDRH and RDRL: 0008 A0B0h SCI5 Receive Data Register HL RDRHL 16 16 4, 5 PCLKB 2 ICLK SCIg, SCIh, SCIi
+					<0x0008A0B2 0x01>; // 0008 A0B2h SCI5 Modulation Duty Register MDDR 8 8 2, 3 PCLKB 2 ICLK SCIg, SCIh, SCIi
+				reg-names = "control", "mem"; // ???
+//				interrupts = <4711 0 815>; // check if: correct value				
+    			clocks = <&sysclk>;
+//				resets = <&cpg 210>;
+//				dmas = <&dmac1 0x43>, <&dmac1 0x42>,
+//			    	   <&dmac2 0x43>, <&dmac2 0x42>;
+//				dma-names = "tx", "rx", "tx", "rx";
+			    label = "SPI2";
+				status = "disabled";
+			}; // spi2
+
+
+    // from R01UH0590EJ0230 Rev.2.30: "This MCU has a one-channel Ethernet controller (ETHERC) compliant with the Ethernet or IEEE802.3 Media Access Control (MAC) layer protocol. ETHERC channel has one channel of the MAC layer interface, and connecting the MCU to the physical layer LSI (PHY-LSI) allows transmission and reception of frames compliant with the Ethernet/IEEE802.3 standard. The ETHERC is connected to the Ethernet controller direct memory access controller (EDMAC), so data can be transferred without using the CPU."
+
+			ethernet0: ethernet@C0100 { // R01DS0276EJ0230 Rev.2.30, R01UH0590EJ0230 Rev.2.30
+				compatible = "renesas,sam-gmac"; // check if: driver name is correct
+				reg = 	<0x000C0100 0x04>, // 000C 0100h ETHERC0 ETHERC Mode Register ECMR
+						<0x000C0108 0x04>, // 000C 0108h ETHERC0 Receive Frame Maximum Length Register RFLR
+						<0x000C0110 0x04>, // 000C 0110h ETHERC0 ETHERC Status Register ECSR
+						<0x000C0118 0x04>, // 000C 0118h ETHERC0 ETHERC Interrupt Enable Register ECSIPR
+						<0x000C0120 0x04>, // 000C 0120h ETHERC0 PHY Interface Register PIR
+						<0x000C0128 0x04>, // 000C 0128h ETHERC0 PHY Status Register PSR
+						<0x000C0140 0x04>, // 000C 0140h ETHERC0 Random Number Generation Counter Limit Setting Register RDMLR
+						<0x000C0150 0x04>, // 000C 0150h ETHERC0 Interpacket Gap Register IPGR
+						<0x000C0154 0x04>, // 000C 0154h ETHERC0 Automatic PAUSE Frame Register APR
+						<0x000C0158 0x04>, // 000C 0158h ETHERC0 Manual PAUSE Frame Register MPR
+						<0x000C0160 0x04>, // 000C 0160h ETHERC0 Received PAUSE Frame Counter RFCF
+						<0x000C0164 0x04>, // 000C 0164h ETHERC0 PAUSE Frame Retransmit Count Setting Register TPAUSER
+						<0x000C0168 0x04>, // 000C 0168h ETHERC0 PAUSE Frame Retransmit Counter TPAUSECR
+						<0x000C016C 0x04>, // 000C 016Ch ETHERC0 Broadcast Frame Receive Count Setting Register BCFRR
+						<0x000C01C0 0x04>, // 000C 01C0h ETHERC0 MAC Address Upper Bit Register MAHR
+						<0x000C01C8 0x04>, // 000C 01C8h ETHERC0 MAC Address Lower Bit Register MALR
+						<0x000C01D0 0x04>, // 000C 01D0h ETHERC0 Transmit Retry Over Counter Register TROCR
+						<0x000C01D4 0x04>, // 000C 01D4h ETHERC0 Late Collision Detect Counter Register CDCR
+						<0x000C01D8 0x04>, // 000C 01D8h ETHERC0 Lost Carrier Counter Register LCCR
+						<0x000C01DC 0x04>, // 000C 01DCh ETHERC0 Carrier Not Detect Counter Register CNDCR
+						<0x000C01E8 0x04>, // 000C 01E8h ETHERC0 Frame Receive Error Counter Register FRECR
+						<0x000C01EC 0x04>, // 000C 01ECh ETHERC0 Too-Short Frame Receive Counter Register TSFRCR
+						<0x000C01F0 0x04>, // 000C 01F0h ETHERC0 Too-Long Frame Receive Counter Register TLFRCR
+						<0x000C01F4 0x04>, // 000C 01F4h ETHERC0 Received Alignment Error Frame Counter Register RFCR
+						<0x000C01F8 0x04>; // 000C 01F8h ETHERC0 Multicast Address Frame Receive Counter Register MAFCR	
+				interrupts = <4711 0 815>; // check if: interrupt value must be adapted
+				//interrupt-names = "gmac";
+				num-queues = <1>;
+				local-mac-address = [00 00 00 00 00 00]; // ???
+				phy-connection-type = "RMII"; // from DS00002199C: KSZ8081RNA/RND 10BASE-T/100BASE-TX PHY with RMII Support
+				label = "ETHERNET0";
+				status = "disabled";
+
+				renesas,no-ether-link;
+				phy-handle = <&ethernetphy0>;
+				phy-mode = "rgmii";
+			
+				ethernetphy0: phy@0 {
+					rxc-skew-ps = <1500>;
+					reg = <0x0 0x0>;
+					//interrupt-parent = <&gpio2>;
+					interrupts = <4711 0 815>; // check if: correct value
+					//reset-gpios = <&gpio1 20 GPIO_ACTIVE_LOW>;
+				}; // ethernetphy0
+			}; // ethernet0
+		}; // pinctrl */
+	};
+};

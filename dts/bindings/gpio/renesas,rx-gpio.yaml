@@ -1,0 +1,24 @@
+# SPDX-License-Identifier: Apache-2.0
+
+description: Renesas RX GPIO node
+
+compatible: "renesas,rx-gpio"
+
+include: [gpio-controller.yaml, base.yaml]
+
+properties:
+    reg:
+      required: true
+
+    label:
+      required: true
+
+#    clocks:
+#      required: true
+
+    "#gpio-cells":
+      const: 2
+
+gpio-cells:
+  - pin
+  - flags
