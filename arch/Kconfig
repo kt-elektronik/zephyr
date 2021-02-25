@@ -16,6 +16,8 @@ source "$(ARCH_DIR)/$(ARCH)/Kconfig"
 # Should be 'select'ed by low-level symbols like SOC_SERIES_* or, lacking that,
 # by SOC_*.
 
+
+
 config ARC
 	bool
 	select ARCH_IS_SET
@@ -92,6 +94,13 @@ config XTENSA
 	select USE_SWITCH_SUPPORTED
 	help
 	  Xtensa architecture
+    
+config RXV2
+	bool
+	select ARCH_IS_SET
+	select HAS_DTS
+	help
+	  Renesas RXv2 architecture
 
 config ARCH_POSIX
 	bool

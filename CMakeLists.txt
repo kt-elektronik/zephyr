@@ -1194,11 +1194,38 @@ if(CONFIG_BUILD_OUTPUT_S19)
   endif()
 endif()
 
+if(CONFIG_BUILD_OUTPUT_MOT)
+  get_property(elfconvert_formats TARGET bintools PROPERTY elfconvert_formats)
+  if(srec IN_LIST elfconvert_formats)
+    list(APPEND
+      post_build_commands
+      COMMAND $<TARGET_PROPERTY:bintools,elfconvert_command>
+              $<TARGET_PROPERTY:bintools,elfconvert_flag>
+              ${GAP_FILL}
+              $<TARGET_PROPERTY:bintools,elfconvert_flag_outtarget>srec
+              #$<TARGET_PROPERTY:bintools,elfconvert_flag_srec_len>24
+              $<TARGET_PROPERTY:bintools,elfconvert_flag_section_remove>devices
+              $<TARGET_PROPERTY:bintools,elfconvert_flag_intarget>${OUTPUT_FORMAT}
+              $<TARGET_PROPERTY:bintools,elfconvert_flag_infile>${KERNEL_ELF_NAME}
+              $<TARGET_PROPERTY:bintools,elfconvert_flag_outfile>${KERNEL_MOT_NAME}
+              $<TARGET_PROPERTY:bintools,elfconvert_flag_final>
+      )
+    list(APPEND
+      post_build_byproducts
+      ${KERNEL_MOT_NAME}
+      # ${out_mot_byprod} # Is this needed ?
+
+      )
+  endif()
+endif()
+
 if(CONFIG_OUTPUT_DISASSEMBLY)
-if(CONFIG_OUTPUT_DISASSEMBLE_ALL)
-    set(disassembly_type "$<TARGET_PROPERTY:bintools,disassembly_flag_all>")
-  else()
-    set(disassembly_type "$<TARGET_PROPERTY:bintools,disassembly_flag_inline_source>")
+  if(NOT(CONFIG_RXV2))
+    if(CONFIG_OUTPUT_DISASSEMBLE_ALL)
+      set(disassembly_type "$<TARGET_PROPERTY:bintools,disassembly_flag_all>")
+    else()
+      set(disassembly_type "$<TARGET_PROPERTY:bintools,disassembly_flag_inline_source>")
+    endif()
   endif()
   list(APPEND
     post_build_commands
