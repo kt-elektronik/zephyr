@@ -133,7 +133,7 @@
 		};
 
 		sci0: serial@8a000 {
-			compatible = "renesas,rx-sci";
+			compatible = "renesas,rx-sci","renesas,rx-scig";
 			//uart-controller;
 			//device_type = "serial"; // check if: correct (could be uart)
 			reg = <0x0008A000 0x20>;  // SCI0 Serial Mode Register SMR
@@ -142,14 +142,14 @@
 		};
 
 		sci10: serial@d0040 {
-			compatible = "renesas,rx-sci";
+			compatible = "renesas,rx-sci","renesas,rx-scii";
 			reg = <0x000D0040 0x1D>;  // SCI10 Serial Mode Register SMR
 			status = "disabled";
 			label = "SCI_10";
 		};
 
 		sci12: serial@8b300 {
-			compatible = "renesas,rx-sci";
+			compatible = "renesas,rx-sci","renesas,rx-scih";
 			reg = <0x0008B300 0x34>;  // SCI12 Serial Mode Register SMR
 			status = "disabled";
 			label = "SCI_12";
