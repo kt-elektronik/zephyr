@@ -1,0 +1,15 @@
+# Renesas Starter Kit+ RX65N-2MB board configuration
+# 
+# Copyright (c) 2020 KT-Elektronik, Klaucke und Partner GmbH
+# SPDX-License-Identifier: Apache-2.0
+
+config BOARD_RSK_RX65N_2MB
+	bool "Renesas Starter Kit+ RX65N-2MB board (rsk_rx65n_mb)"
+	depends on SOC_R5F565NE
+	help
+	  Implementation of Renesas' R5F565NE processor family based on rx2v architecture.
+	  The following peripherals are available: uart, timer, i2c, gpio, spi, ethernet, and phy.
+
+#	select SOC_R5F565NE
+#	select SOC_PART_NUMBER_R5F565NEDDFB	
+

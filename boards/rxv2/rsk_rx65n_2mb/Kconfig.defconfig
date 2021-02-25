@@ -1,0 +1,64 @@
+# Renesas Starter Kit+ RX65N-2MB board configuration
+# 
+# Copyright (c) 2020 KT-Elektronik, Klaucke und Partner GmbH
+# SPDX-License-Identifier: Apache-2.0
+
+if BOARD_RSK_RX65N_2MB
+
+	config BOARD
+		default "rsk_rx65n_2mb"
+
+#	config BUILD_OUTPUT_S19
+#		default y
+
+#	config BUILD_OUTPUT_MOT
+#		default y
+
+
+	# ???
+	# config SYS_CLOCK_TICKS_PER_SEC
+	#	int "Frequency [Hz]"
+	#	default 120000000	
+
+	if NETWORKING
+		config ETHERNET0
+			bool "ETHERNET0"
+			default y
+	endif # NETWORKING
+
+	if I2C
+		config I2C0
+			bool "I2C0"
+			default y
+			depends on I2C
+	endif # I2C
+
+	if SPI
+		config SPI0
+			bool "SPOI0"
+			default y
+			depends on SPI
+	endif # SPI
+
+	# ???
+	# config OSC_XTAL0_FREQ
+	#	default 32000000
+
+	if COUNTER
+		config TIMER0
+			bool "TIMER0"		
+			default y
+	endif # COUNTER	
+
+	if GPIO
+		config PORT0
+			bool "PORT0"
+			default y
+	endif # GPIO
+
+	if CONSOLE
+		config UART_CONSOLE
+			default y if SERIAL
+	endif # CONSOLE
+
+endif # BOARD_RSK_RX65N_2MB

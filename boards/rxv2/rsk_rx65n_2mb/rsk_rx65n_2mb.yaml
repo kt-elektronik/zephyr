@@ -1,0 +1,19 @@
+# Copyright (c) 2020 KT-Elektronik, Klaucke und Partner GmbH
+identifier: rsk_rx65n_2mb
+name: Renesas Starter Kit+ RX65N-2MB
+type: mcu
+arch: rxv2
+toolchain:
+  - gnurx
+supported:
+  - gpio
+  - spi
+  - i2c
+  - ethernet
+  - serial
+  - timer
+  - phy
+ram: 640
+flash: 2048
+# testing:
+#   default: true
