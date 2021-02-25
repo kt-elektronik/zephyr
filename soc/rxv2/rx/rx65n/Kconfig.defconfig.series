@@ -1,0 +1,49 @@
+# Copyright (c) 2020 KT-Elektronik, Klaucke und Partner GmbH
+# SPDX-License-Identifier: Apache-2.0
+
+if SOC_SERIES_RX65N # check if: SOC_FAMILY_RX
+
+	source "soc/rxv2/rx/rx65n/Kconfig.defconfig.R5F565NE*"
+
+	config SOC_SERIES
+		default "rx65n"
+
+#	config NUM_IRQS
+#		default 45
+#
+#	config SYS_CLOCK_HW_CYCLES_PER_SEC
+#		default 24000000
+
+
+	if GPIO # check if: place of definition is correct here
+		config GPIO_RX
+			default y
+	endif #GPIO
+
+	if PINMUX # check if: place of definition is correct here
+		config PINMUX_RX
+			default y
+	endif #PINMUX
+
+	config PINMUX_RX
+		default y
+	 	depends on PINMUX
+	
+	# if WATCHDOG # check if: place of definition is correct here	#
+		# config IWDT_RX
+		# 	default y
+		#
+		# config WDT_RX
+		# 	default n
+	# endif # WATCHDOG
+
+#	if FLASH # check if: place of definition is correct here#
+#		config SOC_FLASH_RXV2
+#			default y
+#		# Workaround for not being able to have commas in macro arguments
+#		DT_CHOSEN_Z_FLASH := zephyr,flash#
+#		config FLASH_BASE_ADDRESS
+#			default $(dt_chosen_reg_addr_hex,$(DT_CHOSEN_Z_FLASH))
+#	endif # FLASH
+
+endif #SOC_SERIES_RX65N

@@ -1,0 +1,10 @@
+# Copyright (c) 2020 KT-Elektronik, Klaucke und Partner GmbH
+# SPDX-License-Identifier: Apache-2.0
+
+choice
+	prompt "Renesas RX Family MCU Selection"
+	depends on SOC_SERIES_RX65N  
+  
+	config SOC_R5F565NE
+		bool "R5F565NE"  
+endchoice

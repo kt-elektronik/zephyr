@@ -1,0 +1,70 @@
+# Copyright (c) 2020 KT-Elektronik, Klaucke und Partner GmbH
+# SPDX-License-Identifier: Apache-2.0
+
+if SOC_R5F565NE
+
+	config SOC
+		default "r5f565ne"
+	
+	config NUM_IRQS
+		int
+		default 32	
+
+###	if GPIO # check if: place of definition is correct here
+###		config GPIO_RX
+###			default y
+###	endif #GPIO
+###
+###	if PINMUX # check if: place of definition is correct here
+###		config PINMUX_RX
+###			default y
+###	endif #PINMUX
+ 
+#### config GPIO_MCUX
+#### 	default y
+#### 	depends on GPIO
+#### 
+#### config I2C_MCUX
+#### 	default y
+#### 	depends on I2C
+#### 
+#### config PWM_MCUX_FTM
+#### 	default y
+#### 	depends on PWM
+#### 
+#### config SPI
+#### 	default n
+#### 
+#### config SPI_MCUX_DSPI
+#### 	default y
+#### 	depends on SPI
+#### 
+#### config ETH_MCUX
+#### 	default y
+#### 	depends on NET_L2_ETHERNET
+#### 
+#### config ENTROPY_MCUX_RNGA
+#### 	default y
+#### 	depends on ENTROPY_GENERATOR
+#### 
+#### config SOC_FLASH_MCUX
+#### 	default y
+#### 	depends on FLASH
+#### 
+#### config UART_MCUX
+#### 	default y
+#### 	depends on SERIAL
+#### 
+#### config USB_KINETIS
+#### 	default y
+#### 	depends on USB
+#### 
+#### config WDT_MCUX_WDOG
+#### 	default y
+#### 	depends on WATCHDOG
+#### 
+#### config COUNTER_MCUX_RTC
+#### 	default y
+#### 	depends on COUNTER
+
+endif # SOC_R5F565NE

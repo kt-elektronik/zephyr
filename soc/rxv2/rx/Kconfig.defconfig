@@ -1,0 +1,27 @@
+# Renesas RX600 family
+
+# Copyright (c) 2020 KT-Elektronik, Klaucke und Partner GmbH
+# SPDX-License-Identifier: Apache-2.0
+
+source "soc/rxv2/rx/*/Kconfig.defconfig.series"
+
+config BUILD_OUTPUT_HEX
+	default n
+
+config BUILD_OUTPUT_S19
+	default n
+
+config BUILD_OUTPUT_MOT
+	default y
+
+config BUILD_OUTPUT_BIN
+	default n
+
+config OUTPUT_PRINT_MEMORY_USAGE
+	default y
+
+config RX_TIMER
+	default y
+
+config BUILD_NO_GAP_FILL
+	default y
