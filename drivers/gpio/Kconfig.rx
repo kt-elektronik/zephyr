@@ -1,0 +1,22 @@
+# Renesas RX family GPIO configuration
+# Copyright (c) 2020 KT-Elektronik, Klaucke und Partner GmbH
+# SPDX-License-Identifier: Apache-2.0
+
+menuconfig GPIO_RX
+	bool "GPIO Driver for Renesas RX"
+	depends on SOC_FAMILY_RX
+	help
+	  Enable GPIO driver for Renesas RX family
+
+config GPIO_RX_IRQ
+	int "IRQ line for GPIO pins"
+	default 0 # check if: TODO: for some reason, a value other than 0 has a side effect on board nucleo_f446re ?!
+	help
+	  Select the IRQ line to be used for GPIO interrupts.
+
+config GPIO_RX
+	bool "GPIO pins"
+	default y
+	help
+	  Include support for GPIO pins on the RX65N.
+

@@ -298,6 +298,13 @@ config LEON_GPTIMER
 	  This module implements a kernel device driver for the GRLIB
 	  GPTIMER which is common in LEON systems.
 
+config RX_TIMER
+	bool "RX Timer"
+	default y
+	depends on RXV2_ICTL
+	help
+	  RX Timer
+
 config SYSTEM_CLOCK_DISABLE
 	bool "API to disable system clock"
 	help

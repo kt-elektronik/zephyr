@@ -1,0 +1,12 @@
+# RXV2 EIC configuration
+
+# Copyright (c) 2019 Derek Hageman <hageman@inthat.cloud>
+# Copyright (c) 2021 KT-Elektronik, Klaucke und Partner GmbH
+# SPDX-License-Identifier: Apache-2.0
+
+config RXV2_IRQ_CTRL
+	bool "External Interrupt Controller (EIC) Driver for RXV2"
+	default y
+	depends on SOC_FAMILY_RX
+	help
+	  Enable EIC driver for Renesas RXV2. This is required for GPIO interrupt support.

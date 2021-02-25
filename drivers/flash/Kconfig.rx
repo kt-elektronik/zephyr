@@ -1,0 +1,14 @@
+# Renesas RX65N flash driver config
+
+# Copyright (c) 2018, Piotr Mienkowski
+# Copyright (c) 2020 KT-Elektronik, Klaucke und Partner GmbH
+# SPDX-License-Identifier: Apache-2.0
+
+config SOC_FLASH_RX65N
+	bool "Renesas RX65N flash driver"
+	depends on SOC_FAMILY_RX
+	select FLASH_HAS_DRIVER_ENABLED
+	#select FLASH_HAS_PAGE_LAYOUT
+	#select SOC_GECKO_MSC
+	help
+	  Enable Renesas RX65N series internal flash driver.
