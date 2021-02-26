@@ -59,6 +59,16 @@
 	// cts-pin = <19>;
 };
 
+&sci10 {
+	status = "okay";
+	current-speed = <115200>;
+	// tx-pin = <1>;
+	// rx-pin = <3>;
+	// rts-pin = <22>;
+	// cts-pin = <19>;
+};
+
+
 &sci12 {
 	status = "okay";
 	current-speed = <115200>;
