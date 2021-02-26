@@ -70,7 +70,7 @@
 
 
 &sci12 {
-	status = "okay";
+	status = "disabled";
 	current-speed = <115200>;
 	// tx-pin = <1>;
 	// rx-pin = <3>;

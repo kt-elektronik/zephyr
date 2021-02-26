@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-//#define DT_DRV_COMPAT renesas_rx_sci
+#define DT_DRV_COMPAT renesas_rx_sci
 
 
 // adapted from  uart_sifive.c // uart_esp32.c
@@ -13,6 +13,7 @@
 #include <drivers/uart.h>
 #include <rx_sci.h>
 #include <soc.h>
+#include <sys/util.h>
 
 
 
@@ -173,60 +174,49 @@ static const struct uart_rx_device_config uart_rx_dev_cfg_##id = { \
 		(.cfg_func     = uart_rx_irq_cfg_func_##id,)) \
 }; 
 
-// #ifdef CONFIG_UART_INTERRUPT_DRIVEN \
-// static void uart_rx_irq_cfg_func_##id(void); \
+// #ifdef CONFIG_UART_INTERRUPT_DRIVEN 
+// static void uart_rx_irq_cfg_func_##id(void); 
 // #endif
 
 
-#define RX_SCIG_DEFINE(id) \
-static const struct uart_rx_device_config uart_rx_dev_cfg_g##id = {}; \
-static struct st_sci0 uart_rx_data_g##id; \
-DEVICE_DT_DEFINE(id, \
-			uart_rx_sci0_init, \
-			device_pm_control_nop, \
-			&uart_rx_data_g##id,  \
-			&uart_rx_dev_cfg_g##id, \
-			PRE_KERNEL_2,  \
-			CONFIG_KERNEL_INIT_PRIORITY_DEVICE, \
-			(void *)&uart_rx_driver_api);
+
+#define RX_SCI_DEFINE(id) \
+IF_ENABLED(DT_NODE_HAS_COMPAT(DT_DRV_INST(id),renesas_rx_scig), \
+	(RX_CONFIG_INIT(id) \
+	static struct st_sci0 uart_rx_data_##id; \
+	DEVICE_DT_DEFINE(id, \
+				uart_rx_sci0_init, \
+				device_pm_control_nop, \
+				&uart_rx_data_##id,  \
+				&uart_rx_dev_cfg_##id, \
+				PRE_KERNEL_2,  \
+				CONFIG_KERNEL_INIT_PRIORITY_DEVICE, \
+				(void *)&uart_rx_driver_api); )) \
+IF_ENABLED(DT_NODE_HAS_COMPAT(DT_DRV_INST(id),renesas_rx_scii), \
+	(RX_CONFIG_INIT(id)\
+	static struct st_sci10 uart_rx_data_##id; \
+	DEVICE_DT_DEFINE(id, \
+				uart_rx_sci10_init, \
+				device_pm_control_nop, \
+				&uart_rx_data_##id,  \
+				&uart_rx_dev_cfg_##id, \
+				PRE_KERNEL_2,  \
+				CONFIG_KERNEL_INIT_PRIORITY_DEVICE, \
+				(void *)&uart_rx_driver_api); ))
+IF_ENABLED(DT_NODE_HAS_COMPAT(DT_DRV_INST(id),renesas_rx_scih), \
+	(RX_CONFIG_INIT(id)\
+	static struct st_sci12 uart_rx_data_##id; \
+	DEVICE_DT_DEFINE(id, \
+				uart_rx_sci12_init, \
+				device_pm_control_nop, \
+				&uart_rx_data_##id,  \
+				&uart_rx_dev_cfg_##id, \
+				PRE_KERNEL_2,  \
+				CONFIG_KERNEL_INIT_PRIORITY_DEVICE, \
+				(void *)&uart_rx_driver_api); ))
+
+DT_INST_FOREACH_STATUS_OKAY(RX_SCI_DEFINE)
 
 
-#define RX_SCII_DEFINE(id) \
-static const struct uart_rx_device_config uart_rx_dev_cfg_i##id = {}; \
-static struct st_sci10 uart_rx_data_i##id; \
-DEVICE_DT_DEFINE(id, \
-			uart_rx_sci10_init, \
-			device_pm_control_nop, \
-			&uart_rx_data_i##id,  \
-			&uart_rx_dev_cfg_i##id, \
-			PRE_KERNEL_2,  \
-			CONFIG_KERNEL_INIT_PRIORITY_DEVICE, \
-			(void *)&uart_rx_driver_api);
-
-
-#define RX_SCIH_DEFINE(id) \
-RX_CONFIG_INIT(id) \
-static struct st_sci12 uart_rx_data_##id; \
-DEVICE_DT_DEFINE(id, \
-			uart_rx_sci12_init, \
-			device_pm_control_nop, \
-			&uart_rx_data_##id,  \
-			&uart_rx_dev_cfg_##id, \
-			PRE_KERNEL_2,  \
-			CONFIG_KERNEL_INIT_PRIORITY_DEVICE, \
-			(void *)&uart_rx_driver_api);
-
-
-#undef DT_DRV_COMPAT
-#define DT_DRV_COMPAT renesas_rx_scig
-DT_INST_FOREACH_STATUS_OKAY(RX_SCIG_DEFINE)
-
-#undef DT_DRV_COMPAT
-#define DT_DRV_COMPAT renesas_rx_scii
-DT_INST_FOREACH_STATUS_OKAY(RX_SCII_DEFINE)
-
-// #undef DT_DRV_COMPAT
-// #define DT_DRV_COMPAT renesas_rx_scih
-// DT_INST_FOREACH_STATUS_OKAY(RX_SCIH_DEFINE)
 
 
