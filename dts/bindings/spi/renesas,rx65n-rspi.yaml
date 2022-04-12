@@ -1,0 +1,46 @@
+# Copyright (c) 2021 KT-Elektronik, Klaucke und Partner GmbH
+# SPDX-License-Identifier: Apache-2.0
+
+description: Renesas RX65N RSPI controller
+
+compatible: "renesas,rx65n-rspi"
+
+include: spi-controller.yaml
+
+properties:
+  reg:
+    required: true
+
+  reg-names:
+    required: true
+
+  gpios:
+    type: phandle-array
+    required: true
+    description: gpio pin settings for RSPI
+
+  pinmuxs:
+    type: phandle-array
+    required: true
+    description: pinmux setting for RSPI
+
+  interrupts:
+    type: array
+    required: true
+    description: interrupts associated to the spi
+
+  clock:
+    type: phandle
+    required: true
+    description: sub-clock responsible for this interface
+
+  clock_subsystems:
+    type: phandle-array
+    required: true
+    description: clock sub-system to start and stop the device
+
+  dmas:
+    type: phandle-array
+    required: true
+    description: dma device(s) to be used by spi
+

@@ -160,7 +160,7 @@ static bool is_rodata(const void *addr)
 	extern const char *__rodata_region_end[];
 	#define RO_START __rodata_region_start
 	#define RO_END __rodata_region_end
-#elif defined(CONFIG_XTENSA)
+#elif defined(CONFIG_XTENSA) || defined(CONFIG_RXV2)
 	extern const char *_rodata_start[];
 	extern const char *_rodata_end[];
 	#define RO_START _rodata_start

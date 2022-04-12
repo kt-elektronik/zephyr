@@ -1,0 +1,85 @@
+# Renesas RX65N Independent Watchdog (IWDT) configuration
+
+# Copyright (C) 2021 KT-Elektronik, Klaucke und Partner GmbH
+# SPDX-License-Identifier: Apache-2.0
+
+config IWDT_RX65N
+	bool "Renesas RX65N Independent Watchdog (IWDT) Driver"
+	depends on SOC_FAMILY_RX
+	default y
+	help
+	  This option enables IWDT driver for Renesas RX65 Series
+
+config IWDT_RX65N_AUTO_START_MODE
+	bool "Start IWDT automatically on reset"
+	depends on IWDT_RX65N
+	default n
+	help
+	  Auto-start mode: Counting automatically starts after a reset is released
+	  Otherwise (Register start mode): Counting is started by refresh operation
+	  (writing 00h and then FFh to the IWDTRR register).
+
+config IWDT_RX65N_OFS0_IWDTSTRT
+	int "IWDT Start Mode Select"
+	default 0 if IWDT_RX65N_AUTO_START_MODE
+	default 1
+	help
+	  0: IWDT is automatically activated in auto-start mode after a reset
+	  1: IWDT is halted after a reset
+
+if IWDT_RX65N_AUTO_START_MODE
+
+	config IWDT_RX65N_OFS0_IWDTTOPS
+		int "IWDT Timeout Period Select"
+		default 3
+		help
+		0: 1024 cycles (03FFh)
+		1: 4096 cycles (0FFFh)
+		2: 8192 cycles (1FFFh)
+		3: 16384 cycles (3FFFh)
+
+	config IWDT_RX65N_OFS0_IWDTCKS
+		int "IWDT-Dedicated Clock Frequency Division Ratio Select"
+		default 15
+		help
+		0:  No division
+		2:  Divide-by-16
+		3:  Divide-by-32
+		4:  Divide-by-64
+		15: Divide-by-128
+		5:  Divide-by-256
+
+	config IWDT_RX65N_OFS0_IWDTRPES
+		int "IWDT Window End Position Select"
+		default 3
+		help
+		0: 75%
+		1: 50%
+		2: 25%
+		3: 0% (No window end position setting)
+
+	config IWDT_RX65N_OFS0_IWDTRPSS
+		int "IWDT Window Start Position Select"
+		default 3
+		help
+		0: 25%
+		1: 50%
+		2: 75%
+		3: 100% (No window start position setting
+
+	config IWDT_RX65N_OFS0_IWDTRSTIRQS
+		int "IWDT Reset Interrupt Request Select"
+		default 1
+		help
+		0: Non-maskable interrupt request or plain interrupt request is enabled
+		1: Reset is enabled
+
+	config IWDT_RX65N_OFS0_IWDTSLCSTP
+		int "IWDT Sleep Mode Count Stop Control"
+		default 0
+		help
+		0: Counting stop is disabled
+		1: Counting stop is enabled when entering sleep, software standby,
+		   deep software standby, or all-module clock stop mode
+
+endif # IWDT_RX65N_AUTO_START_MODE

@@ -43,6 +43,7 @@ class JLinkBinaryRunner(ZephyrBinaryRunner):
         super().__init__(cfg)
         self.hex_name = cfg.hex_file
         self.bin_name = cfg.bin_file
+        self.mot_name = cfg.mot_file
         self.elf_name = cfg.elf_file
         self.gdb_cmd = [cfg.gdb] if cfg.gdb else None
         self.device = device
@@ -259,9 +260,12 @@ class JLinkBinaryRunner(ZephyrBinaryRunner):
                 flash_addr = 0
             flash_file = self.bin_name
             flash_cmd = f'loadfile {self.bin_name} 0x{flash_addr:x}'
+        elif self.mot_name is not None and os.path.isfile(self.mot_name):
+            flash_file = self.mot_name
+            flash_cmd = f'loadfile {self.mot_name}'
         else:
-            err = 'Cannot flash; no hex ({}) or bin ({}) files found.'
-            raise ValueError(err.format(self.hex_name, self.bin_name))
+            err = 'Cannot flash; no hex ({}), bin ({}) or mot ({}) files found.'
+            raise ValueError(err.format(self.hex_name, self.bin_name, self.mot_name))
 
         # Flash the selected build artifact
         lines.append(flash_cmd)

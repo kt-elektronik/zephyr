@@ -103,6 +103,11 @@
 /** @} */
 
 /**
+ * @name GPIO peripharal flag (for RX65N)
+ */
+#define GPIO_PERIPHERAL	(1U << 24)
+
+/**
  * @}
  */
 

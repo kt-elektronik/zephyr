@@ -1,0 +1,85 @@
+# Copyright (c) 2021 KT-Elektronik, Klaucke und Partner GmbH
+# SPDX-License-Identifier: Apache-2.0
+
+description: Renesas RX 16-Bit Time Pulse Unit (TPU) or Multi-Function Timer Pulse Unit (MTU) as PWM
+
+compatible: "renesas,rx-pwm"
+
+include: [pwm-controller.yaml, base.yaml]
+
+properties:
+  reg:
+    required: true
+
+  reg-names:
+    required: true
+
+  gpios:
+    type: phandle-array
+    required: true
+    description: gpio drivers to configure PWM pins (up to the number of channels supported by this
+      of the device)
+
+  pinmuxs:
+    type: phandle-array
+    required: true
+    description: pinmux settings for the PWM pins (same as gpios)
+
+  clock:
+    type: phandle
+    required: true
+    description: sub-clock responsible for this interface
+
+  clock_subsystems:
+    type: phandle-array
+    required: true
+    description: clock sub-system to start and stop the device
+
+  bit_idx:
+    type: int
+    required: true
+    description: which bit of the common timer start register (TSTR) and timer synchronous
+      register (TSYR) to set for this device.
+
+  counter_clear_channel:
+    type: int
+    required: false
+    description: Choose one channel to act as counter clear channel. Not required in synchronous
+      mode if another synchronous TPU/MTU has a counter clear channel defined. If neither a channel
+      nor synchronous mode is chosen, it is not possible to set a period, but the TPU/MTU will use a
+      constant period of 0xffff cycles.
+
+  synchronous:
+    type: boolean
+    required: false
+    description: if set, the device will operate in synchronous mode. All TPU/MTU devices in
+      synchronous mode have the same period (in cycles, but subject to different prescaler
+      settings). Only one of the synchronous devices has to specify a counter clear channel.
+      Note that TPUs can be synchronous and MTUs can be synchronous but no mixed synchronizaton
+      is possible
+
+  prescaler:
+    type: int
+    required: true
+    description: prescaler setting to use for the TPU. Valid values are in the range 0-7 but
+      specifically depend on the device (see RX user's manual). Common settings are 0-3 for
+      dividers PCKL/1, PCLK/4, PCLK/16 and PCLK/64.
+
+  clock_divider:
+    type: int
+    required: true
+    description: based on the prescaler setting but can be different for each TPU/MTU of the RX MCU.
+      For details, see RX MCU User's manual.
+
+  toer_mask:
+    type: int
+    required: false
+    description: bit mask determining which bits to set in the timer output master enable register
+      (cf MCU User's manual).
+
+  "#pwm-cells":
+    const: 2
+
+pwm-cells:
+  - channel
+  - flags

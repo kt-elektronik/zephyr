@@ -62,4 +62,6 @@ source "drivers/adc/Kconfig.cc32xx"
 
 source "drivers/adc/Kconfig.adc_emul"
 
+source "drivers/adc/Kconfig.rx600"
+
 endif # ADC

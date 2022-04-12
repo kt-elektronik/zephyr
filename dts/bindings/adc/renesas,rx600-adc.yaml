@@ -1,0 +1,46 @@
+# Copyright (c) 2021 KT-Elektronik, Klaucke und Partner GmbH
+# SPDX-License-Identifier: Apache-2.0
+
+description: Renesas RX 600 ADC
+
+compatible: "renesas,rx600-adc"
+
+include: adc-controller.yaml
+
+properties:
+    reg:
+      required: true
+
+    interrupts:
+      required: true
+
+    gpios:
+      type: phandle-array
+      required: true
+      description: gpio settings for the ADC pins
+
+    pinmuxs:
+      type: phandle-array
+      required: true
+      description: pinmux setting for the ADC pins
+
+    clock:
+      type: phandle
+      required: true
+      description: sub-clock responsible for this interface
+
+    clock_subsystems:
+      type: phandle-array
+      required: true
+      description: clock sub-system to start and stop the device
+
+    num_channels:
+      type: int
+      required: true
+      description: number of channels provided by ADC unit
+
+    "#io-channel-cells":
+      const: 1
+
+io-channel-cells:
+    - input

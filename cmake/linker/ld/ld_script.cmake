@@ -108,7 +108,7 @@ function(group_to_string)
     if(DEFINED first_section_name AND "${symbol}" STREQUAL "SECTION")
       set_property(GLOBAL APPEND PROPERTY ${section}_START_SYMBOLS __${name}_start)
     else()
-      set(${STRING_STRING} "${${STRING_STRING}}\n  __${name}_start = .;\n")
+      set(${STRING_STRING} "${${STRING_STRING}}\n  PLACE_SYMBOL_HERE(__${name}_start);\n")
     endif()
 
     set(${STRING_STRING} "${${STRING_STRING}}\n  __${name}_size = __${name}_end - __${name}_start;\n")
@@ -157,7 +157,7 @@ function(group_to_string)
   endforeach()
 
   if(NOT ${type} STREQUAL REGION)
-    set(${STRING_STRING} "${${STRING_STRING}}\n  __${name}_end = .;\n")
+    set(${STRING_STRING} "${${STRING_STRING}}\n  PLACE_SYMBOL_HERE(__${name}_end);\n")
   endif()
 
   get_property(symbols GLOBAL PROPERTY ${STRING_OBJECT}_SYMBOLS)
@@ -213,11 +213,11 @@ function(section_to_string)
   set(TEMP "${name} ${address}${type} :${secalign}\n{")
 
   foreach(start_symbol ${start_syms})
-    set(TEMP "${TEMP}\n  ${start_symbol} = .;")
+    set(TEMP "${TEMP}\n  PLACE_SYMBOL_HERE(${start_symbol});")
   endforeach()
 
   if(NOT nosymbols)
-    set(TEMP "${TEMP}\n  __${name_clean}_start = .;")
+    set(TEMP "${TEMP}\n  PLACE_SYMBOL_HERE(__${name_clean}_start);")
   endif()
 
   if(NOT noinput)
@@ -252,7 +252,7 @@ function(section_to_string)
     endif()
 
     if(DEFINED symbol_start)
-      set(TEMP "${TEMP}\n  ${symbol_start} = .;")
+      set(TEMP "${TEMP}\n  PLACE_SYMBOL_HERE(${symbol_start});")
     endif()
 
     foreach(setting ${input})
@@ -274,7 +274,7 @@ function(section_to_string)
     endforeach()
 
     if(DEFINED symbol_end)
-      set(TEMP "${TEMP}\n  ${symbol_end} = .;")
+      set(TEMP "${TEMP}\n  PLACE_SYMBOL_HERE(${symbol_end});")
     endif()
 
     set(symbol_start)
@@ -282,11 +282,11 @@ function(section_to_string)
   endforeach()
 
   if(NOT nosymbols)
-    set(TEMP "${TEMP}\n  __${name_clean}_end = .;")
+    set(TEMP "${TEMP}\n  PLACE_SYMBOL_HERE(__${name_clean}_end);")
   endif()
 
   if(DEFINED extra_symbol_end)
-    set(TEMP "${TEMP}\n  ${extra_symbol_end} = .;")
+    set(TEMP "${TEMP}\n  PLACE_SYMBOL_HERE(${extra_symbol_end});")
   endif()
 
   set(TEMP "${TEMP}\n}")

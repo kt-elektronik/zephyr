@@ -1,0 +1,41 @@
+# Copyright (c) 2021 KT-Elektronik, Klaucke und Partner GmbH
+# SPDX-License-Identifier: Apache-2.0
+
+description: Renesas RX65N DMA controller
+
+compatible: "renesas,rx65n-dmac"
+
+include: dma-controller.yaml
+
+properties:
+  reg:
+    required: true
+
+  reg-names:
+    required: true
+
+  interrupts:
+    required: true
+
+  interrupt-names:
+    required: true
+
+  dma-channels:
+    required: true
+
+  clock:
+    type: phandle
+    required: true
+    description: sub-clock responsible for this interface
+
+  clock_subsystems:
+    type: phandle-array
+    required: true
+    description: clock sub-system to start and stop the device
+
+  "#dma-cells":
+    required: true
+    const: 1
+
+dma-cells:
+  - slot

@@ -1,0 +1,53 @@
+# Copyright (c) 2021 KT-Elektronik, Klaucke und Partner GmbH
+# SPDX-License-Identifier: Apache-2.0
+
+description: Renesas RX65N Flash region
+
+compatible: "renesas,rx65n-flash"
+
+include: base.yaml
+
+properties:
+  reg:
+    required: true
+
+  reg-names:
+    required: true
+
+  entry_bit:
+    type: int
+    required: true
+    description: bit number of the FCUs entry register for this flash region
+
+  write_block_size:
+    type: int
+    required: true
+    description: minimum unit to write
+
+  page_counts:
+    type: array
+    required: true
+    description: number of pages of different sizes
+
+  page_sizes:
+    type: array
+    required: true
+    description: page sizes (corresponding to page_counts)
+
+  program_timeout_ms:
+    type: int
+    required: true
+    description: timeout of a single programming command in milliseconds
+
+  erase_timeout_ms:
+    type: int
+    required: true
+    description: timeout of a single erase command in milliseconds
+
+  erased_undefined:
+    type: boolean
+    required: false
+    description: if this is set, the content of erased flash is undefined. Since
+      some applications expect erased flash to be recognizable by a specific
+      content (0xff), this means that a blank check has to be performed for each
+      block when reading.

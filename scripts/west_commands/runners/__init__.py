@@ -42,6 +42,8 @@ _names = [
     'openocd',
     'pyocd',
     'qemu',
+    'remote_runner',
+    'renesasflashprogrammer',
     'stm32cubeprogrammer',
     'stm32flash',
     'xtensa',

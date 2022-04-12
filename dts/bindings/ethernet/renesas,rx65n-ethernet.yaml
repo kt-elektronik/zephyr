@@ -1,0 +1,48 @@
+# Copyright (c) 2021 KT-Elektronik, Klaucke und Partner GmbH
+# SPDX-License-Identifier: Apache-2.0
+
+description: Renesas RX65n Ethernet interface
+
+compatible: "renesas,rx65n-ethernet"
+
+include: ethernet.yaml
+
+properties:
+  pinmuxs:
+    type: phandle-array
+    required: true
+    description: pinmux setting for ethernet
+  gpios:
+    type: phandle-array
+    required: true
+    description: gpio drivers to configure ethernet pins
+  interface_mode:
+    type: int
+    required: true
+    enum:
+      - 0
+      - 1
+    description:
+      interface mode for communication with the PHY, can be either 0 for MII
+      (Media Independent Interface) or 1 for RMII (Reduced MII)
+  phy_address:
+    type: int
+    required: true
+    description:
+      address of the PHY
+  linksta:
+    type: boolean
+    required: false
+    description:
+      set if the LINKSTA pin is connected for this device
+  stored_mac_address:
+    type: int
+    required: false
+    description:
+      A MAC address can be stored, usually in the RX65N data flash, and read
+      from this address at startup. For verification, the 6 bytes starting at
+      this address have to be repeated once and followed by a uin16_t value
+      which is the sum of all bytes. The data is also ignored if it is all 0x00.
+
+      If set and the flash contains a valid MAC address, local-mac-address and
+      zephyr,random-mac-address fields are ignored.

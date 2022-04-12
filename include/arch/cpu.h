@@ -29,6 +29,8 @@
 #include <arch/posix/arch.h>
 #elif defined(CONFIG_SPARC)
 #include <arch/sparc/arch.h>
+#elif defined(CONFIG_RXV2)
+#include <arch/rxv2/arch.h>
 #else
 #error "Unknown Architecture"
 #endif

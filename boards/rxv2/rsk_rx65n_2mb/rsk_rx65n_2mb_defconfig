@@ -1,0 +1,120 @@
+# Renesas Starter Kit+ RX65N-2MB board configuration
+# Copyright (c) 2021 KT-Elektronik, Klaucke und Partner GmbH
+# SPDX-License-Identifier: Apache-2.0
+
+CONFIG_SOC_SERIES_RX65N=y
+CONFIG_BOARD_RSK_RX65N_2MB=y
+
+# 120 MHz system clock (highest value to get a precise USB clock)
+CONFIG_SYS_CLOCK_HW_CYCLES_PER_SEC=120000000
+
+# enable GPIO
+CONFIG_GPIO=y      # usage in board directory
+
+# enable uart driver
+CONFIG_SERIAL=y
+# CONFIG_UART_INTERRUPT_DRIVEN=y
+
+# enable console
+CONFIG_CONSOLE=y
+CONFIG_UART_CONSOLE=y
+# might be added at a later stage
+# CONFIG_RAM_CONSOLE=y
+# CONFIG_RAM_CONSOLE_BUFFER_SIZE=1024
+
+# enable clock configuration
+CONFIG_CLOCK_CONTROL=y
+
+CONFIG_CLOCK_RX65N_ENABLE_MAINCLK=y
+CONFIG_CLOCK_RX65N_MAINCLK_SRC_RESONATOR=y
+
+CONFIG_CLOCK_RX65N_ENABLE_HOCO=n
+
+# PLL clock source selection
+CONFIG_CLOCK_RX65N_PLL_SRC_MAINCLOCK=y
+
+# PLL setting
+CONFIG_CLOCK_RX65N_PLL_DIVISOR=1
+CONFIG_CLOCK_RX65N_PLL_MULTIPLIER=10
+
+# enable console output
+CONFIG_PRINTK=y
+
+### START: adapted from up_squared_adsp_defconfig ###
+
+# CONFIG_MAIN_STACK_SIZE=2048
+# CONFIG_MULTI_LEVEL_INTERRUPTS=y
+# CONFIG_2ND_LEVEL_INTERRUPTS=y
+# CONFIG_RXV2_ICTL=y # check if: how to enable this symbol
+# CONFIG_CAVS_ICTL=y
+# CONFIG_BOOTLOADER_SRAM_SIZE=192
+
+### END: adapted from up_squared_adsp_defconfig ###
+
+# might be added at a later stage
+# enable spi
+# CONFIG_SPI=y
+
+# enable pinmux
+CONFIG_PINMUX=y
+
+# might be added at a later stage
+# enable secure firmware image
+# CONFIG_TRUSTED_EXECUTION_SECURE=y
+
+# might be added at a later stage
+# enable i2c
+# CONFIG_I2C=y
+
+# might be added at a later stage
+# Enable RTT
+# CONFIG_USE_SEGGER_RTT=y
+
+# might be added at a later stage
+# additional board options
+# CONFIG_GPIO_AS_PINRESET=y
+
+# might be added at a later stage
+# Zephyr Kernel Configuration
+# CONFIG_XIP=n
+# CONFIG_FLASH_SIZE=0
+# CONFIG_FLASH_BASE_ADDRESS=0x0
+
+# might be added at a later stage
+# ADC
+# CONFIG_ADC=y
+
+# might be added at a later stage
+# Floating Point Options
+# CONFIG_FPU=y
+
+# might be added at a later stage
+# Kernel Options due to Low Memory (8k)
+# CONFIG_MAIN_STACK_SIZE=640
+# CONFIG_IDLE_STACK_SIZE=200
+# CONFIG_ISR_STACK_SIZE=512
+
+# might be added at a later stage
+# Prevent Interrupt Vector Table in RAM
+# CONFIG_IS_BOOTLOADER=y
+# CONFIG_BOOTLOADER_SRAM_SIZE=4
+
+# might be added at a later stage
+# Enable pulse width modulation
+# CONFIG_PWM=y
+
+# might be added at a later stage
+# power management
+# CONFIG_SOC_POWER_MANAGEMENT=y
+
+# this is maybe better done in soc/rxv2/rx/Kconfig.defconfig
+#CONFIG_BUILD_NO_GAP_FILL=y
+
+# IWDT
+CONFIG_WATCHDOG=y
+
+# Optimization for debug (-Og)
+CONFIG_DEBUG=y
+
+# enable test RNG for development until a better RNG can be used.
+CONFIG_TEST_RANDOM_GENERATOR=y

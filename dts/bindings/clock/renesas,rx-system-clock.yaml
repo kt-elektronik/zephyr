@@ -1,0 +1,26 @@
+# Copyright (c) 2021 KT-Elektronik Klaucke und Partner GmbH
+# SPDX-License-Identifier: Apache-2.0
+
+description: Renesas RX65N Clock Controller
+
+compatible: "renesas,rx-system-clock"
+
+include: [clock-controller.yaml, base.yaml]
+
+properties:
+  label:
+    required: true
+
+  reg:
+    required: true
+
+  reg-names:
+    required: true
+
+  main_clock_frequency:
+    required: true
+    type: int
+    description: main clock frequency in Hz
+
+  "#clock-cells":
+    const: 0

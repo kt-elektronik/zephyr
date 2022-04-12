@@ -1,0 +1,107 @@
+/* Copyright (c) 2021 KT-Elektronik, Klaucke und Partner GmbH */
+/* SPDX-License-Identifier: Apache-2.0 */
+
+/dts-v1/;
+
+#include <R5F565NE.dtsi>
+
+/ {
+	model = "Target board for RX65N";
+	compatible = "renesas,rtb_rx65n";
+
+	chosen {
+		zephyr,sram = &sram1;
+		zephyr,console = &sci12;
+		zephyr,shell-uart = &sci12;
+		zephyr,flash-controller = &data_flash;
+		rx65n,tick-timer = &cmtw0;
+		rx65n,cycle-timer = &cmtw1;
+	};
+
+	gpio_keys {
+		compatible = "gpio-keys";
+		user_button: sw0 {
+			gpios = <&portb 1 GPIO_ACTIVE_LOW>;
+			label = "User Switch";
+		};
+	};
+
+	leds {
+		compatible = "gpio-leds";
+		green_led0: led_0 {
+			gpios = <&portd 6 GPIO_ACTIVE_LOW>;
+			label = "LED 0 (green)";
+		};
+		green_led1: led_1 {
+			gpios = <&portd 7 GPIO_ACTIVE_LOW>;
+			label = "LED 1 (green)";
+		};
+	};
+
+	aliases {
+		led0 = &green_led0;
+		led1 = &green_led1;
+		sw0 = &user_button;
+	};
+};
+
+&sci10 {
+	status = "okay";
+	current-speed = <115200>;
+	pinmuxs = <&pinmuxc 6 36>, <&pinmuxc 7 36>;
+	gpios = <&portc 6 GPIO_PERIPHERAL>, <&portc 7 GPIO_PERIPHERAL>;
+};
+
+&sci11 {
+	status = "okay";
+	current-speed = <115200>;
+	pinmuxs = <&pinmuxb 6 36>, <&pinmuxb 7 36>;
+	gpios = <&portb 6 GPIO_PERIPHERAL>, <&portb 7 GPIO_PERIPHERAL>;
+};
+
+&sci12 {
+	status = "okay";
+	current-speed = <115200>;
+	pinmuxs = <&pinmuxe 2 12>, <&pinmuxe 1 12>;
+	gpios = <&porte 2 GPIO_PERIPHERAL>, <&porte 1 GPIO_PERIPHERAL>;
+};
+
+&portb {
+	status = "okay";
+};
+
+&pinmuxb {
+	status = "okay";
+};
+
+&portc {
+	status = "okay";
+};
+
+&pinmuxc {
+	status = "okay";
+};
+
+&portd {
+	status = "okay";
+};
+
+&pinmuxd {
+	status = "okay";
+};
+
+&porte {
+	status = "okay";
+};
+
+&pinmuxe {
+	status = "okay";
+};
+
+&system_clock {
+	main_clock_frequency = <0>;
+};
+
+&iwdt {
+	status = "okay";
+};

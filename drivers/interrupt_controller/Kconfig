@@ -71,4 +71,6 @@ source "drivers/interrupt_controller/Kconfig.esp32"
 
 source "drivers/interrupt_controller/Kconfig.xec"
 
+source "drivers/interrupt_controller/Kconfig.rxv2"
+
 endmenu

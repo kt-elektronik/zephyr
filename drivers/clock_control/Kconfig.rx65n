@@ -1,0 +1,255 @@
+# RX65N Clock Driver configuration options
+
+# Copyright (c) 2021 KT-Elektronik, Klaucke und Partner GmbH
+# SPDX-License-Identifier: Apache-2.0
+
+menuconfig CLOCK_CONTROL_RX65N
+	bool "RX65N Clock Control"
+	depends on SOC_FAMILY_RX
+	help
+	  Enable clock driver for Renesas RX MCUs
+
+if CLOCK_CONTROL_RX65N
+
+config CLOCK_RX65N_SYSTEM_CLOCK # TODO: obsolete due to derived frequencies?
+	int "System Clock frequency"
+	default 120000000
+	range 1 120000000
+	help
+	  Set the resulting System clock frequency. But keep in mind that this
+	  value doesn't affect the System Clock. It can be used for derived
+	  calculations.
+
+config CLOCK_RX65N_ENABLE_MAINCLK
+	bool "Enable Main Clock"
+	default n
+	help
+	  MOSTP Bit (Main Clock Oscillator Stop)
+	  This bit runs or stops the main clock oscillator.
+
+# Main clock source selection
+choice CLOCK_RX65N_MAINCLK_SRC
+	prompt "Main Clock Source"
+	depends on CLOCK_RX65N_ENABLE_MAINCLK
+	default CLOCK_RX65N_MAINCLK_SRC_RESONATOR
+
+	config CLOCK_RX65N_MAINCLK_SRC_RESONATOR
+		bool "Resonator"
+		help
+		Use a resonator as main clock source
+
+	config CLOCK_RX65N_MAINCLK_SRC_EXT
+		bool "External"
+		help
+		External clock input
+endchoice #CLOCK_RX65N_MAINCLK_SRC
+
+
+#  Main Clock Oscillator Driving Ability
+choice CLOCK_RX65N_MAINCLK_DRIVEABILITY
+	prompt "Main Clock Oscillator Driving Ability"
+	depends on CLOCK_RX65N_ENABLE_MAINCLK
+	default CLOCK_RX65N_MAINCLK_DRIVEABILITY_01
+	help
+	  MODRV2[1:0] Bits (Main Clock Oscillator Driving Ability 2 Switching)
+	  These bits switch the driving ability of the main clock oscillator.
+	  Specify the driving ability according to the frequency of a crystal
+	  connected to the main clock oscillator. The frequency ranges specified
+	  in the bit description of the MODRV2[1:0] bits are the reference
+	  values of the crystal with capacitive load of 8 pF. A setting value
+	  may not fit within the frequency range depending on a crystal.
+
+	  In case of a ceramic resonator, it may be better to select lower
+	  frequency range than the frequency of the resonator.
+
+	config CLOCK_RX65N_MAINCLK_DRIVEABILITY_00
+		bool "20.1 to 24 MHz"
+	config CLOCK_RX65N_MAINCLK_DRIVEABILITY_01
+		bool "16.1 to 20 MHz"
+	config CLOCK_RX65N_MAINCLK_DRIVEABILITY_10
+		bool "8.1 to 16 MHz"
+	config CLOCK_RX65N_MAINCLK_DRIVEABILITY_11
+		bool "8 MHz"
+endchoice
+
+config CLOCK_RX65N_MAINCLK_DRIVEABILITY
+	int
+	default 0 if CLOCK_RX65N_MAINCLK_DRIVEABILITY_00
+	default 1 if CLOCK_RX65N_MAINCLK_DRIVEABILITY_01
+	default 2 if CLOCK_RX65N_MAINCLK_DRIVEABILITY_10
+	default 3 if CLOCK_RX65N_MAINCLK_DRIVEABILITY_11
+
+
+config CLOCK_RX65N_MOSCWTCR
+	int "Main Clock Oscillator Wait Control Register (MOSCWTCR)"
+	depends on CLOCK_RX65N_ENABLE_MAINCLK
+	default 92
+	range 0 255
+	help
+	  MOSCWTCR is used to control the waiting time until output of the
+	  signal from the main clock oscillator to the internal circuits starts.
+	  The oscillation stabilization wait circuit for the main clock
+	  oscillator measures the waiting time by counting the number of LOCO
+	  clock cycles corresponding to the setting of the MOSCWTCR register.
+	  Calculation:
+	     MOSCWTCR > (t_MAINOSC × (f_LOCO_max) + 16)/32   (t_MAINOSC in ms)
+
+
+config CLOCK_RX65N_ENABLE_SUBCLK
+	bool "Enable Sub-clock"
+	default n
+	help
+	  SOSTP Bit (Sub-Clock Oscillator Stop)
+	  This bit runs or stops the sub-clock oscillator. The SOSTP bit
+	  and the sub-clock control bit in the RTC control register 3
+	  (RCR3.RTCEN) controls whether to operate or stop the sub-clock
+	  oscillator. If one of these bits is set so as to enable the operation,
+	  the sub-clock oscillator runs.
+
+config CLOCK_RX65N_ENABLE_LOCO
+	bool "Enable Low-Speed On-Chip Oscillator"
+	default n
+	help
+	  LCSTP Bit (LOCO Stop)
+	  This bit runs or stops the LOCO. After the setting of the LCSTP bit
+	  has been changed so that the LOCO operates, only start using the LOCO
+	  after the LOCO clock oscillation stabilization waiting time (tLOCOWT)
+	  has elapsed.
+
+config CLOCK_RX65N_ENABLE_HOCO
+	bool "Enable High-Speed On-Chip Oscillator"
+	default y
+	help
+	  HCSTP Bit (HOCO Stop)
+	  This bit runs or stops the HOCO. After the setting of the HCSTP bit
+	  has been changed to make the HOCO run, confirm that the OSCOVFSR.HCOVF
+	  flag has been set to 1 before starting to use the oscillator.
+
+# HOCO frequency setting
+choice CLOCK_RX65N_HOCO_FREQ
+	prompt "High Speed On-Chip Oscillator (HOCO) frequency setting"
+	depends on CLOCK_RX65N_ENABLE_HOCO
+	default CLOCK_RX65N_HOCO_16MHZ
+
+	config CLOCK_RX65N_HOCO_16MHZ
+		bool "16 MHz"
+
+	config CLOCK_RX65N_HOCO_18MHZ
+		bool "18 MHz"
+
+	config CLOCK_RX65N_HOCO_20MHZ
+		bool "20 MHz"
+
+endchoice #CLOCK_RX65N_HOCO_FREQ
+
+config CLOCK_RX65N_HOCO_FREQ
+	int
+	default 0 if CLOCK_RX65N_HOCO_16MHZ
+	default 1 if CLOCK_RX65N_HOCO_18MHZ
+	default 2 if CLOCK_RX65N_HOCO_20MHZ
+
+# System clock input selection (SCKCR3)
+choice CLOCK_RX65N_SYSCLK_SRC
+	prompt "System Clock Source"
+	default CLOCK_RX65N_SYSCLK_SRC_PLL
+	help
+	  CKSEL[2:0] Bits (Clock Source Select)
+	  These bits select the source of the system clock (ICLK), peripheral
+	  module clocks (PCLKA, PCLKB, PCLKC, and PCLKD), flash-IF clock
+	  (FCLK), external bus clock (BCLK), SDRAM clock (SDCLK), and USB clock
+	  (UCLK) from low-speed on-chip oscillator (LOCO), high-speed on-chip
+	  oscillator (HOCO), the main clock oscillator, the sub-clock
+	  oscillator, and the PLL circuit. Transitions to clock sources which
+	  are not in operation are prohibited.
+
+	config CLOCK_RX65N_SYSCLK_SRC_MAINCLOCK
+		bool "Main Clock"
+		help
+		Use Main clock oscillator as source of the system clock (ICLK)
+
+	config CLOCK_RX65N_SYSCLK_SRC_SUBCLOCK
+		bool "Sub Clock"
+		help
+		Use Sub-clock oscillator as source of the system clock (ICLK)
+
+	config CLOCK_RX65N_SYSCLK_SRC_PLL
+		bool "PLL"
+		help
+		Use PLL as source of the system clock (ICLK)
+
+	config CLOCK_RX65N_SYSCLK_SRC_HOCO
+		bool "HOCO"
+		help
+		Use HOCO as source of the system clock (ICLK)
+
+	config CLOCK_RX65N_SYSCLK_SRC_LOCO
+		bool "LOCO"
+		help
+		Use LOCO as source of the system clock (ICLK)
+
+endchoice #CLOCK_RX65N_SYSCLCK_SRC
+
+config CLOCK_RX65N_SYSCLK_SRC
+	int
+	default 0 if CLOCK_RX65N_SYSCLK_SRC_LOCO
+	default 1 if CLOCK_RX65N_SYSCLK_SRC_HOCO
+	default 2 if CLOCK_RX65N_SYSCLK_SRC_MAINCLOCK
+	default 3 if CLOCK_RX65N_SYSCLK_SRC_SUBCLOCK
+	default 4 if CLOCK_RX65N_SYSCLK_SRC_PLL
+
+
+# PLL clock source selection
+choice CLOCK_RX65N_PLL_SRC
+	prompt "PLL Clock Source"
+	depends on CLOCK_RX65N_SYSCLK_SRC_PLL
+	default CLOCK_RX65N_PLL_SRC_HOCO
+
+	config CLOCK_RX65N_PLL_SRC_MAINCLOCK
+		bool "Main Clock"
+		depends on CLOCK_RX65N_ENABLE_MAINCLK
+		help
+		Use Main clock oscillator as PLL clock source
+
+	config CLOCK_RX65N_PLL_SRC_HOCO
+		bool "HOCO"
+		depends on CLOCK_RX65N_ENABLE_HOCO
+		help
+		Use High Speed On-Chip Clock Oscillator (HOCO) as PLL clock source
+endchoice #CLOCK_RX65N_PLL_SRC
+
+# PLL configuration
+config CLOCK_RX65N_PLL_DIVISOR
+	int "PLL Input Frequency Division Ratio Select (PLIDIV[1:0])"
+	depends on CLOCK_RX65N_SYSCLK_SRC_PLL
+	default 1
+	range 1 3
+	help
+	  These bits select the frequency division ratio of the PLL clock
+	  source. Set these bits so that the frequency of PLL input signal is
+	  within the range of 8 MHz to 24 MHz.
+
+# @todo: check if float is possible at this place because setting in steps
+# of 0.5 is possible here.
+config CLOCK_RX65N_PLL_MULTIPLIER
+	int "PLL Frequency Multiplication Factor Select (STC[5:0])"
+	depends on CLOCK_RX65N_SYSCLK_SRC_PLL
+	default 10
+	range 10 30
+	help
+	  These bits select the frequency multiplication factor of the PLL
+	  circuit. Set these bits so that the output frequency is within the
+	  range of the output clock frequency of the PLL circuit (120 MHz to
+	  240 MHz).
+
+config CLOCK_RX65N_ENABLE_IWDT_CLOCK
+	bool "Enable IWDT dedicated on-chip clock"
+	default n if IWDT_RX65N_AUTO_START_MODE
+	default y
+	depends on WATCHDOG
+	help
+	  ILCSTP Bit (IWDT-Dedicated On-Chip Oscillator)
+	  This bit runs or stops the IWDT-dedicated on-chip oscillator when
+	  the IWDT start mode select bit in the option function select register
+	  0 (OFS0.IWDTSTRT) is set to 1 (IWDT stopped).
+
+endif # CLOCK_CONTROL_RX65N

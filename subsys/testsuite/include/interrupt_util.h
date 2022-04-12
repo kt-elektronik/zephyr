@@ -135,6 +135,9 @@ static inline void trigger_irq(int irq)
 {
 	z_sparc_enter_irq(irq);
 }
+#elif defined(CONFIG_RXV2)
+
+/* for RXV2, trigger_irq() is defined in include\arch\rxv2\arch.h*/
 
 #else
 /* So far, Nios II does not support this */

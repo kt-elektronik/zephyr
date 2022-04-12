@@ -1,0 +1,7 @@
+# Copyright (c) 2022 KT-Elektronik Klaucke und Partner GmbH
+# SPDX-License-Identifier: Apache-2.0
+
+config I2C_RX_SCI
+	bool "RX SCI in simple I2C mode"
+	default y
+	depends on SOC_FAMILY_RX

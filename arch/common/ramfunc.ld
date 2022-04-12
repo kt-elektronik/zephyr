@@ -10,11 +10,11 @@
 SECTION_DATA_PROLOGUE(.ramfunc,,)
 {
 	MPU_ALIGN(__ramfunc_size);
-	__ramfunc_start = .;
+	PLACE_SYMBOL_HERE(__ramfunc_start);
 	*(.ramfunc)
 	*(".ramfunc.*")
 	MPU_ALIGN(__ramfunc_size);
-	__ramfunc_end = .;
+	PLACE_SYMBOL_HERE(__ramfunc_end);
 } GROUP_DATA_LINK_IN(RAMABLE_REGION, ROMABLE_REGION)
 __ramfunc_size = __ramfunc_end - __ramfunc_start;
 __ramfunc_load_start = LOADADDR(.ramfunc);

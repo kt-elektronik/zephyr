@@ -1,0 +1,85 @@
+/* Copyright (c) 2021 KT-Elektronik, Klaucke und Partner GmbH */
+/* SPDX-License-Identifier: Apache-2.0 */
+
+/*
+ * device tree for the Renesas RX66N MCU group
+ */
+
+ #include "RX.dtsi"
+
+/ {
+	soc {
+		sram0: memory@0 {
+			device_type = "memory";
+			compatible = "mmio-sram";
+			reg = <0x0 DT_SIZE_K(256)>;
+			label = "SRAM0";
+		};
+
+		sci7: serial@8a0e0 {
+			compatible = "renesas,rx-scig","renesas,rx-sci-uart";
+			reg = <0x0008a0e0 0x01>, <0x0008a0e1 0x01>, <0x0008a0e2 0x01>,
+				<0x0008a0e3 0x01>, <0x0008a0e4 0x01>, <0x0008a0e5 0x01>,
+				<0x0008a0e6 0x01>, <0x0008a0e7 0x01>, <0x0008a0e8 0x01>,
+				<0x0008a0e9 0x01>, <0x0008a0ea 0x01>, <0x0008a0eb 0x01>,
+				<0x0008a0ec 0x01>, <0x0008a0ed 0x01>, <0x0008a0f2 0x01>;
+			reg-names = "SMR", "BRR", "SCR", "TDR", "SSR", "RDR", "SCMR", "SEMR",
+				"SNFR", "SIMR1", "SIMR2", "SIMR3", "SISR", "SPMR", "MDDR";
+			clock = <&pclkb>;
+			clock_subsystems =  <&mstpcrb 24>;
+			interrupts = <98 7 0>, <99 7 0>;
+			tei-ctrl = <&group_irq_bl0>;
+			tei-number = <14>;
+			eri-ctrl = <&group_irq_bl0>;
+			eri-number = <15>;
+			status = "disabled";
+			label = "SCI_7";
+			pinmux-names = "RXD", "TXD";
+			gpio-names = "RXD", "TXD";
+		}; /* sci7 */
+
+		sci8: serial@8a100 {
+			compatible = "renesas,rx-scig","renesas,rx-sci-uart";
+			reg = <0x0008a100 0x01>, <0x0008a101 0x01>, <0x0008a102 0x01>,
+				<0x0008a103 0x01>, <0x0008a104 0x01>, <0x0008a105 0x01>,
+				<0x0008a106 0x01>, <0x0008a107 0x01>, <0x0008a108 0x01>,
+				<0x0008a109 0x01>, <0x0008a10a 0x01>, <0x0008a10b 0x01>,
+				<0x0008a10c 0x01>, <0x0008a10d 0x01>, <0x0008a112 0x01>;
+			reg-names = "SMR", "BRR", "SCR", "TDR", "SSR", "RDR", "SCMR", "SEMR",
+				"SNFR", "SIMR1", "SIMR2", "SIMR3", "SISR", "SPMR", "MDDR";
+			clock = <&pclkb>;
+			clock_subsystems =  <&mstpcrc 27>;
+			interrupts = <100 7 0>, <101 7 0>; /* number, priority, flags */
+			tei-ctrl = <&group_irq_bl1>;
+			tei-number = <24>;
+			eri-ctrl = <&group_irq_bl1>;
+			eri-number = <25>;
+			status = "disabled";
+			label = "SCI_8";
+			pinmux-names = "RXD", "TXD";
+			gpio-names = "RXD", "TXD";
+		}; /* sci8 */
+
+		sci9: serial@8a120 {
+			compatible = "renesas,rx-scig","renesas,rx-sci-uart";
+			reg = <0x0008a120 0x01>, <0x0008a121 0x01>, <0x0008a122 0x01>,
+				<0x0008a123 0x01>, <0x0008a124 0x01>, <0x0008a125 0x01>,
+				<0x0008a126 0x01>, <0x0008a127 0x01>, <0x0008a128 0x01>,
+				<0x0008a129 0x01>, <0x0008a12a 0x01>, <0x0008a12b 0x01>,
+				<0x0008a12c 0x01>, <0x0008a12d 0x01>, <0x0008a132 0x01>;
+			reg-names = "SMR", "BRR", "SCR", "TDR", "SSR", "RDR", "SCMR", "SEMR",
+				"SNFR", "SIMR1", "SIMR2", "SIMR3", "SISR", "SPMR", "MDDR";
+			clock = <&pclkb>;
+			clock_subsystems =  <&mstpcrc 26>;
+			interrupts = <102 7 0>, <103 7 0>;
+			tei-ctrl = <&group_irq_bl1>;
+			tei-number = <26>;
+			eri-ctrl = <&group_irq_bl1>;
+			eri-number = <27>;
+			status = "disabled";
+			label = "SCI_9";
+			pinmux-names = "RXD", "TXD";
+			gpio-names = "RXD", "TXD";
+		}; /* sci9 */
+	}; /* soc */
+};

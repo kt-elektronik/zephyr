@@ -1,0 +1,25 @@
+# Renesas RX65N series
+
+# Copyright (c) 2021 KT-Elektronik, Klaucke und Partner GmbH
+# SPDX-License-Identifier: Apache-2.0
+
+# Kconfig symbols common to RX65N series
+
+
+if SOC_SERIES_RX65N
+	config SOC_SERIES
+		default "rx65n"
+
+	config GPIO_RX
+		default y
+		depends on GPIO
+
+	config PINMUX_RX
+		default y
+	 	depends on PINMUX
+
+	config CLOCK_CONTROL_RX65N
+		default y
+		depends on CLOCK_CONTROL
+
+endif #SOC_SERIES_RX65N

@@ -54,4 +54,6 @@ source "drivers/clock_control/Kconfig.rcar"
 
 source "drivers/clock_control/Kconfig.xec"
 
+source "drivers/clock_control/Kconfig.rx65n"
+
 endif # CLOCK_CONTROL

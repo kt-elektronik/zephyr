@@ -15,6 +15,7 @@
 #include <zephyr.h>
 #include <ztest.h>
 
+#include <app_memory/app_memdomain.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <malloc.h>
@@ -39,6 +40,17 @@ extern void __sinit_lock_release(void);
 extern void __tz_lock(void);
 extern void __tz_unlock(void);
 
+extern void __retarget_lock_init(_LOCK_T *lock);
+extern void __retarget_lock_init_recursive(_LOCK_T *lock);
+extern void __retarget_lock_acquire(_LOCK_T lock);
+extern void __retarget_lock_acquire_recursive(_LOCK_T lock);
+extern int __retarget_lock_try_acquire(_LOCK_T lock);
+extern int __retarget_lock_try_acquire_recursive(_LOCK_T lock);
+extern void __retarget_lock_release(_LOCK_T lock);
+extern void __retarget_lock_release_recursive(_LOCK_T lock);
+extern void __retarget_lock_close(_LOCK_T lock);
+extern void __retarget_lock_close_recursive(_LOCK_T lock);
+
 /* Static locks */
 extern struct k_mutex __lock___sinit_recursive_mutex;
 extern struct k_mutex __lock___sfp_recursive_mutex;
@@ -59,11 +71,11 @@ extern struct k_sem __lock___arc4random_mutex;
  */
 static void test_retargetable_lock_sem(void)
 {
-	_LOCK_T lock = NULL;
+	_LOCK_T lock = (_LOCK_T)NULL;
 
 	/* Dynamically allocate and initialise a new lock */
 	__retarget_lock_init(&lock);
-	zassert_not_null(lock, "non-recursive lock init failed");
+	zassert_not_null((void *)lock, "non-recursive lock init failed");
 
 	/* Acquire lock and verify acquisition */
 	__retarget_lock_acquire(lock);
@@ -81,7 +93,7 @@ static void test_retargetable_lock_sem(void)
 
 static void retargetable_lock_mutex_thread_acq(void *p1, void *p2, void *p3)
 {
-	_LOCK_T lock = p1;
+	_LOCK_T lock = (_LOCK_T)p1;
 	int ret;
 
 	/*
@@ -94,7 +106,7 @@ static void retargetable_lock_mutex_thread_acq(void *p1, void *p2, void *p3)
 
 static void retargetable_lock_mutex_thread_rel(void *p1, void *p2, void *p3)
 {
-	_LOCK_T lock = p1;
+	_LOCK_T lock = (_LOCK_T)p1;
 	int ret;
 
 	/*
@@ -113,19 +125,19 @@ static void retargetable_lock_mutex_thread_rel(void *p1, void *p2, void *p3)
  */
 static void test_retargetable_lock_mutex(void)
 {
-	_LOCK_T lock = NULL;
+	_LOCK_T lock = (_LOCK_T)NULL;
 	k_tid_t tid;
 
 	/* Dynamically allocate and initialise a new lock */
 	__retarget_lock_init_recursive(&lock);
-	zassert_not_null(lock, "recursive lock init failed");
+	zassert_not_null((void *)lock, "recursive lock init failed");
 
 	/* Acquire lock from parent thread */
 	__retarget_lock_acquire_recursive(lock);
 
 	/* Spawn a lock acquisition check thread and wait for exit */
 	tid = k_thread_create(&tdata, tstack, STACK_SIZE,
-			      retargetable_lock_mutex_thread_acq, lock,
+			      retargetable_lock_mutex_thread_acq, (void *)lock,
 			      NULL, NULL, K_PRIO_PREEMPT(0), THREAD_OPT,
 			      K_NO_WAIT);
 
@@ -136,7 +148,7 @@ static void test_retargetable_lock_mutex(void)
 
 	/* Spawn a lock release check thread and wait for exit */
 	tid = k_thread_create(&tdata, tstack, STACK_SIZE,
-			      retargetable_lock_mutex_thread_rel, lock,
+			      retargetable_lock_mutex_thread_rel, (void *)lock,
 			      NULL, NULL, K_PRIO_PREEMPT(0), THREAD_OPT,
 			      K_NO_WAIT);
 

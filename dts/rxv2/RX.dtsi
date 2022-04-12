@@ -1,0 +1,1013 @@
+/*
+ * Copyright (c) 2021-2022 KT-Elektronik, Klaucke und Partner GmbH
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/*
+ * common device tree elements of all (currently supported) RX MCUs
+ */
+
+#include <mem.h>
+#include <drivers/dma/dma_rx65n.h>
+
+#include "skeleton.dtsi"
+
+/ {
+	cpus {
+		#address-cells = <1>;
+		#size-cells = <1>;
+		cpu0: cpu@fe7f7d90 {
+			compatible = "renesas,rx";
+			device_type = "cpu";
+			reg = <0xfe7f7d90 4>;
+			status = "okay";
+			label = "CPU0";
+		};
+	}; /* cpus */
+
+	icu: interrupt-controller@87000{
+		#interrupt-cells = <3>;
+		compatible = "renesas,rx-icu";
+		interrupt-controller;
+		reg =	<0x0087000 0xff>,
+			<0x0087200 0x1f>,
+			<0x0087300 0xff>,
+			<0x00872f0 0x02>;
+		reg-names = "IR", "IER", "IPR", "FIR";
+		label = "ICU";
+	}; /* icu */
+
+	group_irq_be0: grp_intc@87600 {
+		compatible = "renesas,rx-grp-intc";
+		interrupt-controller;
+		label = "INT_BE0";
+		reg =	<0x00087600 0x04>,
+			<0x00087640 0x04>;
+		reg-names = "GRP", "GEN";
+		vector = <106>;
+		prio = <4>;
+		status = "disabled";
+		#interrupt-cells = <1>;
+	}; /* group_irq_be0 */
+
+	group_irq_bl0: grp_intc@87630 {
+		compatible = "renesas,rx-grp-intc";
+		interrupt-controller;
+		label = "INT_BL0";
+		reg =	<0x00087630 0x04>,
+			<0x00087670 0x04>;
+		reg-names = "GRP", "GEN";
+		vector = <110>;
+		prio = <4>;
+		status = "okay";
+		#interrupt-cells = <1>;
+	}; /* group_irq_bl0 */
+
+	group_irq_bl1: grp_intc@87634 {
+		compatible = "renesas,rx-grp-intc";
+		interrupt-controller;
+		label = "INT_BL1";
+		reg =	<0x00087634 0x04>,
+			<0x00087674 0x04>;
+		reg-names = "GRP", "GEN";
+		vector = <111>;
+		prio = <4>;
+		status = "okay";
+		#interrupt-cells = <1>;
+	}; /* group_irq_bl1 */
+
+	group_irq_bl2: grp_intc@87638 {
+		compatible = "renesas,rx-grp-intc";
+		interrupt-controller;
+		label = "INT_BL2";
+		reg =	<0x00087638 0x04>,
+			<0x00087678 0x04>;
+		reg-names = "GRP", "GEN";
+		vector = <107>;
+		prio = <4>;
+		status = "disabled";
+		#interrupt-cells = <1>;
+	}; /* group_irq_bl2 */
+
+	group_irq_al0: grp_intc@87830 {
+		compatible = "renesas,rx-grp-intc";
+		interrupt-controller;
+		label = "INT_AL0";
+		reg =	<0x00087830 0x04>,
+			<0x00087870 0x04>;
+		reg-names = "GRP", "GEN";
+		vector = <112>;
+		prio = <4>;
+		status = "okay";
+		#interrupt-cells = <1>;
+	}; /* group_irq_al0 */
+
+	group_irq_al1: grp_intc@87834 {
+		compatible = "renesas,rx-grp-intc";
+		interrupt-controller;
+		label = "INT_AL1";
+		reg =	<0x00087834 0x04>,
+			<0x00087874 0x04>;
+		reg-names = "GRP", "GEN";
+		vector = <113>;
+		prio = <4>;
+		status = "okay";
+		#interrupt-cells = <1>;
+	}; /* group_irq_al1 */
+
+	soc {
+		#address-cells = <1>;
+		#size-cells = <1>;
+		device_type = "soc";
+		compatible = "simple-bus";
+		interrupt-parent = <&icu>;
+		ranges;
+
+		system_clock: system-clock@80000 {
+			compatible = "renesas,rx-system-clock";
+			#address-cells = <1>;
+			#size-cells = <1>;
+			#clock-cells = <0>;
+			reg =	<0x00080000 0x1>;
+			reg-names = "BASE";
+			status = "okay";
+			label = "SYSTEM_CLOCK";
+
+			mstpcra: mstpcr@80010 {
+				compatible = "renesas,rx-clock-subsystem";
+				reg = <0x00080010 4>;
+				#clock_subsystem-cells = <1>;
+			};
+
+			mstpcrb: mstpcr@80014 {
+				compatible = "renesas,rx-clock-subsystem";
+				reg = <0x00080014 4>;
+				#clock_subsystem-cells = <1>;
+			};
+
+			mstpcrc: mstpcr@80018 {
+				compatible = "renesas,rx-clock-subsystem";
+				reg = <0x00080018 4>;
+				#clock_subsystem-cells = <1>;
+			};
+
+			mstpcrd: mstpcr@8001c {
+				compatible = "renesas,rx-clock-subsystem";
+				reg = <0x0008001c 4>;
+				#clock_subsystem-cells = <1>;
+			};
+
+			fclk: fclk {
+				compatible = "renesas,rx-sub-clock";
+				prescale = <4>;
+				#clock-cells = <0>;
+			};
+
+			iclk: iclk {
+				compatible = "renesas,rx-sub-clock";
+				prescale = <2>;
+				#clock-cells = <0>;
+			};
+
+			pclka: pclka {
+				compatible = "renesas,rx-sub-clock";
+				prescale = <2>;
+				#clock-cells = <0>;
+			};
+
+			pclkb: pclkb {
+				compatible = "renesas,rx-sub-clock";
+				prescale = <4>;
+				#clock-cells = <0>;
+			};
+
+			pclkc: pclkc {
+				compatible = "renesas,rx-sub-clock";
+				prescale = <4>;
+				#clock-cells = <0>;
+			};
+
+			pclkd: pclkd {
+				compatible = "renesas,rx-sub-clock";
+				prescale = <4>;
+				#clock-cells = <0>;
+			};
+
+			bclk: bclk {
+				compatible = "renesas,rx-sub-clock";
+				prescale = <2>;
+				#clock-cells = <0>;
+			};
+		}; /* system_clock */
+
+		cmt0: timer@88004 {
+			compatible = "renesas,rx-timer";
+			reg =	<0x00088004 0x02>,
+				<0x00088000 0x02>,
+				<0x00088002 0x02>,
+				<0x00088006 0x02>;
+			reg-names = "CMCNT", "CMSTR", "CMCR", "CMCOR";
+			interrupts = <28 13 0>;
+			clock = <&pclkb>;
+			clock_subsystems =  <&mstpcra 15>;
+		}; /* cmt0 */
+
+		cmt1: timer@8800a {
+			compatible = "renesas,rx-timer";
+			reg =	<0x0008800a 0x02>,
+				<0x00088000 0x02>,
+				<0x00088008 0x02>,
+				<0x0008800c 0x02>;
+			reg-names = "CMCNT", "CMSTR", "CMCR", "CMCOR";
+			start_bit = <1>;
+			interrupts = <29 13 0>;
+			clock = <&pclkb>;
+			clock_subsystems =  <&mstpcra 15>;
+		}; /* cmt1 */
+
+		cmt2: timer@88014 {
+			compatible = "renesas,rx-timer";
+			reg =	<0x00088014 0x02>,
+				<0x00088010 0x02>,
+				<0x00088012 0x02>,
+				<0x00088016 0x02>;
+			reg-names = "CMCNT", "CMSTR", "CMCR", "CMCOR";
+			/* sw_ints = <&sw_intc_b 1>; not implemented yet */
+			clock = <&pclkb>;
+			clock_subsystems =  <&mstpcra 14>;
+		}; /* cmt2 */
+
+		cmt3: timer@8801a {
+			compatible = "renesas,rx-timer";
+			reg =	<0x0008801a 0x02>,
+				<0x00088010 0x02>,
+				<0x00088018 0x02>,
+				<0x0008801c 0x02>;
+			reg-names = "CMCNT", "CMSTR", "CMCR", "CMCOR";
+			start_bit = <1>;
+			/* sw_ints = <&sw_intc_b 2>; not implemented yet */
+			clock = <&pclkb>;
+			clock_subsystems =  <&mstpcra 14>;
+		}; /* cmt3 */
+
+		cmtw0: timer@94210 {
+			compatible = "renesas,rx-timer";
+			reg =	<0x00094210 0x04>,
+				<0x00094200 0x02>,
+				<0x00094204 0x02>,
+				<0x00094214 0x04>,
+				<0x00094208 0x02>;
+			reg-names = "CMCNT", "CMSTR", "CMCR", "CMCOR", "CMWIOR";
+			interrupts = <30 13 0>;
+			clock = <&pclkb>;
+			clock_subsystems =  <&mstpcra 1>;
+		}; /* cmtw0 */
+
+		cmtw1: timer@94290 {
+			compatible = "renesas,rx-timer";
+			reg =	<0x00094290 0x04>,
+				<0x00094280 0x02>,
+				<0x00094284 0x02>,
+				<0x00094294 0x04>,
+				<0x00094288 0x02>;
+			reg-names = "CMCNT", "CMSTR", "CMCR", "CMCOR", "CMWIOR";
+			interrupts = <31 13 0>;
+			clock = <&pclkb>;
+			clock_subsystems =  <&mstpcra 0>;
+		}; /* cmtw1 */
+
+		iwdt: watchdog0@88030 {
+			compatible = "renesas,rx65n-iwdt";
+			reg = <0x00088030 0x07>;
+			interrupts = <95 15 0>;
+			label = "IWDT";
+		}; /* iwdt */
+
+		rtc: rtc@8c400 {
+			compatible = "renesas,rx-rtc";
+			reg = <0x0008c400 0x01>, <0x0008c402 0x01>, <0x0008c404 0x01>,
+				<0x0008c406 0x01>, <0x0008c40a 0x01>, <0x0008c40c 0x01>,
+				<0x0008c40e 0x01>, <0x0008c422 0x01>, <0x0008c424 0x01>,
+				<0x0008c426 0x01>, <0x0008c428 0x01>, <0x0008c42e 0x01>;
+			reg-names = "R64CNT", "RSECCNT", "RMINCNT", "RHRCNT", "RDAYCNT", "RMONCNT",
+				"RYRCNT", "RCR1", "RCR2", "RCR3", "RCR4", "RADJ";
+			label = "RTC";
+		};
+
+		fcu: flash-controller@7e0000 {
+			#address-cells = <1>;
+			#size-cells = <1>;
+			compatible = "renesas,rx65n-fcu";
+			reg = <0x007e0000 0x04>, <0x007fe084 0x02>,
+				<0x007fe080 0x04>, <0x0008c296 0x02>,
+				<0x007fe030 0x04>, <0x007fe034 0x04>,
+				<0x007fe0e0 0x02>, <0x007fe014 0x01>,
+				<0x007fe018 0x01>, <0x007fe010 0x01>,
+				<0x007fe0d0 0x01>, <0x007fe0d4 0x01>,
+				<0x007fe0d8 0x04>;
+			reg-names = "FACI", "FENTRYR", "FSTATR", "FWEPROR",
+					"FSADDR", "FEADDR", "FCPSR", "FAEINT",
+					"FRDYIE", "FASTAT", "FBCCNT", "FBCSTAT",
+					"FPSADDR";
+			interrupt-parent = < &icu >;
+			interrupts = <21 10 0>, <23 10 0>;
+			interrupt-names = "fiferr", "frdyi";
+			label = "FCU";
+		}; /* fcu */
+
+		mpc: pinmux@8c100 {
+			#address-cells = <1>;
+			#size-cells = <1>;
+			reg = <0x0008C100 2>;
+			label = "PINMUX_BASE";
+			status = "okay";
+
+			pinmux0: pinmux@8c140 {
+				compatible = "renesas,rx-mpc";
+				#pinmux-cells = <2>;
+				reg = <0x00008c140 0x8>; /* P00PFS */
+				label = "PINMUX_0";
+				status = "okay";
+			};
+			pinmux1: pinmux@8c148 {
+				compatible = "renesas,rx-mpc";
+				#pinmux-cells = <2>;
+				reg = <0x00008c148 0x8>; /* P10PFS */
+				label = "PINMUX_1";
+				status = "okay";
+			};
+			pinmux2: pinmux@8c150 {
+				compatible = "renesas,rx-mpc";
+				#pinmux-cells = <2>;
+				reg = <0x00008c150 0x8>;
+				label = "PINMUX_2";
+				status = "okay";
+			};
+			pinmux3: pinmux@8c158 {
+				compatible = "renesas,rx-mpc";
+				#pinmux-cells = <2>;
+				reg = <0x00008c158 0x8>;
+				label = "PINMUX_3";
+				status = "okay";
+			};
+			pinmux4: pinmux@8c160 {
+				compatible = "renesas,rx-mpc";
+				#pinmux-cells = <2>;
+				reg = <0x00008c160 0x8>;
+				label = "PINMUX_4";
+				status = "okay";
+			};
+			pinmux5: pinmux@8c168 {
+				compatible = "renesas,rx-mpc";
+				#pinmux-cells = <2>;
+				reg = <0x00008c168 0x8>;
+				label = "PINMUX_5";
+				status = "okay";
+			};
+			pinmux6: pinmux@8c170 {
+				compatible = "renesas,rx-mpc";
+				#pinmux-cells = <2>;
+				reg = <0x00008c170 0x8>;
+				label = "PINMUX_6";
+				status = "okay";
+			};
+			pinmux7: pinmux@8c178 {
+				compatible = "renesas,rx-mpc";
+				#pinmux-cells = <2>;
+				reg = <0x00008c178 0x8>;
+				label = "PINMUX_7";
+				status = "okay";
+			};
+			pinmux8: pinmux@8c180 {
+				compatible = "renesas,rx-mpc";
+				#pinmux-cells = <2>;
+				reg = <0x00008c180 0x8>;
+				label = "PINMUX_8";
+				status = "okay";
+			};
+			pinmux9: pinmux@8c188 {
+				compatible = "renesas,rx-mpc";
+				#pinmux-cells = <2>;
+				reg = <0x00008c188 0x8>;
+				label = "PINMUX_9";
+				status = "okay";
+			};
+			pinmuxa: pinmux@8c190 {
+				compatible = "renesas,rx-mpc";
+				#pinmux-cells = <2>;
+				reg = <0x00008c190 0x8>;
+				label = "PINMUX_A";
+				status = "okay";
+			};
+			pinmuxb: pinmux@8c198 {
+				compatible = "renesas,rx-mpc";
+				#pinmux-cells = <2>;
+				reg = <0x00008c198 0x8>;
+				label = "PINMUX_B";
+				status = "okay";
+			};
+			pinmuxc: pinmux@8c1a0 {
+				compatible = "renesas,rx-mpc";
+				#pinmux-cells = <2>;
+				reg = <0x00008c1a0 0x8>;
+				label = "PINMUX_C";
+				status = "okay";
+			};
+			pinmuxd: pinmux@8c1a8 {
+				compatible = "renesas,rx-mpc";
+				#pinmux-cells = <2>;
+				reg = <0x00008c1a8 0x8>;
+				label = "PINMUX_D";
+				status = "okay";
+			};
+			pinmuxe: pinmux@8c1b0 {
+				compatible = "renesas,rx-mpc";
+				#pinmux-cells = <2>;
+				reg = <0x00008c1b0 0x8>;
+				label = "PINMUX_E";
+				status = "okay";
+			};
+			pinmuxf: pinmux@8c1b8 {
+				compatible = "renesas,rx-mpc";
+				#pinmux-cells = <2>;
+				reg = <0x00008c1b8 0x8>;
+				label = "PINMUX_F";
+				status = "okay";
+			};
+			pinmuxj: pinmux@8c1d0 {
+				compatible = "renesas,rx-mpc";
+				#pinmux-cells = <2>;
+				reg = <0x00008c1d0 0x8>;
+				label = "PINMUX_J";
+				status = "okay";
+			};
+			/* note: for RX66N 224 pin MCUs, additional ports (K,L,M,N,Q) exist that
+			 * would require additional pinmux entries.
+			 */
+		}; /* mpc */
+
+		dmac: dma@82000 {
+			compatible = "renesas,rx65n-dmac";
+			reg = <0x00082000 0x04>,
+				<0x00082004 0x04>,
+				<0x00082008 0x04>,
+				<0x0008200C 0x02>,
+				<0x00082010 0x02>,
+				<0x00082013 0x01>,
+				<0x00082014 0x02>,
+				<0x00082018 0x04>,
+				<0x0008201C 0x01>,
+				<0x0008201D 0x01>,
+				<0x0008201E 0x01>,
+				<0x0008201F 0x01>,
+				<0x00082200 0x01>,
+				<0x00082204 0x01>,
+				<0x00087400 0x20>;
+			reg-names = "DMSAR", "DMDAR", "DMCRA", "DMCRB", "DMTMD",
+				"DMINT", "DMAMD", "DMOFR", "DMCNT", "DMREQ", "DMSTS",
+				"DMCSL", "DMAST", "DMIST", "DMRSR";
+			interrupt-parent = <&icu>;
+			interrupts = <120 12 0>, <121 12 0>, <122 12 0>, <123 12 0>, <124 12 0>;
+			interrupt-names = "dmac0i", "dmac1i", "dmac2i", "dmac3i", "dmac74i";
+			/* the DMAC does not appear to be associated with any
+			* sub-clock, but to release the stop state, one has to
+			* be selected.
+			*/
+			clock = <&pclka>;
+			clock_subsystems = <&mstpcra 28>;
+			#dma-cells = <1>;
+			dma-channels = <8>;
+			label = "DMA_0";
+		}; /* dmac */
+
+		/* RX Serial Commuication Interface (SCI) devices can be used in different modes:
+		 * - Asynchronous (UART, default)
+		 * - Clock synchronous (no driver implemented yet)
+		 * - Smart card interface (no driver implemented yet)
+		 * - Simple I2C-bus ("renesas,rx-sci-i2c")
+		 * - Simple SPI bus (no driver implemeted yet)
+		 *
+		 * the mode an SCI device is used in can be chosen in the device tree by overriding
+		 * the "compatible" property (by default, SCI devices are used as UART devices).
+		 */
+		sci0: serial@8a000 {
+			compatible = "renesas,rx-scig","renesas,rx-sci-uart";
+			reg = <0x0008a000 0x01>, <0x0008a001 0x01>, <0x0008a002 0x01>,
+				<0x0008a003 0x01>, <0x0008a004 0x01>, <0x0008a005 0x01>,
+				<0x0008a006 0x01>, <0x0008a007 0x01>, <0x0008a008 0x01>,
+				<0x0008a009 0x01>, <0x0008a00a 0x01>, <0x0008a00b 0x01>,
+				<0x0008a00c 0x01>, <0x0008a00d 0x01>, <0x0008a012 0x01>;
+			reg-names = "SMR", "BRR", "SCR", "TDR", "SSR", "RDR", "SCMR", "SEMR",
+				"SNFR", "SIMR1", "SIMR2", "SIMR3", "SISR", "SPMR", "MDDR";
+			clock = <&pclkb>;
+			clock_subsystems =  <&mstpcrb 31>;
+			interrupts = <58 7 0>, <59 7 0>;
+			tei-ctrl = <&group_irq_bl0>;
+			tei-number = <0>;
+			eri-ctrl = <&group_irq_bl0>;
+			eri-number = <1>;
+			status = "disabled";
+			label = "SCI_0";
+			pinmux-names = "RXD", "TXD";
+			gpio-names = "RXD", "TXD";
+		}; /* sci0 */
+
+		sci1: serial@8a020 {
+			compatible = "renesas,rx-scig","renesas,rx-sci-uart";
+			reg = <0x0008a020 0x01>, <0x0008a021 0x01>, <0x0008a022 0x01>,
+				<0x0008a023 0x01>, <0x0008a024 0x01>, <0x0008a025 0x01>,
+				<0x0008a026 0x01>, <0x0008a027 0x01>, <0x0008a028 0x01>,
+				<0x0008a029 0x01>, <0x0008a02a 0x01>, <0x0008a02b 0x01>,
+				<0x0008a02c 0x01>, <0x0008a02d 0x01>, <0x0008a032 0x01>;
+			reg-names = "SMR", "BRR", "SCR", "TDR", "SSR", "RDR", "SCMR", "SEMR",
+				"SNFR", "SIMR1", "SIMR2", "SIMR3", "SISR", "SPMR", "MDDR";
+			clock = <&pclkb>;
+			clock_subsystems =  <&mstpcrb 30>;
+			interrupts = <60 7 0>, <61 7 0>;
+			tei-ctrl = <&group_irq_bl0>;
+			tei-number = <2>;
+			eri-ctrl = <&group_irq_bl0>;
+			eri-number = <3>;
+			status = "disabled";
+			label = "SCI_1";
+			pinmux-names = "RXD", "TXD";
+			gpio-names = "RXD", "TXD";
+		}; /* sci1 */
+
+		sci2: serial@8a040 {
+			compatible = "renesas,rx-scig","renesas,rx-sci-uart";
+			reg = <0x0008a040 0x01>, <0x0008a041 0x01>, <0x0008a042 0x01>,
+				<0x0008a043 0x01>, <0x0008a044 0x01>, <0x0008a045 0x01>,
+				<0x0008a046 0x01>, <0x0008a047 0x01>, <0x0008a048 0x01>,
+				<0x0008a049 0x01>, <0x0008a04a 0x01>, <0x0008a04b 0x01>,
+				<0x0008a04c 0x01>, <0x0008a04d 0x01>, <0x0008a052 0x01>;
+			reg-names = "SMR", "BRR", "SCR", "TDR", "SSR", "RDR", "SCMR", "SEMR",
+				"SNFR", "SIMR1", "SIMR2", "SIMR3", "SISR", "SPMR", "MDDR";
+			clock = <&pclkb>;
+			clock_subsystems =  <&mstpcrb 29>;
+			interrupts = <62 7 0>, <63 7 0>;
+			tei-ctrl = <&group_irq_bl0>;
+			tei-number = <4>;
+			eri-ctrl = <&group_irq_bl0>;
+			eri-number = <5>;
+			status = "disabled";
+			label = "SCI_2";
+			pinmux-names = "RXD", "TXD";
+			gpio-names = "RXD", "TXD";
+		}; /* sci2 */
+
+		sci3: serial@8a060 {
+			compatible = "renesas,rx-scig","renesas,rx-sci-uart";
+			reg = <0x0008a060 0x01>, <0x0008a061 0x01>, <0x0008a062 0x01>,
+				<0x0008a063 0x01>, <0x0008a064 0x01>, <0x0008a065 0x01>,
+				<0x0008a066 0x01>, <0x0008a067 0x01>, <0x0008a068 0x01>,
+				<0x0008a069 0x01>, <0x0008a06a 0x01>, <0x0008a06b 0x01>,
+				<0x0008a06c 0x01>, <0x0008a06d 0x01>, <0x0008a072 0x01>;
+			reg-names = "SMR", "BRR", "SCR", "TDR", "SSR", "RDR", "SCMR", "SEMR",
+				"SNFR", "SIMR1", "SIMR2", "SIMR3", "SISR", "SPMR", "MDDR";
+			clock = <&pclkb>;
+			clock_subsystems =  <&mstpcrb 28>;
+			interrupts = <80 7 0>, <81 7 0>;
+			tei-ctrl = <&group_irq_bl0>;
+			tei-number = <6>;
+			eri-ctrl = <&group_irq_bl0>;
+			eri-number = <7>;
+			status = "disabled";
+			label = "SCI_3";
+			pinmux-names = "RXD", "TXD";
+			gpio-names = "RXD", "TXD";
+		}; /* sci3 */
+
+		sci4: serial@8a080 {
+			compatible = "renesas,rx-scig","renesas,rx-sci-uart";
+			reg = <0x0008a080 0x01>, <0x0008a081 0x01>, <0x0008a082 0x01>,
+				<0x0008a083 0x01>, <0x0008a084 0x01>, <0x0008a085 0x01>,
+				<0x0008a086 0x01>, <0x0008a087 0x01>, <0x0008a088 0x01>,
+				<0x0008a089 0x01>, <0x0008a08a 0x01>, <0x0008a08b 0x01>,
+				<0x0008a08c 0x01>, <0x0008a08d 0x01>, <0x0008a092 0x01>;
+			reg-names = "SMR", "BRR", "SCR", "TDR", "SSR", "RDR", "SCMR", "SEMR",
+				"SNFR", "SIMR1", "SIMR2", "SIMR3", "SISR", "SPMR", "MDDR";
+			clock = <&pclkb>;
+			clock_subsystems =  <&mstpcrb 27>;
+			interrupts = <82 7 0>, <83 7 0>;
+			tei-ctrl = <&group_irq_bl0>;
+			tei-number = <8>;
+			eri-ctrl = <&group_irq_bl0>;
+			eri-number = <9>;
+			status = "disabled";
+			label = "SCI_4";
+			pinmux-names = "RXD", "TXD";
+			gpio-names = "RXD", "TXD";
+		}; /* sci4 */
+
+		sci5: serial@8a0a0 {
+			compatible = "renesas,rx-scig","renesas,rx-sci-uart";
+			reg = <0x0008a0a0 0x01>, <0x0008a0a1 0x01>, <0x0008a0a2 0x01>,
+				<0x0008a0a3 0x01>, <0x0008a0a4 0x01>, <0x0008a0a5 0x01>,
+				<0x0008a0a6 0x01>, <0x0008a0a7 0x01>, <0x0008a0a8 0x01>,
+				<0x0008a0a9 0x01>, <0x0008a0aa 0x01>, <0x0008a0ab 0x01>,
+				<0x0008a0ac 0x01>, <0x0008a0ad 0x01>, <0x0008a0b2 0x01>;
+			reg-names = "SMR", "BRR", "SCR", "TDR", "SSR", "RDR", "SCMR", "SEMR",
+				"SNFR", "SIMR1", "SIMR2", "SIMR3", "SISR", "SPMR", "MDDR";
+			clock = <&pclkb>;
+			clock_subsystems =  <&mstpcrb 26>;
+			interrupts = <84 7 0>, <85 7 0>;
+			tei-ctrl = <&group_irq_bl0>;
+			tei-number = <10>;
+			eri-ctrl = <&group_irq_bl0>;
+			eri-number = <11>;
+			status = "disabled";
+			label = "SCI_5";
+			pinmux-names = "RXD", "TXD";
+			gpio-names = "RXD", "TXD";
+		}; /* sci5 */
+
+		sci6: serial@8a0c0 {
+			compatible = "renesas,rx-scig","renesas,rx-sci-uart";
+			reg = <0x0008a0c0 0x01>, <0x0008a0c1 0x01>, <0x0008a0c2 0x01>,
+				<0x0008a0c3 0x01>, <0x0008a0c4 0x01>, <0x0008a0c5 0x01>,
+				<0x0008a0c6 0x01>, <0x0008a0c7 0x01>, <0x0008a0c8 0x01>,
+				<0x0008a0c9 0x01>, <0x0008a0ca 0x01>, <0x0008a0cb 0x01>,
+				<0x0008a0cc 0x01>, <0x0008a0cd 0x01>, <0x0008a0d2 0x01>;
+			reg-names = "SMR", "BRR", "SCR", "TDR", "SSR", "RDR", "SCMR", "SEMR",
+				"SNFR", "SIMR1", "SIMR2", "SIMR3", "SISR", "SPMR", "MDDR";
+			clock = <&pclkb>;
+			clock_subsystems =  <&mstpcrb 25>;
+			interrupts = <86 7 0>, <87 7 0>;
+			tei-ctrl = <&group_irq_bl0>;
+			tei-number = <12>;
+			eri-ctrl = <&group_irq_bl0>;
+			eri-number = <13>;
+			status = "disabled";
+			label = "SCI_6";
+			pinmux-names = "RXD", "TXD";
+			gpio-names = "RXD", "TXD";
+		}; /* sci6 */
+
+		sci10: serial@d0040 {
+			compatible = "renesas,rx-scii","renesas,rx-sci-uart";
+			reg = <0x000d0040 0x01>, <0x000d0041 0x01>, <0x000d0042 0x01>,
+				<0x000d0043 0x01>, <0x000d0044 0x01>, <0x000d0045 0x01>,
+				<0x000d0046 0x01>, <0x000d0047 0x01>, <0x000d0048 0x01>,
+				<0x000d0049 0x01>, <0x000d004a 0x01>, <0x000d004b 0x01>,
+				<0x000d004c 0x01>, <0x000d004d 0x01>, <0x000d0052 0x01>;
+			reg-names = "SMR", "BRR", "SCR", "TDR", "SSR", "RDR", "SCMR", "SEMR",
+				"SNFR", "SIMR1", "SIMR2", "SIMR3", "SISR", "SPMR", "MDDR";
+			clock = <&pclka>;
+			clock_subsystems =  <&mstpcrc 25>;
+			interrupts = <104 7 0>, <105 7 0>; /* number, priority, flags */
+			tei-ctrl = <&group_irq_al0>;
+			tei-number = <8>;
+			eri-ctrl = <&group_irq_al0>;
+			eri-number = <9>;
+			status = "disabled";
+			label = "SCI_10";
+			pinmux-names = "RXD", "TXD";
+			gpio-names = "RXD", "TXD";
+		}; /* sci10 */
+
+		sci11: serial@d0060 {
+			compatible = "renesas,rx-scii","renesas,rx-sci-uart";
+			reg = <0x000d0060 0x01>, <0x000d0061 0x01>, <0x000d0062 0x01>,
+				<0x000d0063 0x01>, <0x000d0064 0x01>, <0x000d0065 0x01>,
+				<0x000d0066 0x01>, <0x000d0067 0x01>, <0x000d0068 0x01>,
+				<0x000d0069 0x01>, <0x000d006a 0x01>, <0x000d006b 0x01>,
+				<0x000d006c 0x01>, <0x000d006d 0x01>, <0x000d0072 0x01>;
+			reg-names = "SMR", "BRR", "SCR", "TDR", "SSR", "RDR", "SCMR", "SEMR",
+				"SNFR", "SIMR1", "SIMR2", "SIMR3", "SISR", "SPMR", "MDDR";
+			clock = <&pclka>;
+			clock_subsystems =  <&mstpcrc 24>;
+			interrupts = <114 7 0>, <115 7 0>; /* number, priority, flags */
+			tei-ctrl = <&group_irq_al0>;
+			tei-number = <12>;
+			eri-ctrl = <&group_irq_al0>;
+			eri-number = <13>;
+			status = "disabled";
+			label = "SCI_11";
+			pinmux-names = "RXD", "TXD";
+			gpio-names = "RXD", "TXD";
+		}; /* sci11 */
+
+		sci12: serial@8b300 {
+			compatible = "renesas,rx-scih","renesas,rx-sci-uart";
+			/* TODO: the SCIh device SCI12 actually has additional registers */
+			reg = <0x0008b300 0x01>, <0x0008b301 0x01>, <0x0008b302 0x01>,
+				<0x0008b303 0x01>, <0x0008b304 0x01>, <0x0008b305 0x01>,
+				<0x0008b306 0x01>, <0x0008b307 0x01>, <0x0008b308 0x01>,
+				<0x0008b309 0x01>, <0x0008b30a 0x01>, <0x0008b30b 0x01>,
+				<0x0008b30c 0x01>, <0x0008b30d 0x01>, <0x0008b312 0x01>;
+			reg-names = "SMR", "BRR", "SCR", "TDR", "SSR", "RDR", "SCMR", "SEMR",
+				"SNFR", "SIMR1", "SIMR2", "SIMR3", "SISR", "SPMR", "MDDR";
+			clock = <&pclkb>;
+			clock_subsystems =  <&mstpcrb 4>;
+			interrupts = <116 7 0>, <117 7 0>; /* number, priority, flags */
+			tei-ctrl = <&group_irq_bl0>;
+			tei-number = <16>;
+			eri-ctrl = <&group_irq_bl0>;
+			eri-number = <17>;
+			status = "disabled";
+			label = "SCI_12";
+			pinmux-names = "RXD", "TXD";
+			gpio-names = "RXD", "TXD";
+		}; /* sci12 */
+
+		rspi0: spi@d0100 {
+			compatible = "renesas,rx65n-rspi";
+			label = "RSPI0";
+			#address-cells = <1>;
+			#size-cells = <0>;
+			reg =	<0x000D0100 0x01>,
+				<0x000D0101 0x01>,
+				<0x000D0102 0x01>,
+				<0x000D0103 0x01>,
+				<0x000D0104 0x04>,
+				<0x000D0108 0x01>,
+				<0x000D0109 0x01>,
+				<0x000D010A 0x01>,
+				<0x000D010B 0x01>,
+				<0x000D010C 0x01>,
+				<0x000D010D 0x01>,
+				<0x000D010E 0x01>,
+				<0x000D010F 0x01>,
+				<0x000D0110 0x10>,
+				<0x000D0120 0x01>;
+			reg-names = "SPCR", "SSLP", "SPPCR", "SPSR", "SPDR",
+				"SPSCR", "SPSSR", "SPBR", "SPDCR", "SPCKD",
+				"SSLND", "SPND", "SPCR2", "SPCMD", "SPDCR2";
+			interrupt-parent = <&icu>;
+			interrupts = <38 10 0>, <39 10 0>;
+			clock = <&pclka>;
+			clock_subsystems =  <&mstpcrb 17>;
+			dmas =	<&dmac DMA_SLOT_RSPI0_SPRI0>,
+				<&dmac DMA_SLOT_RSPI0_SPTI0>;
+			dma-names = "rx", "tx";
+			status = "disabled";
+		}; /* rspi0 */
+
+		rspi1: spi@d0140 {
+			compatible = "renesas,rx65n-rspi";
+			label = "RSPI1";
+			#address-cells = <1>;
+			#size-cells = <0>;
+			reg =	<0x000D0140 0x01>,
+				<0x000D0141 0x01>,
+				<0x000D0142 0x01>,
+				<0x000D0143 0x01>,
+				<0x000D0144 0x04>,
+				<0x000D0148 0x01>,
+				<0x000D0149 0x01>,
+				<0x000D014A 0x01>,
+				<0x000D014B 0x01>,
+				<0x000D014C 0x01>,
+				<0x000D014D 0x01>,
+				<0x000D014E 0x01>,
+				<0x000D014F 0x01>,
+				<0x000D0150 0x10>,
+				<0x000D0160 0x01>;
+			reg-names = "SPCR", "SSLP", "SPPCR", "SPSR", "SPDR",
+				"SPSCR", "SPSSR", "SPBR", "SPDCR", "SPCKD",
+				"SSLND", "SPND", "SPCR2", "SPCMD", "SPDCR2";
+			interrupt-parent = <&icu>;
+			interrupts = <40 10 0>, <41 10 0>;
+			clock = <&pclka>;
+			clock_subsystems = <&mstpcrb 16>;
+			dmas =	<&dmac DMA_SLOT_RSPI1_SPRI1>,
+				<&dmac DMA_SLOT_RSPI1_SPTI1>;
+			dma-names = "rx", "tx";
+			status = "disabled";
+		}; /* rspi1 */
+
+		eth0: ethernet@c0100 {
+			compatible = "renesas,rx65n-ethernet";
+			label = "ETH0";
+			reg = <0x000c0100 0x4>, <0x000c01c0 0x4>,
+				<0x000c01c8 0x4>, <0x000c0030 0x4>;
+			reg-names = "ECMR", "MAHR", "MALR", "EESIPR";
+			interrupt-parent = <&group_irq_al1>;
+			interrupts = <4>;
+			status = "disabled";
+		}; /* eth0 */
+
+		tpua: tpu@88100 {
+			#address-cells = <1>;
+			#size-cells = <1>;
+			reg = <0x00088100 0x01>, <0x00088101 0x01>;
+			reg-names = "TSTR", "TSYR";
+			tpu0: pwm@88110 {
+				compatible = "renesas,rx-pwm", "renesas,rx-tpu";
+				label = "TPU0";
+				reg = <0x00088110 0x1>, <0x00088111 0x1>, <0x00088112 0x2>,
+					<0x00088118 0x8>, <0x00088116 0x2>;
+				reg-names = "TCR", "TMDR", "TIOR",
+						"TGR", "TCNT";
+				bit_idx = <0>;
+				clock = <&pclkb>;
+				clock_subsystems = <&mstpcra 13>;
+				#pwm-cells = <2>;
+				status = "disabled";
+			};
+
+			tpu1: pwm@88120 {
+				compatible = "renesas,rx-pwm", "renesas,rx-tpu";
+				label = "TPU1";
+				reg = <0x00088120 0x1>, <0x00088121 0x1>, <0x00088122 0x1>,
+					<0x00088128 0x4>, <0x00088126 0x2>;
+				reg-names = "TCR", "TMDR", "TIOR",
+						"TGR", "TCNT";
+				bit_idx = <1>;
+				clock = <&pclkb>;
+				clock_subsystems = <&mstpcra 13>;
+				#pwm-cells = <2>;
+				status = "disabled";
+			};
+
+			tpu2: pwm@88130 {
+				compatible = "renesas,rx-pwm", "renesas,rx-tpu";
+				label = "TPU2";
+				reg = <0x00088130 0x1>, <0x00088131 0x1>, <0x00088132 0x1>,
+					<0x00088138 0x4>, <0x00088136 0x2>;
+				reg-names = "TCR", "TMDR", "TIOR",
+						"TGR", "TCNT";
+				bit_idx = <2>;
+				clock = <&pclkb>;
+				clock_subsystems = <&mstpcra 13>;
+				#pwm-cells = <2>;
+				status = "disabled";
+			};
+
+			tpu3: pwm@88140 {
+				compatible = "renesas,rx-pwm", "renesas,rx-tpu";
+				label = "TPU3";
+				reg = <0x00088140 0x1>, <0x00088141 0x1>, <0x00088142 0x2>,
+					<0x00088148 0x8>, <0x00088146 0x2>;
+				reg-names = "TCR", "TMDR", "TIOR",
+						"TGR", "TCNT";
+				bit_idx = <3>;
+				clock = <&pclkb>;
+				clock_subsystems = <&mstpcra 13>;
+				#pwm-cells = <2>;
+				status = "disabled";
+			};
+
+			tpu4: pwm@88150 {
+				compatible = "renesas,rx-pwm", "renesas,rx-tpu";
+				label = "TPU4";
+				reg = <0x00088150 0x1>, <0x00088151 0x1>, <0x00088152 0x1>,
+					<0x00088158 0x4>, <0x00088156 0x2>;
+				reg-names = "TCR", "TMDR", "TIOR",
+						"TGR", "TCNT";
+				bit_idx = <4>;
+				clock = <&pclkb>;
+				clock_subsystems = <&mstpcra 13>;
+				#pwm-cells = <2>;
+				status = "disabled";
+			};
+
+			tpu5: pwm@88160 {
+				compatible = "renesas,rx-pwm", "renesas,rx-tpu";
+				label = "TPU5";
+				reg = <0x00088160 0x1>, <0x00088161 0x1>, <0x00088162 0x1>,
+					<0x00088168 0x4>, <0x0008866 0x2>;
+				reg-names = "TCR", "TMDR", "TIOR",
+						"TGR", "TCNT";
+				bit_idx = <5>;
+				clock = <&pclkb>;
+				clock_subsystems = <&mstpcra 13>;
+				#pwm-cells = <2>;
+				status = "disabled";
+			};
+		}; /* tpua */
+
+		mtu3a0: mtu@c1280 {
+			/* MTUs 0-4 share the same TSTR and TSYR */
+			#address-cells = <1>;
+			#size-cells = <1>;
+			reg = <0x000C1280 0x01>, <0x000C1281 0x01>;
+			reg-names = "TSTR", "TSYR";
+
+			mtu0: pwm@c1300 {
+				compatible = "renesas,rx-pwm", "renesas,rx-mtu2";
+				label = "MTU0";
+				reg = <0x000c1300 0x01>, <0x000c1301 0x01>, <0x000c1302 0x02>,
+					<0x000c1308 0x8>, <0x000c1306 0x02>;
+				reg-names = "TCR", "TMDR", "TIOR", "TGR", "TCNT";
+				bit_idx = <0>;
+				clock = <&pclka>;
+				clock_subsystems = <&mstpcra 9>;
+				#pwm-cells = <2>;
+				status = "disabled";
+			};
+
+			mtu1: pwm@c1380 {
+				compatible = "renesas,rx-pwm", "renesas,rx-mtu2";
+				label = "MTU1";
+				reg = <0x000c1380 0x01>, <0x000c1381 0x01>, <0x000c1382 0x01>,
+					<0x000c1388 0x4>, <0x000c1386 0x02>;
+				reg-names = "TCR", "TMDR", "TIOR", "TGR", "TCNT";
+				bit_idx = <1>;
+				clock = <&pclka>;
+				clock_subsystems = <&mstpcra 9>;
+				#pwm-cells = <2>;
+				status = "disabled";
+			};
+
+			mtu2: pwm@C1400 {
+				compatible = "renesas,rx-pwm", "renesas,rx-mtu2";
+				label = "MTU2";
+				reg = <0x000c1400 0x01>, <0x000c1401 0x01>, <0x000c1402 0x01>,
+					<0x000c1408 0x4>, <0x000c1406 0x02>;
+				reg-names = "TCR", "TMDR", "TIOR", "TGR", "TCNT";
+				bit_idx = <2>;
+				clock = <&pclka>;
+				clock_subsystems = <&mstpcra 9>;
+				#pwm-cells = <2>;
+				status = "disabled";
+			};
+
+			mtu3: pwm@c1200 {
+				compatible = "renesas,rx-pwm", "renesas,rx-mtu1";
+				label = "MTU3";
+				reg = <0x000c1200 0x01>, <0x000c1202 0x01>, <0x000c1204 0x02>,
+					<0x000c1208 0x8>, <0x000c1210 0x02>, <0x000C120a 0x1>;
+				reg-names = "TCR", "TMDR", "TIOR", "TGR", "TCNT", "TOER";
+				bit_idx = <6>;
+				clock = <&pclka>;
+				clock_subsystems = <&mstpcra 9>;
+				#pwm-cells = <2>;
+				status = "disabled";
+			};
+
+			mtu4: pwm@c1201 {
+				compatible = "renesas,rx-pwm", "renesas,rx-mtu1";
+				label = "MTU4";
+				reg = <0x000c1201 0x01>, <0x000c1203 0x01>, <0x000c1206 0x02>,
+					<0x000c121c 0x8>, <0x000c1212 0x02>, <0x000c120a 0x1>;
+				reg-names = "TCR", "TMDR", "TIOR", "TGR", "TCNT", "TOER";
+				bit_idx = <7>;
+				clock = <&pclka>;
+				clock_subsystems = <&mstpcra 9>;
+				#pwm-cells = <2>;
+				status = "disabled";
+			};
+		}; /* mtu3a0 */
+
+		mtu3a6: mtu@c1a80 {
+			/* MTU6 and MTU7 share the same TSTR and TSYR */
+			#address-cells = <1>;
+			#size-cells = <1>;
+			reg = <0x000c1a80 0x01>, <0x000c1a81 0x01>;
+			reg-names = "TSTR", "TSYR";
+
+			mtu6: pwm@c1a00 {
+				compatible = "renesas,rx-pwm", "renesas,rx-mtu1";
+				label = "MTU6";
+				reg = <0x000c1a00 0x01>, <0x000c1a02 0x01>, <0x000c1a04 0x02>,
+					<0x000c1a18 0x8>, <0x000c1a10 0x02>, <0x000c1a0a 0x1>;
+				reg-names = "TCR", "TMDR", "TIOR", "TGR", "TCNT", "TOER";
+				bit_idx = <6>;
+				clock = <&pclka>;
+				clock_subsystems = <&mstpcra 9>;
+				#pwm-cells = <2>;
+				status = "disabled";
+			};
+
+			mtu7: pwm@c1a01 {
+				compatible = "renesas,rx-pwm", "renesas,rx-mtu1";
+				label = "MTU7";
+				reg = <0x000c1a01 0x01>, <0x000c1a03 0x01>, <0x000c1a06 0x02>,
+					<0x000C121C 0x8>, <0x000c1a12 0x02>, <0x000c1a0a 0x1>;
+				reg-names = "TCR", "TMDR", "TIOR", "TGR", "TCNT", "TOER";
+				bit_idx = <7>;
+				clock = <&pclka>;
+				clock_subsystems = <&mstpcra 9>;
+				#pwm-cells = <2>;
+				status = "disabled";
+			};
+		}; /* mtu3a6 */
+
+		adc0: adc@89000 {
+			compatible = "renesas,rx600-adc";
+			reg =
+				<0x89000 0x2>, <0x89004 0x2>,
+				<0x8900E 0x2>, <0x89020 0x10>,
+				<0x89090 0x2>, <0x877BA 0x1>,
+				<0x89008 0x2>, <0x8900C 0x1>;
+			reg-names =
+				"ADCSR", "ADANSA0",
+				"ADCER", "ADDR",
+				"ADCMPCR", "SLIBR",
+				"ADADS", "ADADC";
+				/* abstractions for S12AD
+				 * SLIBR: SLIBR186
+				 * ADDR: ADDR7
+				 */
+			interrupts = <186 15 0>;
+			clock = <&pclkb>;
+			clock_subsystems = <&mstpcra 17>;
+			num_channels = <8>;
+			label = "S12AD";
+			status = "disabled";
+			#io-channel-cells = <1>;
+		};
+	}; /* soc */
+};

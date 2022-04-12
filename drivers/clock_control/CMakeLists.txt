@@ -21,6 +21,7 @@ if(CONFIG_CLOCK_CONTROL_NRF_K32SRC_RC_CALIBRATION AND NOT CONFIG_CLOCK_CONTROL_N
 endif()
 zephyr_library_sources_ifdef(CONFIG_CLOCK_CONTROL_RCAR_CPG_MSSR       clock_control_rcar_cpg_mssr.c)
 zephyr_library_sources_ifdef(CONFIG_CLOCK_CONTROL_RV32M1_PCC          clock_control_rv32m1_pcc.c)
+zephyr_library_sources_ifdef(CONFIG_CLOCK_CONTROL_RX65N               clock_control_rx65n.c)
 
 if(CONFIG_CLOCK_CONTROL_STM32_CUBE)
 if(CONFIG_SOC_SERIES_STM32MP1X)

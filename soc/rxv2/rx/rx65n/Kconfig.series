@@ -1,0 +1,24 @@
+# Renesas RX65N series
+
+# Copyright (c) 2021 KT-Elektronik, Klaucke und Partner GmbH
+# SPDX-License-Identifier: Apache-2.0
+
+config SOC_SERIES_RX65N
+	bool "RX65N Series MCU"
+	select RXV2
+	select CPU_RXV2
+	select CPU_HAS_FPU
+	select SOC_FAMILY_RX
+	select CONFIG_HAS_RX_FIT
+	help
+	  Enable support for RX65N MCU series
+
+config SOC_SERIES_RX66N
+	bool "RX66N Series MCU"
+	select RXV2
+	select CPU_RXV3
+	select CPU_HAS_FPU
+	select SOC_FAMILY_RX
+	select CONFIG_HAS_RX_FIT
+	help
+	  Enable support for RX65N MCU series

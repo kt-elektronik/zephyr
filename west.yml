@@ -215,6 +215,12 @@ manifest:
       revision: c74be3890c9d975976fde1b1a3b2f5742bec34c0
       groups:
         - tee
+    - name: hal_renesas
+      url: git@github.com:kt-elektronik/zephyr.git
+      revision: a32bcc5d4d60f2821533c6b98d3290d7ae78a271
+      path: modules/hal/renesas
+      groups:
+        - hal
 
   self:
     path: zephyr

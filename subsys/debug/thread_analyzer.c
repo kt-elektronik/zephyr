@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2019 - 2020 Nordic Semiconductor ASA
+ * Copyright (c) 2021 KT-Elektronik, Klaucke und Partner GmbH
  *
  * SPDX-License-Identifier: Apache-2.0
  */
@@ -9,6 +10,7 @@
  */
 
 #include <kernel.h>
+#include <kernel_internal.h>
 #include <debug/thread_analyzer.h>
 #include <debug/stack.h>
 #include <kernel.h>
@@ -121,9 +123,45 @@ void thread_analyzer_run(thread_analyzer_cb cb)
 	}
 }
 
+/**
+ * @brief output isr stack information
+ *
+ * Based on cmd_kernel_stacks() in zephyr\subsys\shell\modules\kernel_service.c
+ */
+static void print_irq_stack(void)
+{
+	uint8_t *buf;
+	size_t size, unused, pcnt;
+
+	buf = Z_KERNEL_STACK_BUFFER(z_interrupt_stacks[0]);
+	size = K_KERNEL_STACK_SIZEOF(z_interrupt_stacks[0]);
+
+	unused = 0;
+	for (size_t i = 0; i < size; i++) {
+		if (buf[i] == 0xAAU) {
+			unused++;
+		} else {
+			break;
+		}
+	}
+	pcnt = ((size-unused) * 100U) / size;
+
+	THREAD_ANALYZER_PRINT(
+#ifdef CONFIG_THREAD_RUNTIME_STATS
+		THREAD_ANALYZER_FMT(
+			" %-20s: STACK: unused %zu usage %zu / %zu (%zu %%)"),
+#else
+		THREAD_ANALYZER_FMT(
+			" %-20s: unused %zu usage %zu / %zu (%zu %%)"),
+#endif
+		THREAD_ANALYZER_VSTR("IRQ"),
+		unused, size - unused, size, pcnt);
+}
+
 void thread_analyzer_print(void)
 {
 	THREAD_ANALYZER_PRINT(THREAD_ANALYZER_FMT("Thread analyze:"));
+	print_irq_stack();
 	thread_analyzer_run(thread_print_cb);
 }
 

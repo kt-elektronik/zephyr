@@ -258,6 +258,7 @@ class RunnerConfig(NamedTuple):
     elf_file: Optional[str]     # zephyr.elf path, or None
     hex_file: Optional[str]     # zephyr.hex path, or None
     bin_file: Optional[str]     # zephyr.bin path, or None
+    mot_file: str               # zephyr.mot path
     gdb: Optional[str] = None   # path to a usable gdb
     openocd: Optional[str] = None  # path to a usable openocd
     openocd_search: List[str] = []  # add these paths to the openocd search path

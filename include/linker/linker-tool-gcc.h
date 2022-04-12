@@ -44,17 +44,19 @@
 	OUTPUT_FORMAT("elf32-littlenios2", "elf32-bignios2", "elf32-littlenios2")
 #elif defined(CONFIG_RISCV)
 	OUTPUT_ARCH("riscv")
-#ifdef CONFIG_64BIT
-	OUTPUT_FORMAT("elf64-littleriscv")
-#else
-	OUTPUT_FORMAT("elf32-littleriscv")
-#endif
+	#ifdef CONFIG_64BIT
+		OUTPUT_FORMAT("elf64-littleriscv")
+	#else
+		OUTPUT_FORMAT("elf32-littleriscv")
+	#endif
 #elif defined(CONFIG_XTENSA)
 	/* Not needed */
 #elif defined(CONFIG_ARCH_POSIX)
 	/* Not needed */
 #elif defined(CONFIG_SPARC)
 	OUTPUT_FORMAT("elf32-sparc")
+#elif defined(CONFIG_RXV2)
+	OUTPUT_FORMAT("elf32-rx-le")
 #else
 	#error Arch not supported.
 #endif
@@ -163,7 +165,7 @@
  * On MMU systems where VMA != LMA there is an implicit ALIGN_WITH_INPUT
  * specified.
  *
- * @param name Name of the output sectio
+ * @param name Name of the output section
  * @param options Section options, such as (NOLOAD), or left blank
  * @param align Alignment directives, such as SUBALIGN(). ALIGN() itself is
  *              not allowed. May be blank.

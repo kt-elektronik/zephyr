@@ -1,0 +1,55 @@
+/* Copyright (c) 2021 KT-Elektronik, Klaucke und Partner GmbH */
+/* SPDX-License-Identifier: Apache-2.0 */
+
+/*
+ * device tree for Renesas R5F566NNH MCUs:
+ * - RX66N group
+ * - 4 MB code flash
+ * - 32 kB data flash
+ * - 1 MB (512 kB + 512 kB) of RAM
+ * - encryption module included
+ */
+
+#include "RX66N.dtsi"
+#include "rx65n_gpio.dtsi"
+#include <dt-bindings/gpio/gpio.h>
+
+/ {
+	soc {
+		fcu: flash-controller@7e0000 {
+			code_flash: flash@ffc00000 {
+				compatible = "renesas,rx65n-flash";
+				reg = <0xffc00000 DT_SIZE_M(4)>;
+				reg-names = "OFFSET";
+				entry_bit = <0>;
+				write_block_size = <128>;
+				/* linear code flash layout */
+				page_counts = <126 8>;
+				page_sizes = <DT_SIZE_K(32) DT_SIZE_K(8)>;
+				/* alternative setting when using dual bank mode:
+				 * page_counts = <62 8 62 8>;
+				 * page_sizes = <DT_SIZE_K(32) DT_SIZE_K(8)
+				 *			DT_SIZE_K(32) DT_SIZE_K(8)>;
+				 */
+				program_timeout_ms = <8>;
+				erase_timeout_ms = <16>;
+				label = "CODE_FLASH";
+				/*status = "disabled";*/
+			}; /* code_flash */
+
+			data_flash: flash@100000 {
+				compatible = "renesas,rx65n-flash";
+				erased_undefined;
+				reg = <0x00100000 DT_SIZE_K(32)>;
+				reg-names = "OFFSET";
+				entry_bit = <7>;
+				write_block_size = <4>;
+				page_counts = <512>;
+				page_sizes = <64>;
+				program_timeout_ms = <2>;
+				erase_timeout_ms = <11>;
+				label = "DATA_FLASH";
+			}; /* data_flash */
+		}; /* fcu */
+	}; /* soc */
+};

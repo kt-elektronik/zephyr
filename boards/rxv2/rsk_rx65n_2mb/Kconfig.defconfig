@@ -1,0 +1,25 @@
+# Renesas Starter Kit+ RX65N-2MB board configuration
+#
+# Copyright (c) 2021 KT-Elektronik, Klaucke und Partner GmbH
+# SPDX-License-Identifier: Apache-2.0
+
+if BOARD_RSK_RX65N_2MB
+
+	config BOARD
+		default "rsk_rx65n_2mb"
+
+	config NET_L2_ETHERNET
+		default y if NETWORKING
+
+	config ETH_RX65N
+		bool "ETHERNET0"
+		default y if NETWORKING
+
+	config UART_CONSOLE
+		default y if SERIAL
+		depends on CONSOLE
+
+	config UART_INTERRUPT_DRIVEN
+		default y
+
+endif # BOARD_RSK_RX65N_2MB

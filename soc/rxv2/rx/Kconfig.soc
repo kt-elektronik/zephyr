@@ -1,0 +1,8 @@
+# Renesas RX600 family
+
+# Copyright (c) 2020 KT-Elektronik, Klaucke und Partner GmbH
+# SPDX-License-Identifier: Apache-2.0
+
+source "soc/rxv2/rx/*/Kconfig.series"
+
+

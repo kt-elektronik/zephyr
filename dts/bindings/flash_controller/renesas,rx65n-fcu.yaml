@@ -1,0 +1,21 @@
+# Copyright (c) 2021 KT-Elektronik, Klaucke und Partner GmbH
+# SPDX-License-Identifier: Apache-2.0
+
+description: Renesas RX65N Flash Control Unit
+
+compatible: "renesas,rx65n-fcu"
+
+include: flash-controller.yaml
+
+properties:
+  reg:
+    required: true
+
+  reg-names:
+    required: true
+
+  interrupts:
+    required: true
+
+  interrupt-names:
+    required: true

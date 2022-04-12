@@ -113,4 +113,10 @@ config HWINFO_GECKO
 	help
 	  Enable Silabs GECKO hwinfo driver.
 
+config HWINFO_RX
+	bool "RX hwinfo"
+	default y
+	depends on SOC_FAMILY_RX
+	help
+	  Enable Renesas RX hwinfo driver.
 endif

@@ -37,6 +37,17 @@
 #include <devicetree.h>
 #endif
 
+/* The GCC for Renesas RX processors adds leading underscores to C-symbols
+ * by default. As a workaroud for symbols defined in linker scripts to be
+ * available in C code, an alias with a leading underscore has to be provided.
+ */
+#if defined(CONFIG_RXV2)
+#define PLACE_SYMBOL_HERE(symbol) symbol = .; \
+			PROVIDE(_CONCAT(_, symbol) = symbol)
+#else
+#define PLACE_SYMBOL_HERE(symbol) symbol = .
+#endif
+
 #ifdef _LINKER
 
 /**
@@ -45,18 +56,18 @@
  */
 
 #define Z_LINK_ITERABLE(struct_type) \
-	_CONCAT(_##struct_type, _list_start) = .; \
+	PLACE_SYMBOL_HERE(_CONCAT(_##struct_type, _list_start)); \
 	KEEP(*(SORT_BY_NAME(._##struct_type.static.*))); \
-	_CONCAT(_##struct_type, _list_end) = .
+	PLACE_SYMBOL_HERE(_CONCAT(_##struct_type, _list_end));\
 
 #define Z_LINK_ITERABLE_ALIGNED(struct_type, align) \
 	. = ALIGN(align); \
 	Z_LINK_ITERABLE(struct_type);
 
 #define Z_LINK_ITERABLE_GC_ALLOWED(struct_type) \
-	_CONCAT(_##struct_type, _list_start) = .; \
+	PLACE_SYMBOL_HERE(_CONCAT(_##struct_type, _list_start)); \
 	*(SORT_BY_NAME(._##struct_type.static.*)); \
-	_CONCAT(_##struct_type, _list_end) = .
+	PLACE_SYMBOL_HERE(_CONCAT(_##struct_type, _list_end));\
 
 /**
  * @brief Define a read-only iterable section output.
@@ -157,7 +168,7 @@
  * no direct reference to them
  */
 #define CREATE_OBJ_LEVEL(object, level)				\
-		__##object##_##level##_start = .;		\
+		PLACE_SYMBOL_HERE(__##object##_##level##_start);		\
 		KEEP(*(SORT(.z_##object##_##level[0-9]_*)));		\
 		KEEP(*(SORT(.z_##object##_##level[1-9][0-9]_*)));
 

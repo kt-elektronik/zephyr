@@ -353,6 +353,14 @@ config NPCX_ITIM_TIMER
 	  series internal 64/32-bit timers and provides the standard "system
 	  clock driver" interfaces.
 
+config RX_TIMER
+	bool "RX Timer"
+	default y
+	depends on SOC_FAMILY_RX
+	select TICKLESS_CAPABLE
+	help
+	  RX Timer
+
 config SYSTEM_CLOCK_DISABLE
 	bool "API to disable system clock"
 	help

@@ -1,0 +1,3 @@
+board_set_flasher_ifnset(renesasfp)
+
+board_finalize_runner_args(renesasfp)

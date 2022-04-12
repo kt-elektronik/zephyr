@@ -1,0 +1,93 @@
+# Copyright (c) 2021 KT-Elektronik Klaucke und Partner GmbH
+# SPDX-License-Identifier: Apache-2.0
+
+description: Common binding for RX SCI devices. Currently, these can be "renesas,rx-sci-uart" for
+  asynchronous UART mode and "renesas,rx-sci-i2c" for simple I2C mode. RX SCI devices can also be
+  used in simple SPI mode and SD-Card mode (not implemented yet).
+
+compatible: "renesas,rx-sci"
+
+include: base.yaml
+
+properties:
+    reg:
+      required: true
+
+    interrupts:
+      required: false
+
+    tei-ctrl:
+      type: phandle
+      required: true
+      description: group interrupt controller for the transmit end interrupt (TEI)
+
+    tei-number:
+      type: int
+      required: true
+      description: number of the TEI in the interrupt group of tei-ctrl
+
+    eri-ctrl:
+      type: phandle
+      required: true
+      description: group interrupt controller for the error interrupt (ERI)
+
+    eri-number:
+      type: int
+      required: true
+      description: number of the ERI in the interrupt group of eri-ctrl
+
+    pinmuxs:
+      type: phandle-array
+      required: true
+      description: RX and TX pinmux, pin, function
+
+    pinmux-names:
+      type: string-array
+      required: true
+      description: UART pin names
+
+    gpios:
+      type: phandle-array
+      required: true
+      description: RX and TX gpio, pin, (flags)
+
+    gpio-names:
+      type: string-array
+      required: true
+      description: UART pin names
+
+    clock:
+      type: phandle
+      required: true
+      description: sub-clock responsible for this interface
+
+    clock_subsystems:
+      type: phandle-array
+      required: true
+      description: clock sub-system to start and stop the device
+
+    hw_fifo:
+      type: boolean
+      required: false
+      description: use the hardware FIFO (only relevant for SCIi)
+
+    fifo_tx_irq_thresh:
+      type: int
+      required: false
+      description: transmit FIFO interrupt threshold (only relevant for SCIi)
+
+    fifo_tx_rts_thresh:
+      type: int
+      required: false
+      description: transmit FIFO RTS threshold (only relevant for SCIi)
+
+    fifo_rx_thresh:
+      type: int
+      required: false
+      description: receive FIFO interrupt threshold (only relevant for SCIi)
+
+    extended_serial_mode:
+      type: boolean
+      required: false
+      description: activate the extended serial mode of an SCIh device e.g. to allow polarity
+        inversion.

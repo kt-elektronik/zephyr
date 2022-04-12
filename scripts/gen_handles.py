@@ -150,7 +150,7 @@ class Device:
             else:
                 format += "Q"
                 size = 8
-            offset = self.ld_constants["_DEVICE_STRUCT_HANDLES_OFFSET"]
+            offset = self.ld_constants["DEVICE_STRUCT_HANDLES_OFFSET"]
             self.__handles = struct.unpack(format, data[offset:offset + size])[0]
         return self.__handles
 
@@ -177,7 +177,6 @@ def main():
     devices = []
     handles = []
     # Leading _ are stripped from the stored constant key
-
     want_constants = set([args.start_symbol,
                           "_DEVICE_STRUCT_SIZEOF",
                           "_DEVICE_STRUCT_HANDLES_OFFSET"])
@@ -187,16 +186,22 @@ def main():
         if isinstance(section, SymbolTableSection):
             for sym in section.iter_symbols():
                 if sym.name in want_constants:
-                    ld_constants[sym.name] = sym.entry.st_value
+                    ld_constants[sym.name.lstrip("_")] = sym.entry.st_value
                     continue
                 if sym.entry.st_info.type != 'STT_OBJECT':
                     continue
-                if sym.name.startswith("__device"):
+                if not sym.name.startswith('__'):
+                    # symbol names should start with '__device' or '___device'
+                    # (if gcc uses -fleading-underscore as in the Renesas
+                    # GCC toolchain)
+                    continue
+                sym_name = sym.name.lstrip("_")
+                if sym_name.startswith("device"):
                     addr = sym.entry.st_value
-                    if sym.name.startswith("__device_"):
+                    if sym_name.startswith("device_"):
                         devices.append(Device(elf, ld_constants, sym, addr))
                         debug("device %s" % (sym.name,))
-                    elif sym.name.startswith("__devicehdl_"):
+                    elif sym_name.startswith("devicehdl_"):
                         hdls = symbol_handle_data(elf, sym)
 
                         # The first element of the hdls array is the dependency
@@ -210,7 +215,7 @@ def main():
 
     devices = sorted(devices, key = lambda k: k.sym.entry.st_value)
 
-    device_start_addr = ld_constants[args.start_symbol]
+    device_start_addr = ld_constants[args.start_symbol.lstrip("_")]
     device_size = 0
 
     assert len(devices) == len(handles), 'mismatch devices and handles'
@@ -332,10 +337,17 @@ def main():
             if len(ext_paths) > 0:
                 lines.append(' * + %s' % ('\n * + '.join(ext_paths)))
 
+            sym_name = hs.sym.name
+            if sym_name.startswith('___'):
+                # for gcc with -fleading-underscore (default in Renesas RX GCC),
+                # the leading underscore has to be removed to get the correct
+                # variable name
+                sym_name = sym_name[1:]
+
             lines.extend([
                 ' */',
                 'const device_handle_t __aligned(2) __attribute__((__section__(".__device_handles_pass2")))',
-                '%s[] = { %s };' % (hs.sym.name, ', '.join([handle_name(_h) for _h in hdls])),
+                '%s[] = { %s };' % (sym_name, ', '.join([handle_name(_h) for _h in hdls])),
                 '',
             ])
 

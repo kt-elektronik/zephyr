@@ -161,7 +161,14 @@ if(NOT CONFIG_NO_OPTIMIZATIONS)
   # _FORTIFY_SOURCE: Detect common-case buffer overflows for certain functions
   # _FORTIFY_SOURCE=1 : Compile-time checks (requires -O1 at least)
   # _FORTIFY_SOURCE=2 : Additional lightweight run-time checks
-  set_compiler_property(PROPERTY security_fortify _FORTIFY_SOURCE=2)
+
+  if (CONFIG_RXV2)
+    # temporarily setting this to 0 from 2 to mitigate a bug in
+    # GCC for Renesas RX 8.3.0.202102-GNURX-ELF:
+    set_compiler_property(PROPERTY security_fortify _FORTIFY_SOURCE=0)
+  else ()
+    set_compiler_property(PROPERTY security_fortify _FORTIFY_SOURCE=2)
+  endif()
 endif()
 
 # gcc flag for a hosted (no-freestanding) application

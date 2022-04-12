@@ -51,7 +51,7 @@ LIB = 'libraries'
 data_template = """
 		/* Auto generated code do not modify */
 		SMEM_PARTITION_ALIGN(z_data_smem_{0}_bss_end - z_data_smem_{0}_part_start);
-		z_data_smem_{0}_part_start = .;
+		PLACE_SYMBOL_HERE(z_data_smem_{0}_part_start);
 		KEEP(*(data_smem_{0}_data*))
 """
 
@@ -60,7 +60,7 @@ library_data_template = """
 """
 
 bss_template = """
-		z_data_smem_{0}_bss_start = .;
+		PLACE_SYMBOL_HERE(z_data_smem_{0}_bss_start);
 		KEEP(*(data_smem_{0}_bss*))
 """
 
@@ -69,29 +69,29 @@ library_bss_template = """
 """
 
 footer_template = """
-		z_data_smem_{0}_bss_end = .;
+		PLACE_SYMBOL_HERE(z_data_smem_{0}_bss_end);
 		SMEM_PARTITION_ALIGN(z_data_smem_{0}_bss_end - z_data_smem_{0}_part_start);
-		z_data_smem_{0}_part_end = .;
+		PLACE_SYMBOL_HERE(z_data_smem_{0}_part_end);
 """
 
 linker_start_seq = """
 	SECTION_PROLOGUE(_APP_SMEM{1}_SECTION_NAME,,)
 	{{
 		APP_SHARED_ALIGN;
-		_app_smem{0}_start = .;
+		PLACE_SYMBOL_HERE(_app_smem{0}_start);
 """
 
 linker_end_seq = """
 		APP_SHARED_ALIGN;
-		_app_smem{0}_end = .;
+		PLACE_SYMBOL_HERE(_app_smem{0}_end);
 	}} GROUP_DATA_LINK_IN(RAMABLE_REGION, ROMABLE_REGION)
 """
 
 empty_app_smem = """
 	SECTION_PROLOGUE(_APP_SMEM{1}_SECTION_NAME,,)
 	{{
-		_app_smem{0}_start = .;
-		_app_smem{0}_end = .;
+		PLACE_SYMBOL_HERE(_app_smem{0}_start);
+		PLACE_SYMBOL_HERE(_app_smem{0}_end);
 	}} GROUP_DATA_LINK_IN(RAMABLE_REGION, ROMABLE_REGION)
 """
 

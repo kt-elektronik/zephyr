@@ -1,0 +1,21 @@
+# Copyright (c) 2021 KT-Elektronik, Klaucke und Partner GmbH
+# SPDX-License-Identifier: Apache-2.0
+
+description: Renesas RX65N clock control node (sub-clock)
+
+compatible: "renesas,rx-sub-clock"
+
+include: [clock-controller.yaml, base.yaml]
+
+properties:
+  prescale:
+    type: int
+    required: true
+    description: prescale divider to calculate the subclock frequency from the
+                 system clock frequency. Can be one of (1,2,4,8,16,32,64) in
+                 general, but specific allowed values differ for the subclocks
+                 of the RX65N and constraints can be interdependent (see RX651
+                 User's manual section 9)
+
+  "#clock-cells":
+    const: 0

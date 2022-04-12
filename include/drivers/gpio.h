@@ -265,6 +265,12 @@ extern "C" {
 #define GPIO_DIR_MASK		(GPIO_INPUT | GPIO_OUTPUT)
 /** @endcond */
 
+/* Set pin to peripheral function.
+ *
+ * Using this pin as I/O port for peripheral modules.
+ */
+#define GPIO_PERIPHERAL	(1U << 24)
+
 /**
  * @brief Identifies a set of pins associated with a port.
  *

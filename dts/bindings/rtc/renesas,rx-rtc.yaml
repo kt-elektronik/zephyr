@@ -1,0 +1,50 @@
+# Copyright (c) 2021-2022 KT-Elektronik, Klaucke und Partner GmbH
+# SPDX-License-Identifier: Apache-2.0
+
+# binding for the Renesas RX RTC
+
+description: Renesas RX RTC
+
+compatible: "renesas,rx-rtc"
+
+include: base.yaml
+
+properties:
+  reg:
+    required: true
+
+  reg-names:
+    required: true
+
+  label:
+    required: true
+
+  use_subclock:
+    type: boolean
+    required: false
+    description: use the sub-clock oscillator
+
+  subclock_drive_capacity_low:
+    type: boolean
+    required: false
+    description: set the sub-clock oscillator drive capacity for low CL (no effect if use_subclock
+      is false)
+
+  automatic_adjustment:
+    type: boolean
+    required: false
+    description: enable automatic adjustment
+
+  automatic_adjustment_10s_period:
+    type: boolean
+    required: false
+    description: automatic adjustment adjusts every 10 seconds (every minute by default)
+
+  adjustment_value:
+    type: int
+    required: false
+    description: adjustment value to be used (if adjustment is active) in clock cycles. The two most
+      significant bits determine the direction of the adjustment
+        0 0 - no adjustment
+        0 1 - positive adjustment (addition to prescaler)
+        1 0 - negative adjustment (subtraction from prescaler)

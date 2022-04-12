@@ -1,0 +1,10 @@
+# Copyright (c) 2021 KT-Elektronik, Klaucke und Partner GmbH
+# SPDX-License-Identifier: Apache-2.0
+
+# Renesas Target Board for RX65N configuration
+
+config BOARD_RTB_RX65N
+	bool "Renesas Target Board for RX65N"
+	help
+	  Implementation of Renesas' R5F565NE processor family based on rx2v architecture.
+	  The following peripherals are available: uart, timer, i2c, gpio.

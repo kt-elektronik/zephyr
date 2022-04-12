@@ -1,0 +1,65 @@
+/* Copyright (c) 2021 KT-Elektronik, Klaucke und Partner GmbH */
+/* SPDX-License-Identifier: Apache-2.0 */
+
+/*
+ * device tree for Renesas R5F565NE MCUs:
+ * - RX65N group
+ * - 2 MB code flash
+ * - 32 kB data flash
+ * - 640 kB (256 kB + 384 kB) of RAM
+ * - no encryption
+ */
+
+#include "RX65N.dtsi"
+#include "rx65n_gpio.dtsi"
+#include <dt-bindings/gpio/gpio.h>
+
+/ {
+	soc {
+		#address-cells = <1>;
+		#size-cells = <1>;
+
+		sram1: memory@800000 {
+			device_type = "memory";
+			compatible = "mmio-sram";
+			reg = <0x800000 DT_SIZE_K(384)>;
+			label = "SRAM1";
+		};
+
+		fcu: flash-controller@7e0000 {
+			code_flash: flash@ffe00000 {
+				compatible = "renesas,rx65n-flash";
+				reg = <0xffe00000 DT_SIZE_M(2)>;
+				reg-names = "OFFSET";
+				entry_bit = <0>;
+				write_block_size = <128>;
+				/* linear code flash layout */
+				page_counts = <62 8>;
+				page_sizes = <DT_SIZE_K(32) DT_SIZE_K(8)>;
+				/* alternative setting when using dual bank mode:
+					* page_counts = <8 30 8 30>;
+					* page_sizes = <DT_SIZE_K(8) DT_SIZE_K(32)
+					*			DT_SIZE_K(8) DT_SIZE_K(32)>;
+					*/
+				program_timeout_ms = <8>;
+				erase_timeout_ms = <16>;
+				label = "CODE_FLASH";
+				/*status = "disabled";*/
+			}; /* code_flash */
+
+			data_flash: flash@100000 {
+				compatible = "renesas,rx65n-flash";
+				erased_undefined;
+				reg = <0x00100000 DT_SIZE_K(32)>;
+				reg-names = "OFFSET";
+				entry_bit = <7>;
+				write_block_size = <4>;
+				page_counts = <512>;
+				page_sizes = <64>;
+				program_timeout_ms = <2>;
+				erase_timeout_ms = <11>;
+				label = "DATA_FLASH";
+			}; /* data_flash */
+		}; /* fcu */
+	}; /* soc */
+};

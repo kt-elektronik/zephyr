@@ -1,0 +1,21 @@
+# SPDX-License-Identifier: Apache-2.0
+
+config UART_RX65N
+	bool "RX65N UART driver"
+	default y
+	select SERIAL_HAS_DRIVER
+	select SERIAL_SUPPORT_INTERRUPT
+	select SERIAL_SUPPORT_ASYNC
+	select GPIO_RX
+	select UART_DRV_CMD
+	depends on SOC_FAMILY_RX
+
+config UART_INIT_PRIORITY
+	int "Init priority"
+	default 55
+	help
+	  UART driver initialization priority.
+	  The UART driver for this architecture needs to be initialized after
+	  the Pinmux and GPIO driver because the corresponding pins have to be
+	  set before. So this has to be > KERNEL_INIT_PRIORITY_DEVICE and
+	  < UART_CONSOLE_INIT_PRIORITY.

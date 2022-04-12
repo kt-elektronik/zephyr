@@ -488,6 +488,12 @@ config BUILD_OUTPUT_UF2_FAMILY_ID
 
 endif # BUILD_OUTPUT_UF2
 
+config BUILD_OUTPUT_MOT
+	bool "Build a binary in SREC format with .mot extension"
+	help
+	  Build a binary in SREC format. This will build a zephyr.mot file need
+	  by some platforms.
+
 config BUILD_OUTPUT_STRIPPED
 	bool "Build a stripped binary"
 	help

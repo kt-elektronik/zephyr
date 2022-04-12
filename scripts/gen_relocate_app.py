@@ -66,7 +66,7 @@ MPU_RO_REGION_START = """
 
 MPU_RO_REGION_END = """
 
-    _{0}_mpu_ro_region_end = .;
+    PLACE_SYMBOL_HERE(_{0}_mpu_ro_region_end);
 
 """
 
@@ -81,7 +81,7 @@ LINKER_SECTION_SEQ = """
                 {4}
                 . = ALIGN(4);
 	}} {5}
-        __{0}_{1}_end = .;
+        PLACE_SYMBOL_HERE(__{0}_{1}_end);
         __{0}_{1}_start = ADDR(_{2}_{3}_SECTION_NAME);
         __{0}_{1}_size = SIZEOF(_{2}_{3}_SECTION_NAME);
 """
@@ -92,14 +92,14 @@ LINKER_SECTION_SEQ_MPU = """
 
 	SECTION_PROLOGUE(_{2}_{3}_SECTION_NAME,,)
         {{
-                __{0}_{1}_start = .;
+                PLACE_SYMBOL_HERE(__{0}_{1}_start);
                 {4}
 #if {6}
                 . = ALIGN({6});
 #else
                 MPU_ALIGN(__{0}_{1}_size);
 #endif
-                __{0}_{1}_end = .;
+                PLACE_SYMBOL_HERE(__{0}_{1}_end);
 	}} {5}
         __{0}_{1}_size = __{0}_{1}_end - __{0}_{1}_start;
 """

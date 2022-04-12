@@ -27,7 +27,7 @@
 /* Declare a reserved memory section */
 #define _RESERVED_SECTION_DECLARE(res) SECTION_DATA_PROLOGUE(_DT_LABEL_TOKEN(res), ,)	\
 				       {						\
-					  _DT_RESERVED_START(res) = .;			\
+					  PLACE_SYMBOL_HERE(_DT_RESERVED_START(res));	\
 					  KEEP(*(._DT_LABEL_TOKEN(res)))		\
 					  KEEP(*(._DT_LABEL_TOKEN(res).*))		\
 					  _DT_RESERVED_END(res) =			\

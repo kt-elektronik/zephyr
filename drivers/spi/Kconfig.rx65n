@@ -1,0 +1,7 @@
+menuconfig RX65N_RSPI
+	bool "Renesas RX65N RSPI drivers"
+	default y
+	depends on SOC_FAMILY_RX
+	select DMA
+	help
+	  Enable support for RSPI drivers on Renesas RX MCUs.

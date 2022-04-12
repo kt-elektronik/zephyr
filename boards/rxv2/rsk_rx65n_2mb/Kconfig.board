@@ -1,0 +1,9 @@
+# Copyright (c) 2020 KT-Elektronik, Klaucke und Partner GmbH
+# SPDX-License-Identifier: Apache-2.0
+
+# Renesas Starter Kit+ RX65N-2MB board configuration
+
+config BOARD_RSK_RX65N_2MB
+	bool "Renesas Starter Kit+ RX65N-2MB board (rsk_rx65n_mb)"
+	help
+	  Implementation of Renesas' R5F565NE processor family based on rx2v architecture.

@@ -902,7 +902,7 @@ static int spi_nor_process_sfdp(const struct device *dev)
 	while (php != phpe) {
 		uint16_t id = jesd216_param_id(php);
 
-		LOG_INF("PH%u: %04x rev %u.%u: %u DW @ %x",
+		LOG_INF("PH%ld: %04x rev %u.%u: %u DW @ %x",
 			(php - hp->phdr), id, php->rev_major, php->rev_minor,
 			php->len_dw, jesd216_param_addr(php));
 
@@ -988,7 +988,7 @@ static int setup_pages_layout(const struct device *dev)
 
 	data->layout.pages_size = layout_page_size;
 	data->layout.pages_count = flash_size / layout_page_size;
-	LOG_DBG("layout %u x %u By pages", data->layout.pages_count, data->layout.pages_size);
+	LOG_DBG("layout %lu x %lu By pages", data->layout.pages_count, data->layout.pages_size);
 #elif defined(CONFIG_SPI_NOR_SFDP_DEVICETREE)
 	const struct spi_nor_config *cfg = dev->config;
 	const struct flash_pages_layout *layout = &cfg->layout;

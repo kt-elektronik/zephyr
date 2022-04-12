@@ -148,7 +148,31 @@ __no_optimization void test_nop(void)
 	arch_nop();
 	arch_nop();
 	arch_nop();
-
+#elif defined(CONFIG_RXV2)
+	/* RX65N runs at 120 MHz, while the cycle clock runs only at 7.5 MHz.
+	 * Since arch_nop() uses 1 processor cycle, at least 16 nop instructions
+	 * are necessary to ensure a measurable time passes. Adding another 17
+	 * calls to arch_nop() for a total of 20 to be sure.
+	 */
+	arch_nop();
+	arch_nop();
+	arch_nop();
+	arch_nop();
+	arch_nop();
+	arch_nop();
+	arch_nop();
+	arch_nop();
+	arch_nop();
+	arch_nop();
+	arch_nop();
+	arch_nop();
+	arch_nop();
+	arch_nop();
+	arch_nop();
+	arch_nop();
+	arch_nop();
+	arch_nop();
+	arch_nop();
 #elif defined(CONFIG_ARMV8_A) || defined(CONFIG_BOARD_EHL_CRB)	\
 	|| (CONFIG_BOARD_UP_SQUARED) || (CONFIG_SOC_FAMILY_INTEL_ADSP)
 	/* the ARMv8-A ARM states the following:
