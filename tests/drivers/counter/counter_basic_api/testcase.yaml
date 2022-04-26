@@ -11,4 +11,4 @@ tests:
     platform_allow: nrf52840dk_nrf52840
     timeout: 400
     extra_args: >
-      OVERLAY_CONFIG="zli.conf;boards/nrf52840dk_nrf52840_zli.conf"
+      OVERLAY_CONFIG="zli.conf;boards/nrf52840dk_nrf52840_zli.conf;boards/mimxrt1060_evk.conf"

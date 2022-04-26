@@ -1,0 +1,7 @@
+&tmr1_timer0 {
+	status = "okay";
+	/* kQTMR_ClockDivide_128  */
+	primary_source = <15>;
+	/* kQTMR_PriSrcRiseEdge */
+	mode = <1>;
+};
