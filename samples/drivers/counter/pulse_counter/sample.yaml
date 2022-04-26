@@ -1,0 +1,7 @@
+sample:
+  name: Counter Driver Sample for external Signals
+tests:
+  sample.drivers.counter.alarm:
+    tags: drivers
+    platform_allow: mimxrt1060_evk
+    depends_on: counter

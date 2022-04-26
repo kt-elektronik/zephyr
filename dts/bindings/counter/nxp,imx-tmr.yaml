@@ -1,0 +1,86 @@
+# Copyright (c) 2022 KT-Elektronik, Klaucke und Partner GmbH
+# SPDX-License-Identifier: Apache-2.0
+
+description: NXP MCUX Quad Timer Channel. Each channel of each quad timer can operate independently
+  and hence will be realized as a separate counter device
+
+compatible: "nxp,imx-tmr"
+
+include: base.yaml
+
+properties:
+  label:
+    required: true
+
+  channel:
+    type: int
+    required: true
+    enum:
+      - 0
+      - 1
+      - 2
+      - 3
+
+  mode:
+    type: int
+    required: true
+    description: counting mode of the timer, see qtmr_counting_mode_t enumerator type
+      of the MCUXpresso SDK
+    enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+
+  primary_source:
+    type: int
+    required: true
+    description: Primary source of the timer, see qtmr_primary_count_source_t enumerator type
+      of the MCUXpresso SDK
+    enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+      - 8
+      - 9
+      - 10
+      - 11
+      - 12
+      - 13
+      - 14
+      - 15
+
+  secondary_source:
+    type: int
+    required: false
+    description: Secondary source of the timer, see qtmr_input_source_t enumerator type
+      of the MCUXpresso SDK
+    enum:
+      - 0
+      - 1
+      - 2
+      - 3
+
+  filter_count:
+    type: int
+    required: false
+    description: Fault filter count (0-255).
+
+  filter_period:
+    type: int
+    required: false
+    description: Fault filter period (0-255).
+
+  freq:
+    type: int
+    required: false
+    description: clock frequency (only used for external clock sources)

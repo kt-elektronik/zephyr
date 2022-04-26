@@ -1,0 +1,36 @@
+/*
+ * Copyright (c) 2022 KT-Elektronik, Klaucke und Partner GmbH
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+ &tmr1_timer0 {
+	status = "okay";
+	/* kQTMR_ClockCounter0InputPin */
+	primary_source = <0>;
+	/* kQTMR_PriSrcRiseEdge */
+	mode = <1>;
+};
+
+&tmr1_timer1 {
+	status = "okay";
+	/* kQTMR_ClockCounter1InputPin */
+	primary_source = <1>;
+	/* kQTMR_PriSrcRiseEdge */
+	mode = <1>;
+};
+
+&tmr2_timer0 {
+	status = "okay";
+	/* kQTMR_ClockDivide_128  */
+	primary_source = <15>;
+	/* kQTMR_PriSrcRiseEdge */
+	mode = <1>;
+};
+
+&tmr3_timer0 {
+	status = "okay";
+	/* kQTMR_ClockCounter0InputPin */
+	primary_source = <0>;
+	/* kQTMR_PriSrcRiseEdge */
+	mode = <1>;
+};
