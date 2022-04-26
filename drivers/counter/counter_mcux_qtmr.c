@@ -63,7 +63,7 @@ void mcux_qtmr_timer_handler(const struct device *dev, uint32_t status)
 		data->interrupt_mask &= ~kQTMR_Compare1InterruptEnable;
 		counter_alarm_callback_t alarm_cb = data->alarm_callback;
 		data->alarm_callback = NULL;
-		alarm_cb(dev, 0, current, data->alarm_user_data);
+		alarm_cb(dev, config->channel, current, data->alarm_user_data);
 	}
 
 	if ((status & kQTMR_OverflowFlag) && data->top_callback) {
@@ -147,17 +147,12 @@ static int mcux_qtmr_set_alarm(const struct device *dev, uint8_t chan_id,
 {
 	const struct mcux_qtmr_config *config = dev->config;
 	struct mcux_qtmr_data *data = dev->data;
-
-	uint32_t current = QTMR_GetCurrentTimerCount(config->base, config->channel);
-	uint32_t ticks = alarm_cfg->ticks;
+	uint32_t current;
+	uint32_t ticks;
 
 	if (chan_id != 0) {
 		LOG_ERR("Invalid channel id");
 		return -EINVAL;
-	}
-
-	if ((alarm_cfg->flags & COUNTER_ALARM_CFG_ABSOLUTE) == 0) {
-		ticks += current;
 	}
 
 	if (data->alarm_callback) {
@@ -167,7 +162,15 @@ static int mcux_qtmr_set_alarm(const struct device *dev, uint8_t chan_id,
 	data->alarm_callback = alarm_cfg->callback;
 	data->alarm_user_data = alarm_cfg->user_data;
 
-	QTMR_SetTimerPeriod(config->base, config->channel, ticks);
+	current = QTMR_GetCurrentTimerCount(config->base, config->channel);
+	ticks = alarm_cfg->ticks;
+
+	if ((alarm_cfg->flags & COUNTER_ALARM_CFG_ABSOLUTE) == 0) {
+		ticks += current;
+	}
+
+	/* this timer always counts up. */
+	config->base->CHANNEL[config->channel].COMP1 = ticks;
 
 	data->interrupt_mask |= kQTMR_Compare1InterruptEnable;
 	QTMR_EnableInterrupts(config->base, config->channel, data->interrupt_mask);
